@@ -5,40 +5,38 @@ Esta es la estructura base para comenzar el TFM:
 ```
 mcp/
 orchestrator/
-nlp_agent/
-prompt_optimizer/
+agents/
 docs/
 tests/
-```
+data/
+web/
+docker/
+
 
 ## Descripción de cada módulo
 
-### mcp/
-Módulo central que define:
-- Tools
-- Server
-- Schemas
-- Comunicación con el Orchestrator
+mcp
+Contiene el servidor Model Context Protocol, herramientas internas y los esquemas de datos que permiten la comunicación con el orquestador.
 
-### orchestrator/
-Gestiona:
-- Flujo entre módulos
-- Recepción y envío de mensajes
-- Decisiones de alto nivel
+orchestrator
+Contiene la lógica de coordinación entre agentes, flujos LangGraph y procesos CrewAI si se usan.
 
-### nlp_agent/
-Agente de lenguaje:
-- Llama modelos LLM
-- Extrae información
-- Resume o traduce
+agents
+Contiene los distintos agentes especializados. Cada agente tiene su propia carpeta con su código y documentación interna.
 
-### prompt_optimizer/
-Optimiza prompts y contexto para mejorar respuestas.
+web
+Interfaz local del sistema. Puede desarrollarse con Streamlit o FastAPI.
 
-### docs/
-Documentación técnica del equipo.
+data
+Directorio técnico para datos sintéticos, archivos temporales, modelos locales y registros.
 
-### tests/
-Pruebas unitarias e integración.
+docker
+Archivos necesarios para empaquetar el sistema en contenedores.
+
+tests
+Pruebas unitarias y de integración.
+
+docs
+Documentación oficial del proyecto.
 
 
