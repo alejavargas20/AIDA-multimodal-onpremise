@@ -28,7 +28,7 @@ Ejemplos:
 - No trabajar directamente en develop.
 - No subir binarios, datasets, venv, etc.
 
-## ✔ Reglas del PR
+## Reglas del PR
 - Mínimo un revisor.
 - Descripción clara.
 - No romper develop.
