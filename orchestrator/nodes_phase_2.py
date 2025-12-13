@@ -1,4 +1,4 @@
-from orchestrator.state import OrchestratorState
+from state import OrchestratorState
 
 
 def mock_intent_classifier(text: str) -> str:

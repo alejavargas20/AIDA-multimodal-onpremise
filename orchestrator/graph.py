@@ -1,8 +1,8 @@
 from langgraph.graph import StateGraph, END
-from orchestrator.state import OrchestratorState
-from orchestrator.nodes_phase_1 import phase1_router
-from orchestrator.nodes_phase_2 import phase2_planner
-from orchestrator.nodes_phase_3 import (
+from state import OrchestratorState
+from nodes_phase_1 import phase1_router
+from nodes_phase_2 import phase2_planner
+from nodes_phase_3 import (
     assemble_results,
     behaviour_adaptation,
     execute_plan,
