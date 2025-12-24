@@ -9,11 +9,13 @@ orquestador de agentes.
 ## Rol del módulo
 
 El Prompt Optimizer:
+
 - NO ejecuta tareas
 - NO consulta bases de datos
 - NO responde directamente al usuario
 
 Su responsabilidad es:
+
 - interpretar la intención del usuario
 - reformular la petición de forma clara
 - generar un plan estructurado de tareas en formato JSON
@@ -27,6 +29,7 @@ El Prompt Optimizer se integra como una tool del MCP (Model Context Protocol).
 Recibe peticiones normalizadas desde el orquestador y devuelve un JSON estructurado.
 
 La ejecución real de las tareas queda delegada en los agentes especializados:
+
 - NLP
 - Datos
 - Imagen
@@ -44,7 +47,6 @@ prompt_optimizer/
 ├── exceptions.py # Excepciones propias del módulo
 └── README.md
 
-
 ## Flujo de funcionamiento
 
 1. Recepción del input desde MCP
@@ -59,6 +61,7 @@ prompt_optimizer/
 
 El Prompt Optimizer utiliza un Data Abstraction Layer (DAL) como contexto conceptual
 para conocer:
+
 - tipos de datos disponibles
 - conceptos de negocio
 - granularidades
@@ -77,6 +80,7 @@ El DAL no contiene datos reales ni esquemas físicos.
 ## Objetivo académico
 
 Este módulo permite:
+
 - desacoplar planificación y ejecución
 - mejorar la explicabilidad del sistema
 - reforzar privacidad y control
