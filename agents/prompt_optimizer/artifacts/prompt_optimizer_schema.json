@@ -1,0 +1,28 @@
+
+
+{
+  "optimized_prompt": "string",
+  "intent_plan": {
+    "intent": "string",
+    "confidence": "number",
+    "tasks": [
+      {
+        "agent": "string",
+        "action": "string",
+        "input": "string",
+        "params": {
+          "type": "object",
+          "description": "Parámetros opcionales específicos del agente"
+        }
+      }
+    ],
+    "metadata": {
+      "language": "string",
+      "input_source": "string"
+    },
+    "conductual_state": null,
+    "conductual_notes": null
+  },
+  "status": "string",
+  "errors": []
+}

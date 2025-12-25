@@ -1,0 +1,63 @@
+PROMPT OPTIMIZER – FLOW INTERNO
+
+1. Recepción del input
+El Prompt Optimizer recibe un payload estructurado desde el MCP que contiene:
+- texto del usuario
+- historial (opcional)
+- metadatos (idioma, origen: chat, STT u OCR)
+- restricciones básicas (formato, número máximo de tareas)
+
+2. Preprocesamiento
+El texto del usuario se normaliza mediante:
+- limpieza de espacios y caracteres especiales
+- corrección básica de ruido procedente de STT u OCR
+- detección simple de idioma
+- extracción inicial de entidades (fechas, importes, porcentajes) mediante regex
+
+Este paso mejora la estabilidad del sistema y reduce errores posteriores.
+
+3. Baseline clásico
+Antes de invocar al modelo de lenguaje, se ejecuta un baseline basado en:
+- reglas
+- palabras clave
+- patrones simples
+
+El objetivo es:
+- reforzar la detección de intención
+- disponer de un punto de comparación académico
+- servir como fallback en caso de error del LLM
+
+4. Planner basado en LLM
+El texto preprocesado se pasa al modelo de lenguaje junto con:
+- un system prompt que lo define como planificador
+- reglas estrictas de salida en formato JSON
+- ejemplos few-shot
+
+El modelo debe:
+- detectar la intención principal
+- generar un plan de tareas coherente
+- no ejecutar ninguna acción
+
+5. Validación del JSON
+La salida del modelo se valida automáticamente:
+- formato JSON correcto
+- campos obligatorios presentes
+- estructura compatible con el contrato definido
+
+Si la validación falla, se realiza un reintento controlado.
+
+6. Construcción de la salida final
+Una vez validado el plan:
+- se añade el prompt optimizado
+- se incluyen metadatos
+- se completan campos de estado
+
+7. Logging y trazabilidad
+Se registran de forma local y anonimizada:
+- inputs
+- planes generados
+- errores de formato
+
+Estos logs se utilizarán para métricas, evaluación y documentación del TFM.
+
+8. Devuelvo el plan al orquestador; la ejecución queda fuera de este módulo
