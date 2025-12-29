@@ -1,0 +1,30 @@
+
+{
+  "optimized_prompt": "Analiza el riesgo agregado de la cartera en el último trimestre y resume los hallazgos clave",
+  "intent_plan": {
+    "intent": "analisis_financiero",
+    "confidence": 0.85,
+    "tasks": [
+      {
+        "agent": "data",
+        "action": "data.TBD_query_kpi",
+        "input": "KPIs agregados de riesgo y evolución trimestral de cartera (sin datos personales)",
+        "params": {}
+      },
+      {
+        "agent": "nlp",
+        "action": "nlp.summarize",
+        "input": "Resumen ejecutivo de los resultados agregados del análisis",
+        "params": {}
+      }
+    ],
+    "metadata": {
+      "language": "es",
+      "input_source": "chat"
+    },
+    "conductual_state": null,
+    "conductual_notes": null
+  },
+  "status": "ok",
+  "errors": []
+}

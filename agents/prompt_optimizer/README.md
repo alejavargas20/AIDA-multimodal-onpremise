@@ -1,87 +1,70 @@
 # Prompt Optimizer Module
 
-Este módulo implementa el Prompt Optimizer del sistema multimodal de IA desarrollado
-en el Trabajo Fin de Máster.
+Este módulo implementa el Prompt Optimizer del sistema AIDA multimodal on-premise.
 
-Su función es actuar como capa de planificación entre la entrada del usuario y el
-orquestador de agentes.
-
-## Rol del módulo
+## Alcance (importante)
 
 El Prompt Optimizer:
 
-- NO ejecuta tareas
-- NO consulta bases de datos
-- NO responde directamente al usuario
+- **NO ejecuta tareas**
+- **NO consulta bases de datos**
+- **NO responde directamente al usuario**
+- **NO decide el flujo de ejecución** (eso es del orquestador)
 
-Su responsabilidad es:
+Su objetivo es **planificar**: transformar la petición del usuario en un **plan declarativo** (JSON) con:
 
-- interpretar la intención del usuario
-- reformular la petición de forma clara
-- generar un plan estructurado de tareas en formato JSON
+- `intent` (intención detectada)
+- `tasks` (tareas a ejecutar por agentes)
 
-Este plan es consumido posteriormente por el orquestador (CrewAI / LangGraph),
-que decide qué agentes ejecutar.
+El orquestador (LangGraph) consume este plan y ejecuta herramientas vía MCP.
 
-## Encaje en la arquitectura
+## API pública
 
-El Prompt Optimizer se integra como una tool del MCP (Model Context Protocol).
-Recibe peticiones normalizadas desde el orquestador y devuelve un JSON estructurado.
+Función pública estable:
 
-La ejecución real de las tareas queda delegada en los agentes especializados:
+- `process_request(payload: dict) -> dict`
 
-- NLP
-- Datos
-- Imagen
-- Voz
-- Reportes
+Debe devolver **solo JSON**.
 
-## Estructura del módulo
+## Artefactos (contrato)
 
-prompt_optimizer/
-├── optimizer.py # Clase principal PromptOptimizer
-├── planner_prompt.py # System prompt + few-shot examples
-├── preprocessing.py # Limpieza, regex y detección de idioma
-├── schema.py # Definición del contrato JSON (Pydantic)
-├── baseline.py # Reglas y keywords como baseline clásico
-├── exceptions.py # Excepciones propias del módulo
-└── README.md
+En `agents/prompt_optimizer/artifacts/` se incluye un ejemplo de salida (`prompt_optimizer_schema.json`) y el prompt del planner (`planner_system_prompt.txt`) para alinear el contrato con el equipo sin necesidad de leer el código.
 
-## Flujo de funcionamiento
+## Acciones provisionales (TBD)
 
-1. Recepción del input desde MCP
-2. Preprocesamiento del texto
-3. Ejecución de baseline clásico
-4. Generación del plan mediante LLM
-5. Validación estricta del JSON
-6. Logging y trazabilidad
-7. Devolución del plan al orquestador
+Las acciones (`action`) incluidas en las tareas generadas por el Prompt Optimizer pueden definirse de forma provisional utilizando el prefijo `TBD_` mientras no exista una alineación definitiva con el agente de datos y el orquestador.
 
-## Data Abstraction Layer
+Durante esta fase, el Prompt Optimizer se limita a generar un plan declarativo, sin validar ni ejecutar acciones concretas. La validación y ejecución de las acciones se realizará en capas posteriores del sistema.
 
-El Prompt Optimizer utiliza un Data Abstraction Layer (DAL) como contexto conceptual
-para conocer:
+Ejemplo de acción provisional:
 
-- tipos de datos disponibles
-- conceptos de negocio
-- granularidades
-- restricciones de privacidad
+- `data.TBD_query_kpi`
 
-El DAL no contiene datos reales ni esquemas físicos.
+## Estructura del output (extendida, compatible con mínima)
 
-## Estado del desarrollo
+Extendida:
 
-- Diseño del módulo: completado
-- Contrato JSON: definido (v1.0)
-- Planner prompt: implementado
-- Integración MCP/orquestador: pendiente
-- Ejecución end-to-end: pendiente
+- `optimized_prompt`
+- `intent_plan.intent`
+- `intent_plan.tasks`
+- `status`
+- `errors`
 
-## Objetivo académico
+### Compatibilidad con contrato mínimo
 
-Este módulo permite:
+Aunque el módulo devuelve un formato extendido (con `optimized_prompt`, `status`, `errors`), se mantiene compatibilidad con el contrato mínimo porque:
 
-- desacoplar planificación y ejecución
-- mejorar la explicabilidad del sistema
-- reforzar privacidad y control
-- facilitar la evaluación del TFM
+- `intent_plan.intent` equivale a `intent`
+- `intent_plan.tasks` equivale a `tasks`
+
+Así, cualquier consumidor que solo necesite `{intent, tasks}` puede extraerlos directamente del `intent_plan`.
+
+## Tests
+
+Tests mínimos en:
+
+- `agents/prompt_optimizer/tests/`
+
+Ejecutar:
+
+- `pytest -q`
