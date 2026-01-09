@@ -1,8 +1,14 @@
-from typing import Any, List
+from typing import List, Any
+import fitz  # pymupdf
+from PIL import Image
+import io
 
 def pdf_to_images_from_path(path: str, max_pages: int) -> List[Any]:
-    # Placeholder: sustituir por pypdfium2/pymupdf/pdf2image
-    return [{"_type": "pdf_page_image", "path": path, "page": i} for i in range(1, max_pages + 1)]
-
-def pdf_to_images_from_bytes(b: bytes, max_pages: int) -> List[Any]:
-    return [{"_type": "pdf_page_image", "bytes": True, "page": i} for i in range(1, max_pages + 1)]
+    doc = fitz.open(path)
+    images = []
+    for i in range(min(len(doc), max_pages)):
+        page = doc.load_page(i)
+        pix = page.get_pixmap(dpi=200)
+        img = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
+        images.append(img)
+    return images

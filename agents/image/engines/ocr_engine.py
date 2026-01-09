@@ -1,33 +1,14 @@
 from typing import Any, Optional
+import pytesseract
 
 class OcrEngine:
+    def __init__(self, tesseract_cmd: Optional[str] = None):
+        # Si no está en PATH, pásalo:
+        # r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+        if tesseract_cmd:
+            pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
 
-    def __init__(self):
-        from paddleocr import PaddleOCR
-        self.ocr = PaddleOCR(
-            lang="es",
-            use_angle_cls=False,
-            use_gpu=False
-        )
-
-    def extract_text_from_image(
-        self,
-        image_obj: Any,
-        language_hint: Optional[str] = None
-    ) -> str:
-        """
-        Extrae texto OCR y lo devuelve como un string único.
-        """
-
-        # image_obj aquí ya debería ser una imagen real (numpy / PIL)
-        result = self.ocr.ocr(image_obj, cls=False)
-
-        lines = []
-
-        for block in result:
-            for line in block:
-                text = line[1][0]
-                if text:
-                    lines.append(text)
-
-        return "\n".join(lines)
+    def extract_text_from_image(self, image_obj: Any, language_hint: Optional[str] = None) -> str:
+        lang = "spa" if (language_hint in (None, "es", "spa")) else language_hint
+        config = "--oem 3 --psm 6"
+        return pytesseract.image_to_string(image_obj, lang=lang, config=config)

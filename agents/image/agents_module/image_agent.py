@@ -5,13 +5,13 @@ from typing import Any, Dict, List
 from agents.image.schemas.image_models import (
     ImageAgentRequest, ImageAgentResult, ExtractedPage
 )
-from engines.ocr_engine import OcrEngine
-from llm.llm_client import LlmClient
-from utils.text import normalize_text
-from utils.heuristics import guess_doc_type, basic_text_quality_metrics
-from utils.ids import stable_content_id
-from loaders.image_loader import load_image_from_path, load_image_from_bytes
-from loaders.pdf_loader import pdf_to_images_from_path, pdf_to_images_from_bytes
+from agents.image.engines.ocr_engine import OcrEngine
+from agents.image.llm.llm_client import LlmClient
+from agents.image.utils.text import normalize_text
+from agents.image.utils.heuristics import guess_doc_type, basic_text_quality_metrics
+from agents.image.utils.ids import stable_content_id
+from agents.image.loaders.image_loader import load_image_from_path, load_image_from_bytes
+from agents.image.loaders.pdf_loader import pdf_to_images_from_path, pdf_to_images_from_bytes
 
 import time
 

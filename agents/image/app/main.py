@@ -1,7 +1,7 @@
-from schemas.image_models import ImageAgentRequest
-from agents_module.image_agent import ImageAgent
-from engines.ocr_engine import OcrEngine
-from llm.llm_client import LlmClient
+from agents.image.schemas.image_models import ImageAgentRequest
+from agents.image.agents_module.image_agent import ImageAgent
+from agents.image.engines.ocr_engine import OcrEngine
+from agents.image.llm.llm_client import LlmClient
 
 def build_agent() -> ImageAgent:
     return ImageAgent(ocr=OcrEngine(), llm=LlmClient())
