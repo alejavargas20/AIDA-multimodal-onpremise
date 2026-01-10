@@ -5,7 +5,7 @@ try:
 except ImportError:
 
     def process(payload: dict) -> dict:
-        return {"text": "Ejemplo numero 1", "status": "mock"}
+        return {"text": None, "status": "mock"}
 
 
 def voice_process(payload: dict) -> dict:
