@@ -16,7 +16,7 @@ class Metadata(BaseModel):
 
 class Task(BaseModel):
     agent: AgentName
-    action: str = Field(..., min_length=1, description="Action name. Can be provisional TBD_*.")
+    action: str = Field(..., min_length=1, description="Verb-only action name (no agent prefix).")
     input: str = Field(..., min_length=1, description="Business-level input description (no SQL).")
     params: Dict[str, Any] = Field(default_factory=dict)
 

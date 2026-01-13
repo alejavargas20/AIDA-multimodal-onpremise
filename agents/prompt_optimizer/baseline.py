@@ -31,11 +31,11 @@ def baseline_intent(text: str) -> Tuple[str, float]:
 
 
 def baseline_action_stub(intent: str) -> Dict[str, str]:
-    # Provisional actions until alignment with Data Agent (Jordan) & Orchestrator (Quique)
+# Actions aligned with Desarrollo: action is verb-only; orchestrator builds tool_name as "<agent>.<action>"
     if intent in ("analisis_financiero", "consulta_datos", "perfil_cliente", "alerta_riesgo"):
-        return {"agent": "data", "action": "data.TBD_query_kpi"}
+        return {"agent": "data", "action": "fetch_metrics"}
     if intent in ("resumen",):
-        return {"agent": "nlp", "action": "nlp.summarize"}
+        return {"agent": "nlp", "action": "summarize"}
     if intent in ("procesar_documento",):
-        return {"agent": "image", "action": "image.TBD_extract_text"}
-    return {"agent": "nlp", "action": "nlp.answer"}
+        return {"agent": "image", "action": "extract_text"}
+    return {"agent": "nlp", "action": "answer"}

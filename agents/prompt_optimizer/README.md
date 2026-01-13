@@ -30,15 +30,16 @@ Debe devolver **solo JSON**.
 
 En `agents/prompt_optimizer/artifacts/` se incluye un ejemplo de salida (`prompt_optimizer_schema.json`) y el prompt del planner (`planner_system_prompt.txt`) para alinear el contrato con el equipo sin necesidad de leer el código.
 
-## Acciones provisionales (TBD)
+## Acciones (contrato actual)
 
-Las acciones (`action`) incluidas en las tareas generadas por el Prompt Optimizer pueden definirse de forma provisional utilizando el prefijo `TBD_` mientras no exista una alineación definitiva con el agente de datos y el orquestador.
+El Prompt Optimizer devuelve planes con `agent` y `action` separados (action = verbo, sin prefijo).
+El orquestador/MCP construye el `tool_name` como `<agent>.<action>` (ej.: `data.fetch_metrics`).
 
-Durante esta fase, el Prompt Optimizer se limita a generar un plan declarativo, sin validar ni ejecutar acciones concretas. La validación y ejecución de las acciones se realizará en capas posteriores del sistema.
+Acciones acordadas:
 
-Ejemplo de acción provisional:
-
-- `data.TBD_query_kpi`
+- data: `fetch_metrics`
+- nlp: `summarize`, `answer`, `ask_clarification`
+- image: `extract_text`
 
 ## Estructura del output (extendida, compatible con mínima)
 

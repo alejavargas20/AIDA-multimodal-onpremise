@@ -9,7 +9,12 @@ RULES:
 - Do NOT execute tasks.
 - Output MUST be valid JSON and nothing else.
 - Tasks MUST NOT include SQL or table names.
-- If exact action name is not confirmed, use action prefix 'TBD_'.
+- Use verb-only actions (no agent prefix). The orchestrator builds tool_name as "<agent>.<action>" (e.g., data.fetch_metrics).
+
+ALLOWED ACTIONS:
+- data: fetch_metrics
+- nlp: summarize | answer | ask_clarification
+- image: extract_text
 
 SUPPORTED INTENTS:
 - consulta_datos

@@ -7,13 +7,13 @@
     "tasks": [
       {
         "agent": "data",
-        "action": "data.TBD_query_kpi",
+        "action": "fetch_metrics",
         "input": "KPIs agregados de riesgo y evolución trimestral de cartera (sin datos personales)",
         "params": {}
       },
       {
         "agent": "nlp",
-        "action": "nlp.summarize",
+        "action": "summarize",
         "input": "Resumen ejecutivo de los resultados agregados del análisis",
         "params": {}
       }

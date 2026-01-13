@@ -6,7 +6,7 @@ from typing import Any, Dict, List
 from pydantic import ValidationError as PydanticValidationError
 
 from .baseline import baseline_intent, baseline_action_stub
-from .exceptions import ValidationError  # tu error propio (para serialización, etc.)
+from .exceptions import ValidationError  # error propio (para serialización, etc.)
 from .preprocessing import preprocess
 from .schema import PromptOptimizerResponse, IntentPlan, Task
 
@@ -68,6 +68,39 @@ def process_request(payload: Dict[str, Any]) -> Dict[str, Any]:
         )
         return response.model_dump()
 
+    # Guardrail explícito: SQL detectado → no construir tasks
+    lowered = user_text.lower()
+    if any(k in lowered for k in ["select ", " from ", " join ", " where ", " group by", "insert ", "update ", "delete "]):
+        safe_response = {
+            "optimized_prompt": (
+                "Reformula la petición sin incluir SQL ni nombres de tablas. "
+                "Indica el objetivo de negocio (qué quieres analizar) y el periodo."
+            ),
+            "intent_plan": {
+                "intent": "needs_clarification",
+                "confidence": 0.0,
+                "tasks": [
+                    {
+                        "agent": "nlp",
+                        "action": "ask_clarification",
+                        "input": (
+                            "El usuario ha incluido SQL. Pedir reformulación a nivel de objetivo de negocio, sin SQL."
+                        ),
+                        "params": {},
+                    }
+                ],
+                "metadata": metadata,
+                "conductual_state": None,
+                "conductual_notes": "Entrada contenía SQL u otro patrón no permitido.",
+            },
+            "status": "needs_clarification",
+            "errors": [],
+        }
+
+        json.dumps(safe_response)
+        return safe_response
+    
+    
     # --- NUEVO: robustez ante inputs inválidos (ej. SQL en el texto del usuario) ---
     try:
         tasks = _build_tasks(intent, user_text)
@@ -106,7 +139,7 @@ def process_request(payload: Dict[str, Any]) -> Dict[str, Any]:
                 "tasks": [
                     {
                         "agent": "nlp",
-                        "action": "nlp.ask_clarification",
+                        "action": "ask_clarification",
                         "input": (
                             "El usuario ha incluido SQL. Pedir reformulación a nivel de objetivo de negocio, sin SQL."
                         ),
@@ -118,7 +151,7 @@ def process_request(payload: Dict[str, Any]) -> Dict[str, Any]:
                 "conductual_notes": "Entrada contenía SQL u otro patrón no permitido.",
             },
             "status": "needs_clarification",
-            "errors": [str(e)],
+            "errors": [],
         }
 
         # Garantizamos serialización también aquí

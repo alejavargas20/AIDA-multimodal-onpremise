@@ -55,3 +55,15 @@ def test_no_sql_in_tasks():
     for t in out["intent_plan"]["tasks"]:
         assert "select " not in t["input"].lower()
         assert " from " not in t["input"].lower()
+
+def test_data_action_is_fetch_metrics_for_financial_intents():
+    payload = {
+        "user_text": "Analiza riesgo agregado de la cartera y dame KPIs del último mes",
+        "metadata": {"lang": "es", "channel": "chat"},
+    }
+    out = process_request(payload)
+    tasks = out["intent_plan"]["tasks"]
+
+    if tasks and tasks[0]["agent"] == "data":
+        assert tasks[0]["action"] == "fetch_metrics"
+

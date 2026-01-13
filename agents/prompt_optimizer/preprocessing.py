@@ -35,13 +35,10 @@ def extract_entities(text: str) -> Dict[str, Any]:
 
 def preprocess(payload: Dict[str, Any]) -> Dict[str, Any]:
     user_text = normalize_text(payload.get("user_text", ""))
-    lang = payload.get("metadata", {}).get("language") or detect_language_simple(user_text)
-    input_source = (
-    payload.get("metadata", {}).get("input_source")
-    or payload.get("metadata", {}).get("channel")
-    or "unknown"
-    )
+    md = payload.get("metadata", {}) or {}
 
+    lang = md.get("language") or md.get("lang") or detect_language_simple(user_text)
+    input_source = md.get("input_source") or md.get("channel") or "unknown"
 
     entities = extract_entities(user_text)
 
@@ -53,3 +50,4 @@ def preprocess(payload: Dict[str, Any]) -> Dict[str, Any]:
         "history": payload.get("history", []),
         "constraints": payload.get("constraints", {}),
     }
+    

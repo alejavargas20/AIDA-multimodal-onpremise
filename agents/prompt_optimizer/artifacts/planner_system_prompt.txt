@@ -56,13 +56,21 @@ TASK GENERATION RULES:
 - If the request is ambiguous or underspecified, return a clarification plan
   instead of guessing tasks.
 
-ACTION NAMING (UNTIL TEAM ALIGNMENT):
-- For data tasks, actions MUST use the prefix "data.TBD_".
-- For nlp tasks, the following actions are allowed:
-  - nlp.ask_clarification
-  - nlp.TBD_*
-- Do NOT use generic action names like "consultar", "resumir", etc.
-- Do NOT invent final action names not explicitly confirmed.
+ACTION NAMING (ALIGNED WITH DESARROLLO):
+- The plan MUST output "agent" and "action" as separate fields.
+- "action" MUST be the verb-only action name (no agent prefix).
+- The orchestrator/MCP will call tools as "<agent>.<action>" (e.g., "data.fetch_metrics").
+
+ALLOWED ACTIONS:
+- data:
+  - fetch_metrics
+- nlp:
+  - summarize
+  - answer
+  - ask_clarification
+- image:
+  - extract_text
+- voice/report: (do not plan unless explicitly requested)
 
 PRIVACY AND SAFETY:
 - Never generate tasks that access personal identifiers.
@@ -112,13 +120,13 @@ Output:
     "tasks": [
       {
         "agent": "data",
-        "action": "data.TBD_query_kpi",
+        "action": "fetch_metrics",
         "input": "Evolución agregada de la cartera en el último trimestre",
         "params": {}
       },
       {
         "agent": "nlp",
-        "action": "nlp.TBD_summarize",
+        "action": "summarize",
         "input": "Resumen de los resultados agregados del análisis financiero",
         "params": {}
       }
@@ -146,7 +154,7 @@ Output:
     "tasks": [
       {
         "agent": "nlp",
-        "action": "nlp.ask_clarification",
+        "action": "ask_clarification",
         "input": "El usuario ha incluido SQL. Solicitar reformulación a nivel de objetivo de negocio.",
         "params": {}
       }
