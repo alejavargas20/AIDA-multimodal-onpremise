@@ -1,5 +1,5 @@
 """
-Agente NLP (solo español)
+Agente NLP ¡
 
 Este módulo implementa UNA única función pública para ser llamada desde el MCP:
     from agents.nlp.nlp_logic import process
@@ -32,17 +32,16 @@ SUPPORTED_TASKS = {
     "rephrase",
     "reason",
     "generate",
-    "auto",
 }
 
 
 def process(payload: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Punto de entrada único del Agente NLP.
+    Punto de entrada del Agente NLP.
 
     Payload esperado (mínimo):
     {
-      "task": "summarize|explain|rephrase|reason|generate|auto",
+      "task": "summarize|explain|rephrase|reason|generate",
       "input": {...},
       "style": "sencillo|tecnico|ejecutivo" (opcional),
       "metadata": {...} (opcional)
@@ -72,7 +71,7 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
     # Solo español (sin detección)
     language = "es"
 
-    # Enrutamiento
+    # Enrutamiento (sin auto-router; lo decide el Prompt Optimizer/Orquestador)
     try:
         if task == "summarize":
             answer = summarize(input_obj, payload)
@@ -84,10 +83,6 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
             answer = reason(input_obj, payload)
         elif task == "generate":
             answer = generate(input_obj, payload)
-        elif task == "auto":
-            # Modo "función general": decide handler según intent/topic/etc.
-            routed_task, answer = auto_route(input_obj, payload)
-            task = routed_task
         else:
             return _error("Task router reached unexpected state.", task=task, t0=t0)
 
@@ -107,7 +102,7 @@ def summarize(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
       - text: str (alternativo)
       - audience: "analista"|"cliente"
       - style: "ejecutivo"|"tecnico"|"sencillo"
-      - constraints: {"length": "short|medium", "format": "bullets|paragraph"}
+      - constraints: {"length": "short|medium|long", "format": "bullets|paragraph"}
     """
     audience, style, constraints = _normalize_style(input_obj, payload)
 
@@ -272,48 +267,6 @@ def generate(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
         content=content_block,
     )
     return _llm_or_fallback(system, user, fallback=instructions.strip())
-
-
-def auto_route(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> Tuple[str, str]:
-    """
-    Router simple (if/else) para el modo 'auto'.
-
-    Inputs esperados:
-      - intent: str (ej: "explicar", "resumir", "reformular", "razonar")
-      - topic: str (ej: "creditos", "mora", "desembolso", "cierre")
-      - question/text: str
-      - data/table/field opcional
-    """
-    intent = (input_obj.get("intent") or "").strip().lower()
-    topic = (input_obj.get("topic") or "").strip().lower()
-    question = (input_obj.get("question") or input_obj.get("text") or "").strip().lower()
-
-    # Reglas
-    if intent in {"explicar", "definir", "definicion"}:
-        return "explain", explain(input_obj, payload)
-
-    if intent in {"resumir", "resumen"}:
-        return "summarize", summarize(input_obj, payload)
-
-    if intent in {"reformular", "refrasear", "parafrasear"}:
-        return "rephrase", rephrase(input_obj, payload)
-
-    if intent in {"razonar", "justificar"}:
-        return "reason", reason(input_obj, payload)
-
-    # Señales en la pregunta
-    if "qué es" in question or "que es" in question or "qué significa" in question or "que significa" in question:
-        return "explain", explain(input_obj, payload)
-
-    if any(w in question for w in ["resume", "resumen", "en pocas palabras"]):
-        return "summarize", summarize(input_obj, payload)
-
-    # Si viene data estructurada, normalmente es para resumen o explicación
-    if input_obj.get("data") is not None and not intent:
-        return "summarize", summarize(input_obj, payload)
-
-    # Fallback
-    return "reason", reason(input_obj, payload)
 
 
 # ---- Prompting ----
@@ -606,3 +559,4 @@ def _safe_json(obj: Any) -> str:
         return json.dumps(obj, ensure_ascii=False, indent=2, default=str)
     except Exception:
         return str(obj)
+
