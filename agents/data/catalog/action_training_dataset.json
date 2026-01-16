@@ -1,0 +1,969 @@
+{
+  "meta": {
+    "task": "action_classification",
+    "num_actions": 24,
+    "examples_per_action": 10
+  },
+  "data": [
+    {
+      "text": "Pregunta de ejemplo 6 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Monto acumulado de créditos desembolsados en el último mes",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Total de préstamos concedidos el mes pasado",
+      "label": "action_1"
+    },
+    {
+      "text": "Créditos desembolsados durante el mes pasado (cantidad)",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Desembolso promedio agrupado por producto en el último mes",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Total de dinero entregado en desembolsos el mes anterior",
+      "label": "action_2"
+    },
+    {
+      "text": "Total de capital desembolsado en el último periodo mensual",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Monto medio desembolsado por producto el mes anterior",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Suma del monto de desembolsos en el último mes",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Promedio de monto otorgado por producto el último mes",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Volumen total de desembolsos del mes pasado",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Monto total otorgado en créditos el último mes",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Valor medio desembolsado por tipo de producto en el mes pasado",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Conteo de préstamos desembolsados en el mes anterior",
+      "label": "action_1"
+    },
+    {
+      "text": "Importe total de créditos desembolsados el mes pasado",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "¿Cuántos créditos nuevos se entregaron el mes pasado?",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Media del importe desembolsado por producto en el último periodo",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Número de créditos desembolsados el mes pasado",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Importe total desembolsado el mes pasado",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Suma total desembolsada en el mes anterior",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "¿Cuántos créditos se desembolsaron en el último mes?",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Media del monto por producto para desembolsos del mes pasado",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Importe promedio por producto en desembolsos recientes",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "¿Cuál fue el monto total desembolsado en el último mes?",
+      "label": "action_2"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Promedio del monto de desembolso por producto (último mes)",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_15",
+      "label": "action_15"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_12",
+      "label": "action_12"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Número total de operaciones de crédito del último mes",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 4 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_16",
+      "label": "action_16"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_24",
+      "label": "action_24"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_23",
+      "label": "action_23"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_11",
+      "label": "action_11"
+    },
+    {
+      "text": "Monto promedio de créditos desembolsados por producto el último mes",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Volumen en número de créditos desembolsados el último mes",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Cantidad de créditos originados el último mes",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 9 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Total de créditos otorgados en el último mes",
+      "label": "action_1"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_8",
+      "label": "action_8"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_4",
+      "label": "action_4"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_13",
+      "label": "action_13"
+    },
+    {
+      "text": "Pregunta de ejemplo 3 para action_17",
+      "label": "action_17"
+    },
+    {
+      "text": "Pregunta de ejemplo 6 para action_22",
+      "label": "action_22"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_19",
+      "label": "action_19"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_6",
+      "label": "action_6"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_21",
+      "label": "action_21"
+    },
+    {
+      "text": "¿Cuál es el monto promedio desembolsado por producto en el último mes?",
+      "label": "action_3"
+    },
+    {
+      "text": "Pregunta de ejemplo 5 para action_10",
+      "label": "action_10"
+    },
+    {
+      "text": "Pregunta de ejemplo 1 para action_18",
+      "label": "action_18"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_7",
+      "label": "action_7"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_20",
+      "label": "action_20"
+    },
+    {
+      "text": "Pregunta de ejemplo 10 para action_9",
+      "label": "action_9"
+    },
+    {
+      "text": "Pregunta de ejemplo 7 para action_14",
+      "label": "action_14"
+    },
+    {
+      "text": "Pregunta de ejemplo 2 para action_5",
+      "label": "action_5"
+    },
+    {
+      "text": "Pregunta de ejemplo 8 para action_15",
+      "label": "action_15"
+    }
+  ]
+}

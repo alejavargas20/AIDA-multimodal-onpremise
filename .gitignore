@@ -7,7 +7,6 @@ env/
 .idea/
 .vscode/
 *.sqlite3
-data/
 logs/
 .DS_Store
 

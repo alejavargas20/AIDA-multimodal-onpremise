@@ -1,0 +1,2363 @@
+{
+  "version": "1.0",
+  "source": {
+    "excel": "DiccionarioDatos.xlsx",
+    "docx": "TFM – Diseño y Estructura de la Base de Datos para el Sistema AIDA.docx",
+    "filter_rule": "Solo se incluyen columnas con Uso == 'Si'."
+  },
+  "tables": [
+    {
+      "name": "desembolso",
+      "description": "Originación del crédito (características del crédito, canal, monto, cliente).",
+      "columns": [
+        {
+          "name": "idCuenta",
+          "type": "int64",
+          "description": "ID cuenta",
+          "sensitive": true,
+          "semantic_tags": []
+        },
+        {
+          "name": "dFechaDes",
+          "type": "object",
+          "description": "Fecha de desembolso",
+          "sensitive": false,
+          "semantic_tags": [
+            "desembolso",
+            "fecha"
+          ]
+        },
+        {
+          "name": "nCosecha",
+          "type": "int64",
+          "description": "Fecha de cosecha",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "idSolicitud",
+          "type": "int64",
+          "description": "ID solicitud",
+          "sensitive": true,
+          "semantic_tags": []
+        },
+        {
+          "name": "idCliente",
+          "type": "int64",
+          "description": "ID cliente",
+          "sensitive": true,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cProducto",
+          "type": "object",
+          "description": "Nombre del producto",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cDestino",
+          "type": "object",
+          "description": "Destino del producto",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cTipoCamp",
+          "type": "object",
+          "description": "Tipo de campaña",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cTipoOper",
+          "type": "object",
+          "description": "Tipo operación",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nClienteNue",
+          "type": "int64",
+          "description": "Cliente Nuevo, 1 : Cliente nuevo 0 : No es cliente nuevo",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "nMonto",
+          "type": "float64",
+          "description": "Monto del Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPlazo",
+          "type": "int64",
+          "description": "Plazo del Crédito",
+          "sensitive": false,
+          "semantic_tags": [
+            "plazo"
+          ]
+        },
+        {
+          "name": "nTasa",
+          "type": "float64",
+          "description": "Tasa del Crédito",
+          "sensitive": false,
+          "semantic_tags": [
+            "tasa"
+          ]
+        },
+        {
+          "name": "nCuota",
+          "type": "float64",
+          "description": "Cuota del Crédito",
+          "sensitive": false,
+          "semantic_tags": [
+            "cuota"
+          ]
+        },
+        {
+          "name": "cMoneda",
+          "type": "int64",
+          "description": "Moneda del Crédito, 0: Soles 1: Dolares",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cModalidadPago",
+          "type": "object",
+          "description": "Modalidad de Pago del Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "dFechaVenc",
+          "type": "object",
+          "description": "Fecha de Vencimiento del Crédito",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "cRegion",
+          "type": "object",
+          "description": "Region del Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cOficina",
+          "type": "object",
+          "description": "Oficina del Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cDepartamento",
+          "type": "object",
+          "description": "Departamento del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cProvincia",
+          "type": "object",
+          "description": "Provincia del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cDistrito",
+          "type": "object",
+          "description": "Distrito del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cRegionNat",
+          "type": "object",
+          "description": "Region Natural del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cRegionPol",
+          "type": "object",
+          "description": "Region Politica del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "nEdad",
+          "type": "int64",
+          "description": "Edad del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cEstadoCiv",
+          "type": "object",
+          "description": "Estado del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cActividad",
+          "type": "object",
+          "description": "Actividad del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cCalificacionInt",
+          "type": "object",
+          "description": "Calificacion del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "nSituacionDeu",
+          "type": "object",
+          "description": "Situacion del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cRegionB",
+          "type": "object",
+          "description": "Region del Cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cProductoPrincipal",
+          "type": "object",
+          "description": "Nombre del producto reducido",
+          "sensitive": false,
+          "semantic_tags": []
+        }
+      ],
+      "relations": [
+        {
+          "table": "cierre",
+          "type": "one_to_many",
+          "on": [
+            {
+              "left": "desembolso.idCuenta",
+              "right": "cierre.idCuenta"
+            }
+          ]
+        },
+        {
+          "table": "cosecha_sal",
+          "type": "many_to_one",
+          "on": [
+            {
+              "left": "desembolso.idCliente",
+              "right": "cosecha_sal.idCliente"
+            },
+            {
+              "left": "desembolso.nCosecha",
+              "right": "cosecha_sal.nCosecha"
+            }
+          ]
+        }
+      ],
+      "grain": "credito",
+      "row_level_security": {
+        "column": "idCliente"
+      }
+    },
+    {
+      "name": "cosecha_sal",
+      "description": "Comportamiento del cliente por cosecha (variables consolidadas financieras).",
+      "columns": [
+        {
+          "name": "idCuenta",
+          "type": "int64",
+          "description": "id cuenta",
+          "sensitive": true,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCosecha",
+          "type": "int64",
+          "description": "Fecha de cosecha",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "idCliente",
+          "type": "int64",
+          "description": "id cliente",
+          "sensitive": true,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "idPeriodo",
+          "type": "int64",
+          "description": "id periodo",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPeriodo",
+          "type": "int64",
+          "description": "Numero periodo",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadEmp",
+          "type": "int64",
+          "description": "Cantidad de Empresas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadC14",
+          "type": "int64",
+          "description": "Cantidad Cuentas 14",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadCast",
+          "type": "int64",
+          "description": "Cantidad Cuentas castigadas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoTot",
+          "type": "float64",
+          "description": "Monto total",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoC14",
+          "type": "float64",
+          "description": "Monto cuentas 14",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoCast",
+          "type": "float64",
+          "description": "Monto cuentas castigadas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeCast",
+          "type": "float64",
+          "description": "Porcentaje castigos",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMoraTot",
+          "type": "float64",
+          "description": "Mora total",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraC14",
+          "type": "float64",
+          "description": "Mora cuentas 14",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraCast",
+          "type": "float64",
+          "description": "Mora cuentas castigadas",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMontoCal0",
+          "type": "float64",
+          "description": "Monto en calificación de riesgo 0",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoCal1",
+          "type": "float64",
+          "description": "Monto en calificación de riesgo 1",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoCal2",
+          "type": "float64",
+          "description": "Monto en calificación de riesgo 2",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoCal3",
+          "type": "float64",
+          "description": "Monto en calificación de riesgo 3",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoCal4",
+          "type": "float64",
+          "description": "Monto en calificación de riesgo 4",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeCal0",
+          "type": "float64",
+          "description": "Porcentaje del monto en calificación 0",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeCal1",
+          "type": "float64",
+          "description": "Porcentaje del monto en calificación 1",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeCal2",
+          "type": "float64",
+          "description": "Porcentaje del monto en calificación 2",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeCal3",
+          "type": "float64",
+          "description": "Porcentaje del monto en calificación 3",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeCal4",
+          "type": "float64",
+          "description": "Porcentaje del monto en calificación 4",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCalificacion",
+          "type": "int64",
+          "description": "Calificación crediticia consolidada del cliente",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "nCantidadLinAct",
+          "type": "float64",
+          "description": "Calificación crediticia en Lineas Activas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoLinAct",
+          "type": "float64",
+          "description": "Monto Total en Lineas Activas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoNDes",
+          "type": "float64",
+          "description": "Monto no desembolsado de líneas de crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeUsoLin",
+          "type": "float64",
+          "description": "Porcentaje de utilización de la línea de crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadMedEmp",
+          "type": "int64",
+          "description": "Cantidad de Créditos en Mediana Empresa",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadPeqEmp",
+          "type": "int64",
+          "description": "Cantidad de Créditos en Pequeñas Empresas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadMicEmp",
+          "type": "int64",
+          "description": "Cantidad de Créditos en Micro Empresas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadConRev",
+          "type": "int64",
+          "description": "Cantidad de Créditos revolvente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadConNRev",
+          "type": "int64",
+          "description": "Cantidad de Créditos no revolvente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadHip",
+          "type": "int64",
+          "description": "Cantidad de Créditos hipotecários",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoMedEmp",
+          "type": "float64",
+          "description": "Monto en Créditos en Mediana Empresa",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoPeqEmp",
+          "type": "float64",
+          "description": "Monto en Créditos en Pequeñas Empresas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoMicEmp",
+          "type": "float64",
+          "description": "Monto en Créditos en Micro Empresas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoConRev",
+          "type": "float64",
+          "description": "Monto en Créditos revolvente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoConNRev",
+          "type": "float64",
+          "description": "Monto en Créditos no revolvente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoHip",
+          "type": "float64",
+          "description": "Monto en Créditos hipotecários",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeMedEmp",
+          "type": "float64",
+          "description": "Porcentaje de Créditos en Mediana Empresa",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajePeqEmp",
+          "type": "float64",
+          "description": "Porcentaje de Créditos en Pequeñas Empresas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeMicEmp",
+          "type": "float64",
+          "description": "Porcentaje de Créditos en Micro Empresas",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeConRev",
+          "type": "float64",
+          "description": "Porcentaje de Créditos revolvente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeConNRev",
+          "type": "float64",
+          "description": "Porcentaje de Créditos no revolvente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeHip",
+          "type": "float64",
+          "description": "Porcentaje de Créditos hipotecários",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMoraMedEmp",
+          "type": "float64",
+          "description": "Mora de Créditos en Mediana Empresa",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraPeqEmp",
+          "type": "float64",
+          "description": "Mora de Créditos en Pequeñas Empresas",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMicEmp",
+          "type": "float64",
+          "description": "Mora de Créditos en Micro Empresas",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraConRev",
+          "type": "float64",
+          "description": "Mora de Créditos revolvente",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraConNRev",
+          "type": "float64",
+          "description": "Mora de Créditos no revolvente",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraHip",
+          "type": "float64",
+          "description": "Mora de Créditos hipotecários",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadVeh",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Vehiculares",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadLibDis",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Libre Disponibilidad",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadLinCre",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Líneas de Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadDisEfe",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadComDeu",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadAva",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadSob",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadDes",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadPorLiq",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Créditos por Liquidar (acumulación de deudas)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadPig",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Pignoraticio",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadFac",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Factoring",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadArr",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Arrendamiento",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadLeaBac",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Lease-Back",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadDesPla",
+          "type": "int64",
+          "description": "Cantidad de Entidades Tipo Convenio Descuento por Planilla",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoVeh",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Vehiculares",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoLibDis",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Libre Disponibilidad",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoLinCre",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Líneas de Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoDisEfe",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoComDeu",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoAva",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoSob",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoDes",
+          "type": "object",
+          "description": "Monto de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoPorLiq",
+          "type": "object",
+          "description": "Monto de Entidades Tipo Créditos por Liquidar (acumulación de deudas)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoPig",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Pignoraticio",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoFac",
+          "type": "object",
+          "description": "Monto de Entidades Tipo Factoring",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoArr",
+          "type": "object",
+          "description": "Monto de Entidades Tipo Arrendamiento",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoLeaBac",
+          "type": "object",
+          "description": "Monto de Entidades Tipo Lease-Back",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoDesPla",
+          "type": "float64",
+          "description": "Monto de Entidades Tipo Convenio Descuento por Planilla",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeVeh",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Vehiculares",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeLibDis",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Libre Disponibilidad",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeLinCre",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Líneas de Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeDisEfe",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeComDeu",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeAva",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeSob",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeDes",
+          "type": "object",
+          "description": "Porcentaje de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajePorLiq",
+          "type": "object",
+          "description": "Porcentaje de Entidades Tipo Créditos por Liquidar (acumulación de deudas)",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajePig",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Pignoraticio",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeFac",
+          "type": "object",
+          "description": "Porcentaje de Entidades Tipo Factoring",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeArr",
+          "type": "object",
+          "description": "Porcentaje de Entidades Tipo Arrendamiento",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeLeaBac",
+          "type": "object",
+          "description": "Porcentaje de Entidades Tipo Lease-Back",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeDesPla",
+          "type": "float64",
+          "description": "Porcentaje de Entidades Tipo Convenio Descuento por Planilla",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMoraVeh",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Vehiculares",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraLibDis",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Libre Disponibilidad",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraLinCre",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Líneas de Crédito",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraDisEfe",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraComDeu",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraAva",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraSob",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraDes",
+          "type": "object",
+          "description": "Mora de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraPorLiq",
+          "type": "object",
+          "description": "Mora de Entidades Tipo Créditos por Liquidar (acumulación de deudas)",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraPig",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Pignoraticio",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraFac",
+          "type": "object",
+          "description": "Mora de Entidades Tipo Factoring",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraArr",
+          "type": "object",
+          "description": "Mora de Entidades Tipo Arrendamiento",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraLeaBac",
+          "type": "object",
+          "description": "Mora de Entidades Tipo Lease-Back",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraDesPla",
+          "type": "float64",
+          "description": "Mora de Entidades Tipo Convenio Descuento por Planilla",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadVig",
+          "type": "int64",
+          "description": "Cantidad de Cuentas de Estado Vigente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadRef",
+          "type": "int64",
+          "description": "Cantidad de Cuentas de Estado Refinanciado",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadVen",
+          "type": "int64",
+          "description": "Cantidad de Cuentas de Estado Vencido",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadJud",
+          "type": "int64",
+          "description": "Cantidad de Cuentas de Estado Judicial",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoVig",
+          "type": "float64",
+          "description": "Monto en Cuentas de Estado Vigente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoRef",
+          "type": "float64",
+          "description": "Monto en Cuentas de Estado Refinanciado",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoVen",
+          "type": "float64",
+          "description": "Monto en Cuentas de Estado Vencido",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoJud",
+          "type": "float64",
+          "description": "Monto en Cuentas de Estado Judicial",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeVig",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Vigente",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeRef",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Refinanciado",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeVen",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Vencido",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeJud",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Judicial",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMoraVig",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Vigente",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraRef",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Refinanciado",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraVen",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Vencido",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraJud",
+          "type": "float64",
+          "description": "Porcentaje en Cuentas de Estado Judicial",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadAlDia",
+          "type": "int64",
+          "description": "Cantidad de Cuentas al día",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadM1a30",
+          "type": "int64",
+          "description": "Cantidad de Cuentas con Mora 1 a 30 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadM31a60",
+          "type": "int64",
+          "description": "Cantidad de Cuentas con Mora 31 días a 60 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadM61a90",
+          "type": "int64",
+          "description": "Cantidad de Cuentas con Mora 61 días a 90 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadM91a120",
+          "type": "int64",
+          "description": "Cantidad de Cuentas con Mora 91 días a 120 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadM121a150",
+          "type": "int64",
+          "description": "Cantidad de Cuentas con Mora 121 días a 150 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadM151aMas",
+          "type": "int64",
+          "description": "Cantidad de Cuentas con Mora 151 días a mas",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMontoAlDia",
+          "type": "float64",
+          "description": "Monto de Cuentas al día",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoM1a30",
+          "type": "float64",
+          "description": "Monto de Cuentas con Mora 1 a 30 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMontoM31a60",
+          "type": "float64",
+          "description": "Monto de Cuentas con Mora 31 días a 60 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMontoM61a90",
+          "type": "float64",
+          "description": "Monto de Cuentas con Mora 61 días a 90 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMontoM91a120",
+          "type": "float64",
+          "description": "Monto de Cuentas con Mora 91 días a 120 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMontoM121a150",
+          "type": "float64",
+          "description": "Monto de Cuentas con Mora 121 días a 150 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMontoM151aMas",
+          "type": "float64",
+          "description": "Monto de Cuentas con Mora 151 días a mas",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nPorcentajeAlDia",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas al día",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeM1a30",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas con Mora 1 a 30 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nPorcentajeM31a60",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas con Mora 31 días a 60 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nPorcentajeM61a90",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas con Mora 61 días a 90 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nPorcentajeM91a120",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas con Mora 91 días a 120 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nPorcentajeM121a150",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas con Mora 121 días a 150 días",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nPorcentajeM151aMas",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas con Mora 151 días a mas",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nCantidadMonNac",
+          "type": "int64",
+          "description": "Cantidad de Cuentas en Moneda Nacional",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nCantidadMonExt",
+          "type": "int64",
+          "description": "Cantidad de Cuentas en Moneda Extranjera",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoMonNac",
+          "type": "float64",
+          "description": "Monto de Cuentas en Moneda Nacional",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMontoMonExt",
+          "type": "float64",
+          "description": "Monto de Cuentas en Moneda Extranjera",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeMonNac",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas en Moneda Nacional",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nPorcentajeMonExt",
+          "type": "float64",
+          "description": "Porcentaje de Cuentas en Moneda Extranjera",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMoraMonNac",
+          "type": "float64",
+          "description": "Mora de Cuentas en Moneda Nacional",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMonExt",
+          "type": "float64",
+          "description": "Mora de Cuentas en Moneda Extranjera",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "cClienteAnd",
+          "type": "float64",
+          "description": "Marca de Cliente Los Andes",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cExclusivoAnd",
+          "type": "float64",
+          "description": "Marca de Exclusividad Cliente Los Andes",
+          "sensitive": false,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "nSowAnd",
+          "type": "float64",
+          "description": "Sow Los Andes",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowBcp",
+          "type": "float64",
+          "description": "Sow BCP",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowIbk",
+          "type": "float64",
+          "description": "Sow Interbank",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowBbv",
+          "type": "float64",
+          "description": "Sow BBVA",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowSco",
+          "type": "float64",
+          "description": "Sow Scotiabank",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMib",
+          "type": "float64",
+          "description": "Sow Mi Banco",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowBna",
+          "type": "float64",
+          "description": "Sow Banco de la Nacion",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowCom",
+          "type": "float64",
+          "description": "Sow Comportamos",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowCon",
+          "type": "float64",
+          "description": "Sow Confianza",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowAre",
+          "type": "float64",
+          "description": "Sow Arequipa",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowCus",
+          "type": "float64",
+          "description": "Sow Cusco",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowHua",
+          "type": "float64",
+          "description": "Sow Huancayo",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowPiu",
+          "type": "float64",
+          "description": "Sow Piura",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowBan",
+          "type": "float64",
+          "description": "Sow Banbif",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowFin",
+          "type": "float64",
+          "description": "Sow Financieras",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowCma",
+          "type": "float64",
+          "description": "Sow CMAC",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowCra",
+          "type": "float64",
+          "description": "Sow CRAC",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowEdp",
+          "type": "float64",
+          "description": "Sow EDP",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMoraAnd",
+          "type": "float64",
+          "description": "Mora Los Andes",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraBcp",
+          "type": "float64",
+          "description": "Mora BCP",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraIbk",
+          "type": "float64",
+          "description": "Mora Interbank",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraBbv",
+          "type": "float64",
+          "description": "Mora BBVA",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraSco",
+          "type": "float64",
+          "description": "Mora Scotiabank",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMib",
+          "type": "float64",
+          "description": "Mora Mi Banco",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraBna",
+          "type": "float64",
+          "description": "Mora Banco de la Nacion",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraCom",
+          "type": "float64",
+          "description": "Mora Comportamos",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraCon",
+          "type": "float64",
+          "description": "Mora Confianza",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraAre",
+          "type": "float64",
+          "description": "Mora Arequipa",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraCus",
+          "type": "float64",
+          "description": "Mora Cusco",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraHua",
+          "type": "float64",
+          "description": "Mora Huancayo",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraPiu",
+          "type": "float64",
+          "description": "Mora Piura",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraBan",
+          "type": "float64",
+          "description": "Mora Banbif",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraFin",
+          "type": "float64",
+          "description": "Mora Financieras",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraCma",
+          "type": "float64",
+          "description": "Mora CMAC",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraCra",
+          "type": "float64",
+          "description": "Mora CRAC",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraEdp",
+          "type": "float64",
+          "description": "Mora EDP",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nSowMypeAnd",
+          "type": "float64",
+          "description": "Sow Mype Los Andes",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeBcp",
+          "type": "float64",
+          "description": "Sow Mype BCP",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeIbk",
+          "type": "float64",
+          "description": "Sow Mype Interbank",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeBbv",
+          "type": "float64",
+          "description": "Sow Mype BBVA",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeSco",
+          "type": "float64",
+          "description": "Sow Mype Scotiabank",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeMib",
+          "type": "float64",
+          "description": "Sow Mype Mi Banco",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeBna",
+          "type": "object",
+          "description": "Sow Mype Banco de la Nacion",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeCom",
+          "type": "float64",
+          "description": "Sow Mype Comportamos",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeCon",
+          "type": "float64",
+          "description": "Sow Mype Confianza",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeAre",
+          "type": "float64",
+          "description": "Sow Mype Arequipa",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeCus",
+          "type": "float64",
+          "description": "Sow Mype Cusco",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeHua",
+          "type": "float64",
+          "description": "Sow Mype Huancayo",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypePiu",
+          "type": "float64",
+          "description": "Sow Mype Piura",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeBan",
+          "type": "float64",
+          "description": "Sow Mype Banbif",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeFin",
+          "type": "float64",
+          "description": "Sow Mype Financieras",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeCma",
+          "type": "float64",
+          "description": "Sow Mype CMAC",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeCra",
+          "type": "float64",
+          "description": "Sow Mype CRAC",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSowMypeEdp",
+          "type": "float64",
+          "description": "Sow Mype EDP",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nMoraMypeAnd",
+          "type": "float64",
+          "description": "Mora Mype Los Andes",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeBcp",
+          "type": "float64",
+          "description": "Mora Mype BCP",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeIbk",
+          "type": "float64",
+          "description": "Mora Mype Interbank",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeBbv",
+          "type": "float64",
+          "description": "Mora Mype BBVA",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeSco",
+          "type": "float64",
+          "description": "Mora Mype Scotiabank",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeMib",
+          "type": "float64",
+          "description": "Mora Mype Mi Banco",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeBna",
+          "type": "object",
+          "description": "Mora Mype Banco de la Nacion",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeCom",
+          "type": "float64",
+          "description": "Mora Mype Comportamos",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeCon",
+          "type": "float64",
+          "description": "Mora Mype Confianza",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeAre",
+          "type": "float64",
+          "description": "Mora Mype Arequipa",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeCus",
+          "type": "float64",
+          "description": "Mora Mype Cusco",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeHua",
+          "type": "float64",
+          "description": "Mora Mype Huancayo",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypePiu",
+          "type": "float64",
+          "description": "Mora Mype Piura",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeBan",
+          "type": "float64",
+          "description": "Mora Mype Banbif",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeFin",
+          "type": "float64",
+          "description": "Mora Mype Financieras",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeCma",
+          "type": "float64",
+          "description": "Mora Mype CMAC",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeCra",
+          "type": "float64",
+          "description": "Mora Mype CRAC",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nMoraMypeEdp",
+          "type": "float64",
+          "description": "Mora Mype EDP",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        }
+      ],
+      "relations": [],
+      "grain": "cliente_por_cosecha",
+      "row_level_security": {
+        "column": "idCliente"
+      }
+    },
+    {
+      "name": "desembolso_comportamiento",
+      "description": "Eventos posteriores del crédito (reprogramaciones, condonaciones, cambios).",
+      "columns": [
+        {
+          "name": "idCuentaOrig",
+          "type": "int",
+          "description": "Id cuenta de origen",
+          "sensitive": true,
+          "semantic_tags": []
+        },
+        {
+          "name": "idCuentaVig",
+          "type": "int",
+          "description": "Id cuenta vigente",
+          "sensitive": true,
+          "semantic_tags": []
+        },
+        {
+          "name": "idStock",
+          "type": "bigint",
+          "description": "Id Stock",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nStock",
+          "type": "nvarchar(4000)",
+          "description": "Fecha de stock",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "nMora",
+          "type": "float",
+          "description": "Mora",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nSaldoCap",
+          "type": "float",
+          "description": "Saldo capital",
+          "sensitive": false,
+          "semantic_tags": [
+            "saldo"
+          ]
+        },
+        {
+          "name": "cTipoFecha",
+          "type": "date",
+          "description": "Tipo de Fecha",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "tipo_ope",
+          "type": "varchar(50)",
+          "description": "Tipo operación",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "tipo_ope_repro",
+          "type": "varchar(100)",
+          "description": "Tipo operación reprogramada",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cTipoFecha_repro",
+          "type": "date",
+          "description": "Tipo fecha reprogramada",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "tipo_ope_condonacion",
+          "type": "varchar(11)",
+          "description": "Tipo operación condenación",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cTipoFecha_condonacion",
+          "type": "date",
+          "description": "Tipo de Fecha de condonación",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "monto_condonado",
+          "type": "numeric(18,2)",
+          "description": "Monto condonado",
+          "sensitive": false,
+          "semantic_tags": []
+        }
+      ],
+      "relations": [],
+      "grain": "evento_credito"
+    },
+    {
+      "name": "cierre",
+      "description": "Cierres mensuales del crédito (saldos, mora, provisiones, clasificación).",
+      "columns": [
+        {
+          "name": "idCuenta",
+          "type": "int",
+          "description": "Código único identificador del Crédito",
+          "sensitive": true,
+          "semantic_tags": []
+        },
+        {
+          "name": "dFechaCie",
+          "type": "date",
+          "description": "Fecha de cierre del Crédito",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "nStock",
+          "type": "int",
+          "description": "Fecha de cierre del Crédito en formato yyyyMM",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha"
+          ]
+        },
+        {
+          "name": "idSolicitud",
+          "type": "int",
+          "description": "Código único identificador de la Solicitud del Crédito",
+          "sensitive": true,
+          "semantic_tags": []
+        },
+        {
+          "name": "idCliente",
+          "type": "int",
+          "description": "Código único identificador del Cliente",
+          "sensitive": true,
+          "semantic_tags": [
+            "cliente"
+          ]
+        },
+        {
+          "name": "cProducto",
+          "type": "varchar",
+          "description": "Producto",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cDestino",
+          "type": "varchar",
+          "description": "Destino del Crédito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cTipoCamp",
+          "type": "varchar",
+          "description": "Tipo de Campaña",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cTipoOper",
+          "type": "varchar",
+          "description": "Tipo de Operación",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cModalidadPago",
+          "type": "varchar",
+          "description": "Modalidad de Pago",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "dFechaVenc",
+          "type": "date",
+          "description": "Fecha Vencimiento Última Cuota",
+          "sensitive": false,
+          "semantic_tags": [
+            "fecha",
+            "cuota"
+          ]
+        },
+        {
+          "name": "cRegion",
+          "type": "varchar",
+          "description": "Región",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "cCalificacionInt",
+          "type": "varchar",
+          "description": "Clasificación Interna",
+          "sensitive": false,
+          "semantic_tags": [
+            "clasificacion"
+          ]
+        },
+        {
+          "name": "nSaldoCap",
+          "type": "float",
+          "description": "Saldo capital a la fecha",
+          "sensitive": false,
+          "semantic_tags": [
+            "saldo",
+            "fecha"
+          ]
+        },
+        {
+          "name": "nMora",
+          "type": "int",
+          "description": "dias de atraso",
+          "sensitive": false,
+          "semantic_tags": [
+            "mora"
+          ]
+        },
+        {
+          "name": "nSituacionDeu",
+          "type": "varchar",
+          "description": "Situacion contable del credito",
+          "sensitive": false,
+          "semantic_tags": []
+        },
+        {
+          "name": "nSaldoVen",
+          "type": "float",
+          "description": "Saldo vencido a la fecha",
+          "sensitive": false,
+          "semantic_tags": [
+            "saldo",
+            "fecha"
+          ]
+        },
+        {
+          "name": "nProvision",
+          "type": "float",
+          "description": "Saldo provision a la fecha",
+          "sensitive": false,
+          "semantic_tags": [
+            "saldo",
+            "fecha",
+            "provision"
+          ]
+        }
+      ],
+      "relations": [],
+      "grain": "credito_por_mes",
+      "row_level_security": {
+        "column": "idCliente"
+      }
+    }
+  ]
+}
