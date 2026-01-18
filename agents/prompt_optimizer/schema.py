@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from typing import Any, Dict, List, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional, Union
+import json
+
 from pydantic import BaseModel, Field, model_validator
 
 
@@ -17,13 +19,15 @@ class Metadata(BaseModel):
 class Task(BaseModel):
     agent: AgentName
     action: str = Field(..., min_length=1, description="Verb-only action name (no agent prefix).")
-    input: str = Field(..., min_length=1, description="Business-level input description (no SQL).")
+    input: Union[str, Dict[str, Any]] = Field(..., description="Business-level input (no SQL). Can be str or dict.")
     params: Dict[str, Any] = Field(default_factory=dict)
 
     @model_validator(mode="after")
     def no_sql_in_input(self) -> "Task":
         # Guardrail: tasks should NOT include SQL or explicit table names
-        lowered = (self.input or "").lower()
+        raw = self.input
+        as_text = raw if isinstance(raw, str) else json.dumps(raw, ensure_ascii=False)
+        lowered = (as_text or "").lower()
         forbidden = ["select ", " from ", " join ", " where ", " group by", "insert ", "update ", "delete "]
         if any(tok in lowered for tok in forbidden):
             raise ValueError("Task.input appears to contain SQL, which is forbidden in Prompt Optimizer tasks.")

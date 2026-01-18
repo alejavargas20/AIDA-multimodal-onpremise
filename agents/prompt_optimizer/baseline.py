@@ -37,5 +37,5 @@ def baseline_action_stub(intent: str) -> Dict[str, str]:
     if intent in ("resumen",):
         return {"agent": "nlp", "action": "summarize"}
     if intent in ("procesar_documento",):
-        return {"agent": "image", "action": "extract_text"}
-    return {"agent": "nlp", "action": "answer"}
+        return {"agent": "image", "action": "normalized_text"}
+    return {"agent": "nlp", "action": "reason"}

@@ -28,7 +28,11 @@ Debe devolver **solo JSON**.
 
 ## Artefactos (contrato)
 
-En `agents/prompt_optimizer/artifacts/` se incluye un ejemplo de salida (`prompt_optimizer_schema.json`) y el prompt del planner (`planner_system_prompt.txt`) para alinear el contrato con el equipo sin necesidad de leer el código.
+En `agents/prompt_optimizer/artifacts/`:
+
+- `prompt_optimizer_sample.json` (ejemplo de salida)
+- `planner_system_prompt.txt` (prompt del planner)
+- `optimizer_flow.txt` (flujo interno del módulo)
 
 ## Acciones (contrato actual)
 
@@ -38,8 +42,14 @@ El orquestador/MCP construye el `tool_name` como `<agent>.<action>` (ej.: `data.
 Acciones acordadas:
 
 - data: `fetch_metrics`
-- nlp: `summarize`, `answer`, `ask_clarification`
-- image: `extract_text`
+- nlp: `summarize`, `explain`, `rephrase`, `reason`, `generate`
+- image: `normalized_text`
+
+Nota (alineación con NLP):
+
+- Para tareas NLP, `action` debe ser una de las soportadas por el agente NLP.
+- Para tareas NLP, `input` debe ser un objeto (dict), no un string.
+- El Prompt Optimizer no delega aclaraciones al NLP; si falta información devuelve `status="needs_clarification"` y `tasks=[]`.
 
 ## Estructura del output (extendida, compatible con mínima)
 
@@ -58,14 +68,27 @@ Aunque el módulo devuelve un formato extendido (con `optimized_prompt`, `status
 - `intent_plan.intent` equivale a `intent`
 - `intent_plan.tasks` equivale a `tasks`
 
-Así, cualquier consumidor que solo necesite `{intent, tasks}` puede extraerlos directamente del `intent_plan`.
+Cualquier consumidor que solo necesite `{intent, tasks}` puede extraerlos directamente del `intent_plan`.
 
-## Tests
+## Guardrails
 
-Tests mínimos en:
+- Input demasiado corto → `status="needs_clarification"` y `tasks=[]`
+- SQL detectado (select/from/join/...) → `status="needs_clarification"` y `tasks=[]`
+  (se pide reformulación a objetivo de negocio, sin SQL)
 
-- `agents/prompt_optimizer/tests/`
+## LLM Planner (local, Ollama)
 
-Ejecutar:
+El Prompt Optimizer puede usar un LLM local para generar planes más precisos.
 
-- `pytest -q`
+### Variables de entorno
+
+- `USE_LLM_PLANNER`: `true|false` (default: `true`)
+- `LLM_BASE_URL`: base URL del servidor (recomendado: `http://localhost:11434`)
+- `LLM_MODEL`: nombre del modelo (ej.: `llama3.2:3b`)
+
+### Verificar que Ollama está activo
+
+PowerShell:
+
+```powershell
+(Invoke-WebRequest -UseBasicParsing http://localhost:11434/api/tags).Content
