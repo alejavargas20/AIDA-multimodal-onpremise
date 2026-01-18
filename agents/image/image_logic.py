@@ -1,64 +1,55 @@
 from __future__ import annotations
 from typing import Any, Dict
 
-from .schemas.payloads import AgentPayload, ExtractTextConfig
-from .loaders.image_loader import load_image_from_path
-from .loaders.pdf_loader import pdf_to_images_from_path
-from .engines.ocr_engine import OcrEngine
-from .engines.object_engine import ObjectEngine
-from .utils.text import normalize_text
-from .models.model import LayoutLMv3Extractor
+from schemas.payloads import AgentPayload, ExtractTextConfig
+from loaders.image_loader import load_image_from_path
+from loaders.pdf_loader import pdf_to_images_from_path
+from engines.ocr_engine import OcrEngine
+from utils.text import normalize_text
+#from models.model import LayoutLMv3Extractor
 
+import os
+import pytesseract
 
 def process(payload: Dict[str, Any]) -> Dict[str, Any]:
     try:
-        req = AgentPayload.model_validate(payload)
-        cfg_dict = req.config or {}
-        cfg = ExtractTextConfig.model_validate(cfg_dict) if req.action == "extract_text" else None
+        action = payload.get("action")
+        file_path = payload.get("file_path")
+        config = payload.get("config") or {}
 
-        if req.action == "extract_text":
-            # 1) cargar páginas
-            if req.file_path.lower().endswith(".pdf"):
-                pages = pdf_to_images_from_path(req.file_path, max_pages=cfg.max_pages, dpi=cfg.dpi)
-                file_type = "pdf"
-            else:
-                pages = [load_image_from_path(req.file_path)]
-                file_type = "image"
+        if action != "extract_text":
+            return {"status": "error", "error": "Solo se soporta action='extract_text'."}
+        if not file_path:
+            return {"status": "error", "error": "Falta file_path."}
+        if not os.path.exists(file_path):
+            return {"status": "error", "error": f"No existe el archivo: {file_path}"}
 
-            # 2) OCR
-            ocr = OcrEngine()
-            page_texts = []
-            for img in pages:
-                raw = ocr.extract_text_from_image(img, language=cfg.language) if cfg.use_ocr else ""
-                page_texts.append(normalize_text(raw))
+        language = config.get("language", "es")
+        max_pages = int(config.get("max_pages", 10))
+        dpi = int(config.get("dpi", 200))
 
-            normal_text = "\n".join([t for t in page_texts if t]).strip()
+        lang = "spa" if language in ("es", "spa") else language
+        file_type = "pdf" if file_path.lower().endswith(".pdf") else "image"
 
-            result: Dict[str, Any] = {
-                "status": "success",
-                "normal_text": normal_text,
-                "metadata": {
-                    "page_count": len(pages),
-                    "file_type": file_type,
-                    "used_ocr": cfg.use_ocr,
-                    "language": cfg.language,
-                },
+        images = pdf_to_images_from_path(file_path, max_pages=max_pages, dpi=dpi) if file_type == "pdf" else [load_image_from_path(file_path)]
+
+        page_texts = []
+        for img in images:
+            text = pytesseract.image_to_string(img, lang=lang)
+            page_texts.append(text)  # 👈 bruto, sin limpiar
+
+        raw_text = "\n\n".join(page_texts)
+
+        return {
+            "status": "success",
+            "normal_text": raw_text,
+            "metadata": {
+                "page_count": len(images),
+                "file_type": file_type,
+                "language": language,
+                "dpi": dpi
             }
-
-            # 3) LayoutLMv3 opcional (fase 2)
-            if cfg.use_layoutlmv3 and normal_text:
-                ie = LayoutLMv3Extractor(model_name=cfg.layoutlmv3_model)
-                result["structured"] = ie.extract(pages[0], normal_text)  # ejemplo simple
-
-            return result
-
-        if req.action == "detect_objects":
-            # placeholder
-            img = load_image_from_path(req.file_path)
-            objects = ObjectEngine().detect(img)
-            return {"status": "success", "objects": objects, "metadata": {"file_type": "image"}}
-
-        return {"status": "error", "error": f"Acción no soportada: {req.action}"}
+        }
 
     except Exception as e:
         return {"status": "error", "error": str(e)}
