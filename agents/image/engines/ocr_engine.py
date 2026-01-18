@@ -1,14 +1,13 @@
-from typing import Any, Optional
+from typing import Optional
+from PIL import Image
 import pytesseract
 
 class OcrEngine:
     def __init__(self, tesseract_cmd: Optional[str] = None):
-        # Si no está en PATH, pásalo:
-        # r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         if tesseract_cmd:
             pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
 
-    def extract_text_from_image(self, image_obj: Any, language_hint: Optional[str] = None) -> str:
-        lang = "spa" if (language_hint in (None, "es", "spa")) else language_hint
+    def extract_text_from_image(self, img: Image.Image, language: str = "es") -> str:
+        lang = "spa" if language in ("es", "spa") else language
         config = "--oem 3 --psm 6"
-        return pytesseract.image_to_string(image_obj, lang=lang, config=config)
+        return pytesseract.image_to_string(img, lang=lang, config=config)

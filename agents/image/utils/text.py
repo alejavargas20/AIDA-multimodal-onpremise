@@ -8,3 +8,4 @@ def normalize_text(text: str) -> str:
     text = _whitespace_re.sub(" ", text)
     text = _newlines_re.sub("\n\n", text)
     return text.strip()
+

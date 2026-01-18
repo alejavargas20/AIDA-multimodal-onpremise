@@ -1,8 +1,8 @@
-from typing import Any
+from PIL import Image
+import io
 
-def load_image_from_path(path: str) -> Any:
-    # Placeholder: aquí meterás PIL/OpenCV luego
-    return {"_type": "image", "path": path}
+def load_image_from_path(path: str) -> Image.Image:
+    return Image.open(path).convert("RGB")
 
-def load_image_from_bytes(b: bytes) -> Any:
-    return {"_type": "image", "bytes": True, "size": len(b)}
+def load_image_from_bytes(b: bytes) -> Image.Image:
+    return Image.open(io.BytesIO(b)).convert("RGB")

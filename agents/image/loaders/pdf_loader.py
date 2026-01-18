@@ -1,14 +1,13 @@
-from typing import List, Any
-import fitz  # pymupdf
+from typing import List
+import pypdfium2 as pdfium
 from PIL import Image
-import io
 
-def pdf_to_images_from_path(path: str, max_pages: int) -> List[Any]:
-    doc = fitz.open(path)
-    images = []
-    for i in range(min(len(doc), max_pages)):
-        page = doc.load_page(i)
-        pix = page.get_pixmap(dpi=200)
-        img = Image.open(io.BytesIO(pix.tobytes("png"))).convert("RGB")
-        images.append(img)
+def pdf_to_images_from_path(path: str, max_pages: int = 10, dpi: int = 200) -> List[Image.Image]:
+    pdf = pdfium.PdfDocument(path)
+    n_pages = min(len(pdf), max_pages)
+    images: List[Image.Image] = []
+    for i in range(n_pages):
+        page = pdf[i]
+        bitmap = page.render(scale=dpi / 72)
+        images.append(bitmap.to_pil().convert("RGB"))
     return images
