@@ -5,7 +5,7 @@ from schemas.payloads import AgentPayload, ExtractTextConfig
 from loaders.image_loader import load_image_from_path
 from loaders.pdf_loader import pdf_to_images_from_path
 from engines.ocr_engine import OcrEngine
-from utils.text import normalize_text
+from utils.text import postprocess_ocr_text, normalize_text
 #from models.model import LayoutLMv3Extractor
 
 import os
@@ -26,7 +26,7 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
 
         language = config.get("language", "es")
         max_pages = int(config.get("max_pages", 10))
-        dpi = int(config.get("dpi", 200))
+        dpi = int(config.get("dpi", 300))
 
         lang = "spa" if language in ("es", "spa") else language
         file_type = "pdf" if file_path.lower().endswith(".pdf") else "image"
@@ -35,8 +35,14 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
 
         page_texts = []
         for img in images:
-            text = pytesseract.image_to_string(img, lang=lang)
-            page_texts.append(text)  # 👈 bruto, sin limpiar
+            if file_type == "pdf":
+                raw = pytesseract.image_to_string(img, lang=lang)
+                cleaned = normalize_text(raw)
+                page_texts.append(cleaned)
+            else:
+                raw = pytesseract.image_to_string(img, lang=lang)
+                cleaned = postprocess_ocr_text(raw)
+                page_texts.append(cleaned)
 
         raw_text = "\n\n".join(page_texts)
 
