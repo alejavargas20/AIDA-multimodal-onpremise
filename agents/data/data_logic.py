@@ -1,0 +1,34 @@
+from typing import TypedDict, List, Literal, Dict, Any, Optional
+from agents.data.prog_logic.catalog import Catalog
+from agents.data.prog_logic.create_sql import create_sql
+from agents.data.executors.sql_server_executor import execute_sql
+from agents.data.LLM_logic.main_LLM import create_sql_LLM
+
+
+def process(payload: Dict[str, Any]) -> Dict[str, Any]:
+    """
+    payload esperado (del orquestador):
+      - normalized_text (str)
+      - optimized_prompt (str)
+      - intent_json (dict) opcional
+    """
+
+    print("Ha entrado bien en el agente de data")
+    CATALOG_PATH = "agents/data/catalog.json"
+    catalog = Catalog.from_json(CATALOG_PATH)
+    print("Catalogo creado correctamente")
+
+    try:
+        # Logica Programada
+        sql = create_sql(payload, catalog)
+    except:
+        # LLM
+        sql, mode = create_sql_LLM(payload, catalog)
+
+    execution_result = execute_sql(sql, mode=mode)
+
+    return {
+        "status": "success",
+        "sql": sql,
+        "execution_result": execution_result,
+    }
