@@ -1,0 +1,21 @@
+{
+  "type": "scalar",
+  "data": 80450340.27,
+  "metadata": {
+    "timestamp": "2026-02-11T20:22:22.689006",
+    "sql_executed": "DECLARE @UltimoMes INT = (SELECT MAX(nCosecha) FROM cartera.desembolso);\nSELECT SUM(nMonto) AS Resultado\nFROM cartera.desembolso\nWHERE nCosecha = @UltimoMes",
+    "plan": {
+      "base_table": "cartera.desembolso",
+      "result_shape": "scalar",
+      "preamble_sql": "DECLARE @UltimoMes INT = (SELECT MAX(nCosecha) FROM cartera.desembolso);",
+      "from_sql": "FROM cartera.desembolso",
+      "where_sql": "WHERE nCosecha = @UltimoMes",
+      "group_by_fields": [],
+      "allowed_tables": [
+        "cartera.desembolso"
+      ],
+      "allowed_fields": {},
+      "notes": "time_field=nCosecha, client_scope=False, period=ultimo_mes, id_cliente=none"
+    }
+  }
+}

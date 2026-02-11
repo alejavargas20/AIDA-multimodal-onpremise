@@ -1,0 +1,69 @@
+{
+  "optimized_prompt": "Muéstrate el monto promedio desembolsado por mes, de los últimos 6 meses",
+  "intent_plan": {
+    "intent": "analitica_desembolsos",
+    "confidence": 0.9,
+    "tasks": [
+      {
+        "agent": "data",
+        "action": "fetch_metrics",
+        "input": {
+          "metric": {
+            "concept": "monto_desembolsado",
+            "description": null,
+            "aggregation": {
+              "type": "avg",
+              "field": "monto",
+              "notes": null
+            }
+          },
+          "entity": {
+            "name": "credito",
+            "grain": "idCuenta"
+          },
+          "data_sources": [
+            {
+              "table": "desembolso",
+              "role": "primary",
+              "reason": null
+            }
+          ],
+          "time": {
+            "description": null,
+            "period": {
+              "type": "relative",
+              "value": "ultimo_6_meses"
+            },
+            "granularity": "mensual"
+          },
+          "filters": [],
+          "comparison": {
+            "type": "none",
+            "enabled": false
+          },
+          "scope": {
+            "type": "analista",
+            "id": null
+          },
+          "privacy": {
+            "allow_sensitive": false,
+            "sensitive_fields_detected": [
+              "idCuenta"
+            ]
+          },
+          "confidence": 1.0,
+          "ambiguities": []
+        },
+        "params": {}
+      }
+    ],
+    "metadata": {
+      "language": "es",
+      "input_source": "unknown"
+    },
+    "conductual_state": null,
+    "conductual_notes": null
+  },
+  "status": "ok",
+  "errors": []
+}

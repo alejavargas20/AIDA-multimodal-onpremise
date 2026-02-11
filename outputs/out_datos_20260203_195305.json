@@ -1,0 +1,6 @@
+{
+  "result": 65789212.7899999,
+  "sql_generated": "DECLARE @ultimo_mes INT = (SELECT MAX(nCosecha) FROM cartera.desembolso);\nSELECT SUM(nMonto) AS MontoTotalDesembolsado\nFROM cartera.desembolso\nWHERE nCosecha = @ultimo_mes;",
+  "sql_executed": "DECLARE @ultimo_mes INT = (SELECT MAX(nCosecha) FROM cartera.desembolso);\nSELECT SUM(nMonto) AS MontoTotalDesembolsado\nFROM cartera.desembolso\nWHERE nCosecha = @ultimo_mes;",
+  "timestamp": "2026-02-03T19:53:05.089981"
+}

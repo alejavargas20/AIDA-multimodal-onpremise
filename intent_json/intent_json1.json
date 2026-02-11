@@ -1,0 +1,77 @@
+{
+  "optimized_prompt": "¿Cuál fue el monto total desembolsado en el último mes?",
+  "intent_plan": {
+    "intent": "analitica_desembolsos",
+    "confidence": 0.9,
+    "tasks": [
+      {
+        "agent": "data",
+        "action": "fetch_metrics",
+        "input": {
+          "metric": {
+            "concept": "monto_desembolsado",
+            "description": null,
+            "aggregation": {
+              "type": "suma",
+              "field": null,
+              "numerator": null,
+              "denominator": null,
+              "notes": null
+            }
+          },
+          "entity": {
+            "name": "credito",
+            "grain": "idSolicitud"
+          },
+          "data_sources": [
+            {
+              "table": "desembolso",
+              "role": "primary",
+              "join_key": null,
+              "reason": null
+            }
+          ],
+          "time": {
+            "description": null,
+            "period": {
+              "type": "relative",
+              "value": "ultimo_mes"
+            },
+            "granularity": null
+          },
+          "filters": [
+            {
+              "field": "fecha",
+              "operator": ">",
+              "value": "now() - 1 month",
+              "table": "desembolso"
+            }
+          ],
+          "comparison": {
+            "type": "none",
+            "enabled": false
+          },
+          "scope": {
+            "type": "analista",
+            "id": null
+          },
+          "privacy": {
+            "allow_sensitive": false,
+            "sensitive_fields_detected": []
+          },
+          "confidence": 1,
+          "ambiguities": []
+        },
+        "params": {}
+      }
+    ],
+    "metadata": {
+      "language": "unknown",
+      "input_source": "unknown"
+    },
+    "conductual_state": null,
+    "conductual_notes": null
+  },
+  "status": "ok",
+  "errors": []
+}
