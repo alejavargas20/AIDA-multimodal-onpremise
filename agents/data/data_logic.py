@@ -19,11 +19,15 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
     print("Catalogo creado correctamente")
 
     try:
+        print("Entra por Logica programada")
         # Logica Programada
         sql = create_sql(payload, catalog)
     except:
         # LLM
+        print("Entra por LLM")
         sql, mode = create_sql_LLM(payload, catalog)
+
+    print(sql)
 
     execution_result = execute_sql(sql, mode=mode)
 

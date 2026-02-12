@@ -93,8 +93,8 @@ def _pick_base_table(prompt_lower: str) -> str:
     return "cartera.desembolso"
 
 
-def plan_query(intent_json_str: str, id_cliente: Optional[int] = None) -> QueryPlan:
-    intent = json.loads(intent_json_str)
+def plan_query(intent: dict, id_cliente: Optional[int] = None) -> QueryPlan:
+
     prompt = intent.get("optimized_prompt", "") or ""
     prompt_lower = prompt.lower()
 

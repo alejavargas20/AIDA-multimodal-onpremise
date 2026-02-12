@@ -75,7 +75,7 @@ def prompt_optimize(payload: dict) -> dict:
     """
     # Llama a la función real del agente
     resultado = optimize_prompt(payload)
-    print(resultado)
+    print("Ha acabado bien el prompt optimizer")
     return resultado
 
 

@@ -106,14 +106,13 @@ ORDER BY nCosecha DESC
     return f"{common_rules}\n\n{examples}"
 
 
-def build_sql_prompt(intent_json_str: str, plan: QueryPlan) -> str:
+def build_sql_prompt(intent: str, plan: QueryPlan) -> str:
     """
     Prompt optimizado:
     - Plan determinista manda FROM/JOIN/WHERE.
     - Ejemplos dinámicos según result_shape.
     - LLM solo debe completar SELECT (+ GROUP BY/ORDER BY si corresponde).
     """
-    intent = json.loads(intent_json_str)
     question = intent.get("optimized_prompt", "no disponible")
 
     # Campos útiles del plan
