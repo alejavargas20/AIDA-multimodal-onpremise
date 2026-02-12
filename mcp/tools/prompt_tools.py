@@ -13,53 +13,84 @@ def optimize_prompt(payload: dict) -> dict:
 
     # El JSON de tareas para el Orquestador
     mock_intent_json = {
-        "optimized_prompt": "Muéstrate el monto promedio desembolsado por mes, de los últimos 6 meses",
-        "intent_plan": {
-            "intent": "analitica_desembolsos",
-            "confidence": 0.9,
-            "tasks": [
-                {
-                    "agent": "data",
-                    "action": "fetch_metrics",
-                    "input": {
-                        "metric": {
-                            "concept": "monto_desembolsado",
-                            "description": None,
-                            "aggregation": {
-                                "type": "avg",
-                                "field": "monto",
-                                "notes": None,
-                            },
-                        },
-                        "entity": {"name": "credito", "grain": "idCuenta"},
-                        "data_sources": [
-                            {"table": "desembolso", "role": "primary", "reason": None}
-                        ],
-                        "time": {
-                            "description": None,
-                            "period": {"type": "relative", "value": "ultimo_6_meses"},
-                            "granularity": "mensual",
-                        },
-                        "filters": [],
-                        "comparison": {"type": "none", "enabled": False},
-                        "scope": {"type": "analista", "id": None},
-                        "privacy": {
-                            "allow_sensitive": False,
-                            "sensitive_fields_detected": ["idCuenta"],
-                        },
-                        "confidence": 1.0,
-                        "ambiguities": [],
-                    },
-                    "params": {},
-                }
-            ],
-            "metadata": {"language": "es", "input_source": "unknown"},
-            "conductual_state": None,
-            "conductual_notes": None,
+  "optimized_prompt": "Muéstrate el promedio de cuentas con mora mayor a 30 días por mes, de los últimos 6 meses.",
+  "intent_plan": {
+    "intent": "analitica_cartera",
+    "confidence": 0.9,
+    "tasks": [
+      {
+        "agent": "data",
+        "action": "fetch_metrics",
+        "input": {
+          "metric": {
+            "concept": "media",
+            "description": None,
+            "aggregation": {
+              "type": "avg",
+              "field": None,
+              "numerator": None,
+              "denominator": None,
+              "notes": "Promedio de cuentas con mora mayor a 30 días por mes"
+            }
+          },
+          "entity": {
+            "name": "cosecha_sal",
+            "grain": "idCliente+nPeriodo"
+          },
+          "data_sources": [
+            {
+              "table": "cosecha_sal",
+              "role": "primary"
+            }
+          ],
+          "time": {
+            "description": None,
+            "period": {
+              "type": "relative",
+              "value": "ultimo_six_months"
+            },
+            "granularity": "mensual"
+          },
+          "filters": [
+            {
+              "field": "mora",
+              "operator": ">",
+              "value": "30",
+              "table": "cosecha_sal"
+            }
+          ],
+          "comparison": {
+            "type": "none",
+            "enabled": False
+          },
+          "scope": {
+            "type": "analista",
+            "id": None
+          },
+          "privacy": {
+            "allow_sensitive": False,
+            "sensitive_fields_detected": []
+          },
+          "confidence": 0.8,
+          "ambiguities": [
+            "metric"
+          ]
         },
-        "status": "ok",
-        "errors": [],
-    }
+        "params": {}
+      }
+    ],
+    "metadata": {
+      "language": "es",
+      "input_source": "unknown"
+    },
+    "conductual_state": None,
+    "conductual_notes": None
+  },
+  "status": "ok",
+  "errors": []
+}
+
+                                                                                                                                                                                            
 
     print(mock_intent_json)
 
