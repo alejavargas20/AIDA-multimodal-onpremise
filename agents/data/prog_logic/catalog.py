@@ -15,6 +15,7 @@ class Column:
 @dataclass
 class Table:
     name: str
+    schema: str
     fields: Dict[str, Column]  # field_name -> Column
     measures_by_sem: Dict[str, Column]  # semantic -> Column
     times_by_sem: Dict[str, Column]  # semantic -> Column
@@ -35,6 +36,7 @@ class Catalog:
         tables: Dict[str, Table] = {}
         for t in raw.get("tables_catalog", []):
             name = t["name"]
+            schema = t["schema"]
 
             fields: Dict[str, Column] = {}
             for fdef in t.get("field", []):
@@ -67,6 +69,7 @@ class Catalog:
             rls = (t.get("row_level_security") or {}).get("field")
             tables[name] = Table(
                 name=name,
+                schema=schema,
                 fields=fields,
                 measures_by_sem=measures_by_sem,
                 times_by_sem=times_by_sem,

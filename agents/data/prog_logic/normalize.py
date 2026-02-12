@@ -29,6 +29,7 @@ PERIOD_MAP = {
 
 def normalize_plan(plan: Dict[str, Any]) -> Dict[str, Any]:
     """Normalize plan to stable internal keys."""
+    print("Entra al normalize plan")
     p = dict(plan)
 
     metric = dict(p.get("metric") or {})

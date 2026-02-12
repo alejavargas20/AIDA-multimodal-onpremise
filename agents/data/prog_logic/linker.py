@@ -4,14 +4,7 @@ from agents.data.prog_logic.aggregations import validate_aggregation_key
 from dataclasses import dataclass
 
 
-CONCEPT_TO_MEASURE_SEM = {
-    "monto_desembolsado": "monto_credito",
-}
-
-DEFAULT_TIME_SEM_BY_TABLE = {
-    "desembolso": "fecha_desembolso",
-    "cierre": "fecha_cierre",
-}
+DEFAULT_TIME_SEM_BY_TABLE = {"desembolso": "fecha_desembolso", "cierre": "fecha_cierre"}
 
 
 @dataclass(frozen=True)
@@ -27,6 +20,7 @@ class LinkedSpec:
 
 
 def link_plan(plan: Dict[str, Any], catalog: Catalog) -> LinkedSpec:
+    print("Entra al link plan")
     privacy = plan.get("privacy") or {}
     allow_sensitive = bool(privacy.get("allow_sensitive", False))
 
@@ -36,12 +30,12 @@ def link_plan(plan: Dict[str, Any], catalog: Catalog) -> LinkedSpec:
         raise ValueError("No hay data_sources.primary")
     table_name = primary["table"]
     t = catalog.table(table_name)
-    schema = next(
-        table["schema"]
-        for table in catalog["tables_catalog"]
-        if table["name"] == table_name
-    )
-    table_name = f"{schema}.{table_name}"
+    schema = getattr(t, "schema", None)
+    if not schema:
+        raise ValueError(f"No se encontró schema para la tabla {table_name}")
+
+    table_name = f"{table_name}"
+    print("Tabla completa:", table_name)
 
     agg_key = (plan.get("metric") or {}).get("aggregation", {}).get("key")
     if not agg_key:
@@ -49,7 +43,7 @@ def link_plan(plan: Dict[str, Any], catalog: Catalog) -> LinkedSpec:
     validate_aggregation_key(agg_key)
 
     concept = ((plan.get("metric") or {}).get("concept") or "").strip().lower()
-    measure_sem = CONCEPT_TO_MEASURE_SEM.get(concept)
+    measure_sem = concept
     if not measure_sem:
         raise ValueError(f"No hay mapping determinista para concept '{concept}'")
     metric_col = t.measures_by_sem.get(measure_sem)
@@ -98,7 +92,7 @@ def link_plan(plan: Dict[str, Any], catalog: Catalog) -> LinkedSpec:
         where.append(f"{table_name}.{col} {op} {val_sql}")
 
     return LinkedSpec(
-        table=table_name,
+        table=f"{schema}.{table_name}",
         agg_key=agg_key,
         metric_column=metric_col.name,
         metric_type=metric_col.col_type,

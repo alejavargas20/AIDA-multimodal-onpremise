@@ -22,9 +22,10 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
         print("Entra por Logica programada")
         # Logica Programada
         sql = create_sql(payload, catalog)
-    except:
+    except Exception as e:
+        print(type(e).__name__, ":", e)
         # LLM
-        print("Entra por LLM")
+        print("\nEntra por LLM")
         sql, mode = create_sql_LLM(payload, catalog)
 
     print(sql)

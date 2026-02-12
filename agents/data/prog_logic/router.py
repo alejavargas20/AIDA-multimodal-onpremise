@@ -82,6 +82,7 @@ _TEMPLATES: List[Template] = [
 
 
 def choose_template(plan: Dict[str, Any], spec: LinkedSpec) -> Template:
+    print("Entra al choose template")
     for t in _TEMPLATES:
         if t.matches(plan, spec):
             return t
