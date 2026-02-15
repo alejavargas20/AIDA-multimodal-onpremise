@@ -32,7 +32,14 @@ if __name__ == "__main__":
         session_id="abc",
         input_type="text",
         content="¿Cuántos créditos se desembolsaron en los últimos 30 días?",
-        metadata={},
+        metadata={
+            "language": "es",
+            "timestamp": "2026-02-14T01:15:30.775Z",
+            "user_role": "cliente",
+            "client_id": 3149,
+            "encoding": "plain",
+            "user_query": "Muéstrate el monto promedio desembolsado por mes, de los últimos 6 meses.",
+        },
         user_profile="no_tecnico",
     )
 

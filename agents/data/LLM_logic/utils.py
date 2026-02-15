@@ -2,35 +2,19 @@ from typing import Any, Dict, Tuple
 import json
 
 
-def _extract_id_cliente(
-    intent_json_str: str, payload_params: Dict[str, Any]
-) -> int | None:
+def _extract_id_cliente(payload: Dict[str, Any]) -> int | None:
     """
     Prioridad:
     1) payload.params["IdCliente"]
     2) intent_json.intent_plan.tasks[0].input.scope.id
     3) intent_json.params.IdCliente   (si decides agregarlo al intent_json.json)
     """
-    try:
-        if payload_params and payload_params.get("IdCliente") is not None:
-            return int(payload_params["IdCliente"])
+    id_cliente = None
+    user_role = payload.get("user_role")
+    if user_role == "cliente":
+        id_cliente = payload.get("client_id")
 
-        intent = json.loads(intent_json_str)
-
-        tasks = intent.get("intent_plan", {}).get("tasks") or []
-        if tasks:
-            inp = tasks[0].get("input", {}) or {}
-            scope = inp.get("scope", {}) or {}
-            if scope.get("id") is not None:
-                return int(scope["id"])
-
-        intent_params = intent.get("params", {}) or {}
-        if intent_params.get("IdCliente") is not None:
-            return int(intent_params["IdCliente"])
-
-        return None
-    except Exception:
-        return None
+    return id_cliente
 
 
 def yyyymm_to_date_expr(yyyymm_field: str) -> str:

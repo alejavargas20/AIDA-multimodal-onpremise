@@ -4,12 +4,9 @@ from agents.data.LLM_logic.prompts.sql_prompt_builder import build_sql_prompt
 from agents.data.LLM_logic.engines.ollama_engine import call_ollama
 
 
-def create_sql_LLM(intent_json, catalog):
+def create_sql_LLM(intent_json, catalog, id_cliente):
 
-    # IdCliente (si aplica)
-    print("Extracción de clientes")
     params = intent_json.get("params", {}) or {}
-    id_cliente = _extract_id_cliente(intent_json, params)
 
     # 1) Plan determinista (incluye preamble_sql: DECLARE/CTE)
     print("Plan Query")

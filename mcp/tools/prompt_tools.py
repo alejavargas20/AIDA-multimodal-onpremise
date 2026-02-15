@@ -53,7 +53,6 @@ def optimize_prompt(payload: dict) -> dict:
                     "params": {},
                 }
             ],
-            "metadata": {"language": "es", "input_source": "unknown"},
             "conductual_state": None,
             "conductual_notes": None,
         },
