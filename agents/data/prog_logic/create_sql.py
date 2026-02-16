@@ -5,20 +5,24 @@ from agents.data.prog_logic.linker import link_plan
 from agents.data.prog_logic.router import choose_template
 
 
-def create_sql(payload: Dict[str, Any], catalog: Catalog) -> Tuple[str, Dict[str, Any]]:
+def create_sql(
+    payload: Dict[str, Any], catalog: Catalog, id_cliente=str
+) -> Tuple[str, Dict[str, Any]]:
 
     plan_norm = normalize_plan(payload)
     spec = link_plan(plan_norm, catalog)
     template = choose_template(plan_norm, spec)
     print("\n")
-    print(plan_norm)
-    print(template)
-    print(spec)
     sql = template.render(plan_norm, spec)
+
+    if id_cliente is not None:
+        sql = sql.replace(
+            "WHERE", f"WHERE {spec.table}.idCliente = '{id_cliente}' AND", 1
+        )
+
     print(
         """\nRESULTADO LOGICA PROGRAMADA\n============================================================\n"""
     )
-    print(sql)
 
     # meta = {
     #     "template": template.name,

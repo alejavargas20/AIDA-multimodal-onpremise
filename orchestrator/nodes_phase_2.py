@@ -81,6 +81,6 @@ def phase2_planner(state: OrchestratorState) -> OrchestratorState:
         )
 
     state["plan"] = plan
-    print(state["plan"])
+    print(state)
 
     return state

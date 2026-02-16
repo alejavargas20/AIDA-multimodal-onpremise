@@ -5,6 +5,7 @@ from orchestrator.mcp_client import call_mcp
 
 def execute_plan(state: OrchestratorState) -> OrchestratorState:
     print("\nEXECUTE PLAN")
+    metadata = state.get("metadata")
     state.setdefault("errors", [])
     plan = state.get("plan", [])
     results = []
@@ -28,16 +29,9 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
             continue
 
         # Construimos payload para MCP (incluye action + contexto)
-        payload = {
-            **inp,
-            "action": action,
-            "context": {
-                "user_id": state.get("user_id"),
-                "session_id": state.get("session_id"),
-                "text": base_text,
-                "intent": state.get("intent"),
-            },
-        }
+
+        payload = {**inp, "metadata": metadata}
+        print(payload)
 
         try:
             print(tool_name)

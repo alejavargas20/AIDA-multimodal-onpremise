@@ -47,15 +47,13 @@ def _allowed_cols_from_catalog(catalog: Any, base_table: str) -> Set[str]:
     return set(catalog_idx.get(key) or set())
 
 
-def create_sql_LLM(payload: Dict[str, Any], catalog) -> Tuple[str, str]:
+def create_sql_LLM(payload: Dict[str, Any], catalog, id_cliente) -> Tuple[str, str]:
     print("[LLM] enter create_sql_LLM", flush=True)
 
     norm = normalize_for_llm(payload)
     intent = norm["raw"]
     params = norm["params"]
     question = norm["question"]
-
-    id_cliente = _extract_id_cliente(intent, params)
 
     plan = plan_query(norm, id_cliente=id_cliente)
     base_table = plan.get("base_table") or ""

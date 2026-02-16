@@ -3,6 +3,7 @@ from agents.data.prog_logic.catalog import Catalog
 from agents.data.prog_logic.create_sql import create_sql
 from agents.data.executors.sql_server_executor import execute_sql
 from agents.data.LLM_logic.main_LLM import create_sql_LLM
+from agents.data.LLM_logic.utils import _extract_id_cliente
 
 def _is_empty(result: Any) -> bool:
     try:
@@ -56,13 +57,21 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
     catalog = Catalog.from_json(CATALOG_PATH)
     print("Catalogo creado correctamente")
 
+
     # modo por defecto para que siempre exista
     mode = "scalar"
+
+    # IdCliente (si aplica)
+    print("Extracción de clientes")
+    params = payload.get("metadata", {}) or {}
+    id_cliente = _extract_id_cliente(params)
+
 
     try:
         print("Entra por Logica programada")
         # Logica Programada
-        sql = create_sql(payload, catalog)
+
+        sql = create_sql(payload, catalog, id_cliente)
         # ejecuta aquí para poder evaluar si vino vacío
         mode = _guess_mode(sql, default="scalar")
         execution_result = execute_sql(sql, mode=mode)
@@ -71,23 +80,25 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
         # si no hay resultados, fallback a LLM + re-ejecución
         if _is_empty(execution_result):
             print("Sin resultados en ejecución con lógica programada. Entra por LLM")
-            sql, mode = create_sql_LLM(payload, catalog)
+            sql, mode = create_sql_LLM(payload, catalog, id_cliente)
             mode = _guess_mode(sql, default="scalar")
             print("\n[LLM] Voy a ejecutar SQL:")
             execution_result = execute_sql(sql, mode=mode)
             print("\n[LLM] SQL: "+sql)
 
+
     except Exception as e:
         print(type(e).__name__, ":", e)
         # LLM
         print("\nEntra por LLM")
-        sql, mode = create_sql_LLM(payload, catalog)
+        sql, mode = create_sql_LLM(payload, catalog, id_cliente)
         mode = _guess_mode(sql, default="scalar")
         # ejecución cuando entra por LLM 
         execution_result = execute_sql(sql, mode=mode)
         print("\n[LLM] SQL: "+sql)
         
     print(execution_result)
+
 
     return {
         "status": "success",
