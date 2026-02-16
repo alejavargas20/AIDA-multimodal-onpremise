@@ -1,0 +1,27 @@
+__pycache__/
+*.pyc
+.env
+.env.*
+venv/
+env/
+.idea/
+.vscode/
+*.sqlite3
+data/
+logs/
+.DS_Store
+
+
+temp_uploads/
+
+
+# NLP API local artifacts
+services/nlp_api/.env
+services/nlp_api/.venv/
+services/nlp_api/.pytest_cache/
+services/nlp_api/data/chroma/
+services/nlp_api/data/raw/
+models/*.gguf
+prueba.m4a
+test_audio.py
+test_sst.py

@@ -1,0 +1,89 @@
+PROMPT OPTIMIZER – FLOW INTERNO (AIDA)
+
+1. Recepción del input (MCP → Prompt Optimizer)
+El Prompt Optimizer recibe un payload estructurado desde el MCP:
+- user_text (texto del usuario)
+- history (opcional)
+- metadata (language, input_source: chat | stt | ocr | image)
+- constraints (output_format=json_only, max_tasks=3)
+
+2. Preprocesamiento
+Se normaliza el input para robustez:
+- limpieza de espacios/ruido
+- normalización básica para STT/OCR
+- detección simple de idioma
+- extracción ligera de señales (fechas/importes) como baseline
+
+Objetivo: reducir errores posteriores y homogeneizar entradas multimodales.
+
+3. Baseline clásico (intención + fallback resiliente)
+Se ejecuta un baseline rápido:
+- intent por reglas/palabras clave
+- stub de acción para construir un plan mínimo
+
+Este baseline sirve para:
+- referencia académica (comparación)
+- fallback si el LLM falla o no está disponible
+- garantizar que el sistema nunca se rompe
+
+Nota: si el plan genera tareas NLP, el input se construye como dict (alineado con el contrato del agente NLP).
+
+4. Guardrails (seguridad de planificación)
+Antes del LLM, se aplican guardrails:
+- input demasiado corto → status="needs_clarification" y tasks=[]
+- SQL detectado (select/from/join/...) → status="needs_clarification" y tasks=[]
+  (se pide reformulación a objetivo de negocio, sin SQL)
+
+5. Planner basado en LLM (local, Ollama)
+Si USE_LLM_PLANNER=true, se llama a un LLM local (ej.: Llama 3.2 vía Ollama):
+- system prompt: planner estricto
+- salida: SOLO JSON con el schema requerido (max_tasks=3)
+
+El LLM debe:
+- inferir intent
+- proponer tasks (agente + action + input dict)
+- NO ejecutar acciones (solo planificación)
+
+6. Normalización del plan (alineación con NLP)
+La salida del LLM se alinea con el contrato del agente NLP:
+- action NLP ∈ {summarize, explain, rephrase, reason, generate}
+- mapeo legacy: answer → reason
+- se descartan tasks tipo ask_clarification (las aclaraciones NO se delegan al NLP)
+- input NLP siempre dict (si viene string, se convierte)
+
+7. Validación del JSON (contrato)
+Se valida estrictamente con Pydantic:
+- JSON válido
+- campos obligatorios
+- tipos correctos
+- max_tasks <= 3
+
+Si falla:
+- se reintenta hasta 2 veces pidiendo “JSON-only” al LLM
+- si persiste, se cae a baseline fallback
+
+8. Construcción de la salida final
+Una vez validado:
+- se devuelve PromptOptimizerResponse completo:
+  - optimized_prompt (texto optimizado en lenguaje natural)
+  - intent_plan (intent, tasks, metadata, campos COM-B reservados)
+  - status, errors
+
+9. Devolución al orquestador
+El Prompt Optimizer devuelve el plan al orquestador.
+La ejecución de tasks queda fuera de este módulo (LangGraph/MCP).
+
+
+RUNBOOK (comandos útiles)
+
+PowerShell – comprobar que Ollama está vivo:
+(Invoke-WebRequest -UseBasicParsing http://localhost:11434/api/tags).Content
+
+PowerShell – LLM ON:
+$env:USE_LLM_PLANNER="true"
+$env:LLM_BASE_URL="http://localhost:11434
+"
+$env:LLM_MODEL="llama3.2:3b"
+
+PowerShell – LLM OFF (fallback baseline):
+$env:USE_LLM_PLANNER="false"

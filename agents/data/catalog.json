@@ -1,0 +1,1743 @@
+{
+  "tables_catalog": [
+    {
+      "name": "desembolso",
+      "schema": "cartera",
+      "description": "Originación del crédito: características del crédito, canal, monto y datos del cliente en el momento del desembolso.",
+      "grain": "credito (idCuenta) - 1 fila por crédito/originación",
+      "primary_keys": ["idCuenta"],
+
+      "field": [
+      {"field": "idCuenta", "description": "ID cuenta", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "dFechaDes", "description": "Fecha de desembolso", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "nCosecha", "description": "Fecha de cosecha", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+      {"field": "idSolicitud", "description": "ID solicitud", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "idCliente", "description": "ID cliente", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "cProducto", "description": "Nombre del producto", "dimension": "Yes", "values": ["AGRICOLA - AGRICOLA", "AGRICOLA - AGRICOLA RURAL", "AGRICOLA - CAMPAÑA REFINANCIAMIENTO", "CONTRADEPÓSITO - CONTRADEPOSITO", "CONVENIO - CONVENIO", "GRUPO SOLIDARIO - BANCA COMUNAL", "GRUPO SOLIDARIO - GRUPO SOLIDARIO", "PECUARIO - CAMPAÑA REFINANCIAMIENTO", "PECUARIO - CREDITO RESUMIDO BLINDAJE", "PECUARIO - CRÉDITO AUTOMÁTICO", "PECUARIO - CRÉDITO ESTAMOS CONTIGO", "PECUARIO - PECUARIO", "PECUARIO - PECUARIO RURAL", "PERSONAL - AGRICOLA RURAL", "PERSONAL - CAMPAÑA REENGANCHE", "PERSONAL - CAMPAÑA REFINANCIAMIENTO", "PERSONAL - CONSUMO PRODUCTIVO 1", "PERSONAL - CONSUMO PRODUCTIVO 2", "PERSONAL - CREDITO RESUMIDO BLINDAJE", "PERSONAL - CRÉDITO AUTOMÁTICO", "PERSONAL - CRÉDITO ESTAMOS CONTIGO", "PERSONAL - PECUARIO RURAL", "PERSONAL - PERSONAL", "PERSONAL - PERSONAL - TU CREDI CHAMBA", "PERSONAL - RETENCION - COMPRA DE DEUDA", "PYME - Ampliación Pyme Productivo", "PYME - CAMPAÑA REFINANCIAMIENTO", "PYME - COMPRA DE DEUDA ATAQUE", "PYME - CREDITO RESUMIDO BLINDAJE", "PYME - CRÉDITO AUTOMÁTICO", "PYME - CRÉDITO ESTAMOS CONTIGO", "PYME - PYME", "PYME - PYME - FACILITO", "PYME - PYME - TU CREDI CHAMBA", "PYME - PYME PRODUCTIVO", "PYME - REENGANCHE PYME PRODUCTIVO"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cDestino", "description": "Destino del producto", "dimension": "Yes", "values": ["ACTIVO FIJO", "AGUA Y SANEAMIENTO", "CAPITAL DE TRABAJO", "COMPRA DEUDA", "LIBRE DISPONIBILIDAD", "VIVIENDA"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cTipoCamp", "description": "Tipo de campaña", "dimension": "Yes", "values": ["CAMPAÑA", "NEG. GERENCIA NEGOCIOS", "NEG. GERENCIA REGIONAL", "NEG. JEFE OFICINA", "NORMAL", "NORMAL GS", "TASA CAMPAÑA"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cTipoOper", "description": "Tipo operación", "dimension": "Yes", "values": ["AMPLIACIÓN", "NUEVO", "PARALELO", "PREPAGO", "RECURRENTE", "REFINANCIACION", "REFINANCIACIÓN POR NOVACIÓN"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "nClienteNue", "description": "Cliente Nuevo, 1 : Cliente nuevo 0 : No es cliente nuevo", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+      {"field": "nMonto", "description": "Monto del Crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+      {"field": "nPlazo", "description": "Plazo del Crédito", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+      {"field": "nTasa", "description": "Tasa del Crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+      {"field": "nCuota", "description": "Cuota del Crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+      {"field": "cMoneda", "description": "Moneda del Crédito, 0: Soles 1: Dolares", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+      {"field": "cModalidadPago", "description": "Modalidad de Pago del Crédito", "dimension": "Yes", "values": ["05:Mensual", "06:Bimensual", "07:Trimestral", "09:Semestral", "12: Al Vencimiento(*)"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "dFechaVenc", "description": "Fecha de Vencimiento del Crédito", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cRegion", "description": "Region del Crédito", "dimension": "Yes", "values": ["REGION AREQUIPA", "REGION AYACUCHO", "REGION CENTRO", "REGION CUSCO", "REGION NORTE", "REGION PUNO SUR", "REGIÓN CENTRO ORIENTE", "REGIÓN LIMA", "REGIÓN PUNO NORTE"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cOficina", "description": "Oficina del Crédito", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cDepartamento", "description": "Departamento del Cliente", "dimension": "Yes", "values": ["AMAZONAS", "ANCASH", "APURIMAC", "AREQUIPA", "AYACUCHO", "CAJAMARCA", "CALLAO", "CUSCO", "HUANCAVELICA", "HUANUCO", "ICA", "JUNIN", "LA LIBERTAD", "LAMBAYEQUE", "LIMA", "MADRE DE DIOS", "MOQUEGUA", "PASCO", "PUNO", "SAN MARTIN", "TACNA", "UCAYALI"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cProvincia", "description": "Provincia del Cliente", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cDistrito", "description": "Distrito del Cliente", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cRegionNat", "description": "Region Natural del Cliente", "dimension": "Yes", "values": ["COSTA", "SELVA ALTA", "SELVA BAJA", "SIERRA"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cRegionPol", "description": "Region Politica del Cliente", "dimension": "Yes", "values": ["PolAMAZONAS", "ANCASH", "APURIMAC", "AREQUIPA", "AYACUCHO", "CAJAMARCA", "CALLAO", "CUSCO", "HUANCAVELICA", "HUANUCO", "ICA", "JUNIN", "LA LIBERTAD", "LAMBAYEQUE", "LIMA PROVINCIA", "LIMA REGION", "MADRE DE DIOS", "MOQUEGUA", "PASCO", "PUNO", "SAN MARTIN", "TACNA", "UCAYALI"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "nEdad", "description": "Edad del Cliente", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+      {"field": "cEstadoCiv", "description": "Estado del Cliente", "dimension": "Yes", "values": ["CASADO(A)", "CONVIVIENTE", "DIVORCIADO(A)", "SEPARADO(A)", "SOLTERO(A)", "VIUDO(A)"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cActividad", "description": "Actividad del Cliente", "dimension": "Yes", "values": ["Dependiente", "Independiente"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cCalificacionInt", "description": "Calificacion del Cliente", "dimension": "Yes", "values": ["A", "AA", "AAA", "B", "C", "D", "E", "Nue. BANCARIZADO"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "nSituacionDeu", "description": "Situacion del Cliente", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cRegionB", "description": "Region del Cliente", "dimension": "Yes", "values": ["01Chala", "02Omagua", "03Rupa_Rupa", "05Yunga_Fluvial", "06Quechua", "07Suni", "08Puna", "Nulo"], "type": "object", "semantic_tag": [], "sensible": "No"},
+      {"field": "cProductoPrincipal", "description": "Nombre del producto reducido", "dimension": "Yes", "values": ["AGRICOLA", "CONTRADEPÓSITO", "CONVENIO", "GRUPO SOLIDARIO", "PECUARIO", "PERSONAL", "PYME"], "type": "object", "semantic_tag": [], "sensible": "No"}
+      ],                                
+      "join_keys": [
+        { "field": "idCuenta", "joins_to": ["cierre.idCuenta"] },
+        { "field": "idCliente", "joins_to": ["cosecha_sal.idCliente", "cierre.idCliente"] },
+        { "field": "nCosecha", "joins_to": ["cosecha_sal.nCosecha"] }
+      ],
+      "time_fields": [
+        { "field": "dFechaDes", "semantic": "fecha_desembolso" }
+      ],
+      "measures": [
+        { "field": "idCuenta", "semantic": "credito_id" },
+        { "field": "idCuenta", "semantic": "identificador_credito" },
+        { "field": "idCuenta", "semantic": "clave_unica_credito" },
+
+        { "field": "dFechaDes", "semantic": "fecha_originacion" },
+        { "field": "dFechaDes", "semantic": "fecha_desembolso_credito" },
+        { "field": "dFechaDes", "semantic": "fecha_inicio_credito" },
+
+        { "field": "nCosecha", "semantic": "cohorte_credito" },
+        { "field": "nCosecha", "semantic": "periodo_cosecha" },
+        { "field": "nCosecha", "semantic": "anio_mes_cosecha" },
+
+        { "field": "idSolicitud", "semantic": "solicitud_id" },
+        { "field": "idSolicitud", "semantic": "identificador_solicitud_credito" },
+        { "field": "idSolicitud", "semantic": "clave_solicitud_originacion" },
+
+        { "field": "idCliente", "semantic": "cliente_id" },
+        { "field": "idCliente", "semantic": "identificador_cliente" },
+        { "field": "idCliente", "semantic": "clave_unica_cliente" },
+
+        { "field": "cProducto", "semantic": "producto_financiero" },
+        { "field": "cProducto", "semantic": "nombre_producto_credito" },
+        { "field": "cProducto", "semantic": "segmento_producto_detallado" },
+
+        { "field": "cDestino", "semantic": "destino_financiamiento" },
+        { "field": "cDestino", "semantic": "finalidad_credito" },
+        { "field": "cDestino", "semantic": "uso_fondos_credito" },
+
+        { "field": "cTipoCamp", "semantic": "estrategia_comercial" },
+        { "field": "cTipoCamp", "semantic": "clasificacion_campana" },
+        { "field": "cTipoCamp", "semantic": "modalidad_promocional" },
+
+        { "field": "cTipoOper", "semantic": "naturaleza_operacion_credito" },
+        { "field": "cTipoOper", "semantic": "tipo_transaccion_credito" },
+        { "field": "cTipoOper", "semantic": "categoria_operacion_financiera" },
+
+        { "field": "nClienteNue", "semantic": "indicador_cliente_nuevo" },
+        { "field": "nClienteNue", "semantic": "flag_nueva_relacion" },
+        { "field": "nClienteNue", "semantic": "estado_nuevo_cliente" },
+
+        { "field": "nMonto", "semantic": "importe_desembolsado" },
+        { "field": "nMonto", "semantic": "capital_otorgado" },
+        { "field": "nMonto", "semantic": "monto_desembolsado" },
+
+        { "field": "nPlazo", "semantic": "duracion_credito_meses" },
+        { "field": "nPlazo", "semantic": "plazo_financiamiento" },
+        { "field": "nPlazo", "semantic": "periodo_amortizacion" },
+
+        { "field": "nTasa", "semantic": "tasa_interes_nominal" },
+        { "field": "nTasa", "semantic": "porcentaje_interes_credito" },
+        { "field": "nTasa", "semantic": "costo_financiero_porcentual" },
+
+        { "field": "nCuota", "semantic": "importe_cuota_periodica" },
+        { "field": "nCuota", "semantic": "valor_pago_mensual" },
+        { "field": "nCuota", "semantic": "monto_amortizacion_periodica" },
+
+        { "field": "cMoneda", "semantic": "moneda_operacion" },
+        { "field": "cMoneda", "semantic": "divisa_credito" },
+        { "field": "cMoneda", "semantic": "tipo_moneda_financiera" },
+
+        { "field": "cModalidadPago", "semantic": "frecuencia_pago" },
+        { "field": "cModalidadPago", "semantic": "periodicidad_cuotas" },
+        { "field": "cModalidadPago", "semantic": "esquema_amortizacion" },
+
+        { "field": "dFechaVenc", "semantic": "fecha_vencimiento_final" },
+        { "field": "dFechaVenc", "semantic": "fecha_ultima_cuota" },
+        { "field": "dFechaVenc", "semantic": "fecha_fin_credito" },
+
+        { "field": "cRegion", "semantic": "region_comercial_credito" },
+        { "field": "cRegion", "semantic": "zona_geografica_credito" },
+        { "field": "cRegion", "semantic": "area_operativa_credito" },
+
+        { "field": "cOficina", "semantic": "oficina_originacion" },
+        { "field": "cOficina", "semantic": "sucursal_credito" },
+        { "field": "cOficina", "semantic": "unidad_negocio_local" },
+
+        { "field": "cDepartamento", "semantic": "departamento_residencia_cliente" },
+        { "field": "cDepartamento", "semantic": "region_administrativa_cliente" },
+        { "field": "cDepartamento", "semantic": "ubicacion_departamental_cliente" },
+
+        { "field": "cProvincia", "semantic": "provincia_residencia_cliente" },
+        { "field": "cProvincia", "semantic": "ubicacion_provincial_cliente" },
+        { "field": "cProvincia", "semantic": "division_provincial_cliente" },
+
+        { "field": "cDistrito", "semantic": "distrito_residencia_cliente" },
+        { "field": "cDistrito", "semantic": "ubicacion_distrital_cliente" },
+        { "field": "cDistrito", "semantic": "zona_domiciliaria_cliente" },
+
+        { "field": "cRegionNat", "semantic": "region_natural_geografica" },
+        { "field": "cRegionNat", "semantic": "clasificacion_ecologica_cliente" },
+        { "field": "cRegionNat", "semantic": "zona_geografica_natural" },
+
+        { "field": "cRegionPol", "semantic": "region_politica_administrativa" },
+        { "field": "cRegionPol", "semantic": "division_politica_cliente" },
+        { "field": "cRegionPol", "semantic": "clasificacion_territorial_oficial" },
+
+        { "field": "nEdad", "semantic": "edad_cliente_anios" },
+        { "field": "nEdad", "semantic": "edad_demografica" },
+        { "field": "nEdad", "semantic": "edad_persona_credito" },
+
+        { "field": "cEstadoCiv", "semantic": "estado_civil_cliente" },
+        { "field": "cEstadoCiv", "semantic": "situacion_conyugal" },
+        { "field": "cEstadoCiv", "semantic": "condicion_matrimonial" },
+
+        { "field": "cActividad", "semantic": "actividad_economica_cliente" },
+        { "field": "cActividad", "semantic": "tipo_ocupacion_cliente" },
+        { "field": "cActividad", "semantic": "perfil_laboral" },
+
+        { "field": "cCalificacionInt", "semantic": "rating_crediticio_interno" },
+        { "field": "cCalificacionInt", "semantic": "categoria_riesgo_cliente" },
+        { "field": "cCalificacionInt", "semantic": "score_crediticio_clase" },
+
+        { "field": "nSituacionDeu", "semantic": "estado_deuda_actual" },
+        { "field": "nSituacionDeu", "semantic": "situacion_contable_credito" },
+        { "field": "nSituacionDeu", "semantic": "clasificacion_deuda_cliente" },
+
+        { "field": "cRegionB", "semantic": "clasificacion_biogeografica_cliente" },
+        { "field": "cRegionB", "semantic": "zona_ecologica_residencia" },
+        { "field": "cRegionB", "semantic": "region_geoespacial_cliente" },
+
+        { "field": "cProductoPrincipal", "semantic": "producto_principal_segmento" },
+        { "field": "cProductoPrincipal", "semantic": "linea_negocio_credito" },
+        { "field": "cProductoPrincipal", "semantic": "familia_producto_financiero" }
+      ]
+      ,
+      "dimensions": [
+        "cProducto", "cProductoPrincipal", "cDestino", "cTipoCamp", "cTipoOper",
+        "cMoneda", "cModalidadPago",
+        "cRegion", "cOficina",
+        "cDepartamento", "cProvincia", "cDistrito", "cRegionNat", "cRegionPol",
+        "nClienteNue", "nEdad", "cEstadoCiv", "cActividad", "cCalificacionInt", "nSituacionDeu", "cRegionB"
+      ],
+      "row_level_security": { "field": "idCliente", "policy": "filter_by_user_scope" },
+      "notes": [
+        "Tabla ideal para preguntas de originación: montos desembolsados, número de créditos, tasas, plazos, perfil del cliente en alta."
+      ]
+    },
+    {
+      "name": "cierre",
+      "schema": "cartera",
+      "description": "Cierres mensuales del crédito: saldos, mora, provisiones, clasificación y situación del crédito por mes.",
+      "grain": "credito_por_mes (idCuenta + dFechaCie) - 1 fila por crédito y mes de cierre",
+      "primary_keys": ["idCuenta", "dFechaCie"],
+      "field": [
+      {"field": "idCuenta", "description": "Código único identificador del Crédito", "dimension": "Yes", "values": [""], "type": "int", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "dFechaCie", "description": "Fecha de cierre del Crédito", "dimension": "Yes", "values": [""], "type": "date", "semantic_tag": [], "sensible": "No"},
+      {"field": "nStock", "description": "Fecha de cierre del Crédito en formato yyyyMM", "dimension": "Yes", "values": [""], "type": "int", "semantic_tag": [], "sensible": "No"},
+      {"field": "idSolicitud", "description": "Código único identificador de la Solicitud del Crédito", "dimension": "Yes", "values": [""], "type": "int", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "idCliente", "description": "Código único identificador del Cliente", "dimension": "Yes", "values": [""], "type": "int", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "cProducto", "description": "Producto", "dimension": "Yes", "values": ["AGRICOLA - AGRICOLA", "AGRICOLA - AGRICOLA - TERRITORIAL", "AGRICOLA - AGRICOLA RURAL", "AGRICOLA - CAMPAÑA DIA DE LA MADRE 2018 RECURRENTES", "AGRICOLA - CAMPAÑA FAE AGRO 1 CB", "AGRICOLA - CAMPAÑA FAE AGRO 2 CB", "AGRICOLA - CAMPAÑA FAE AGRO 3", "AGRICOLA - CAMPAÑA FAE AGRO 4", "AGRICOLA - CAMPAÑA RAPICREDITO NAVIDEÑO RECURRENTES", "AGRICOLA - CAMPAÑA REFINANCIAMIENTO", "AGRICOLA - CLIENTES CULQUI", "AGRICOLA - CLIENTES PREFERENTES AGRICOLA", "AGRICOLA - CLIENTES Q'ORI", "AGRICOLA - CREDI CONFIABLE AGRICOLA", "AGRICOLA - IMPULSO MYPERU", "AGRICOLA - Reenganche 1", "AGRICOLA - SOLCAFE", "AGRICOLA - SOLI AGRO", "CONTRADEPÓSITO - CONTRADEPÓSITO", "CONVENIO - CAMPAÑA CREDIMOTO", "CONVENIO - CAMPAÑA REFINANCIAMIENTO", "CONVENIO - CONVENIO", "GRUPO SOLIDARIO - BANCA COMUNAL", "GRUPO SOLIDARIO - GRUPO SOLIDARIO", "PECUARIO - CAMPAÑA ESCOLAR APRENDE Y EMPRENDE 2", "PECUARIO - CAMPAÑA FAE AGRO 1 CB", "PECUARIO - CAMPAÑA FAE AGRO 2 CB", "PECUARIO - CAMPAÑA FAE AGRO 3", "PECUARIO - CAMPAÑA FAE AGRO 4", "PECUARIO - CAMPAÑA RATUKI PUNTUALITO PECUARIO", "PECUARIO - CAMPAÑA REFINANCIAMIENTO", "PECUARIO - CLIENTES CULQUI", "PECUARIO - CLIENTES PREFERENTES PECUARIO", "PECUARIO - CLIENTES Q'ORI", "PECUARIO - CREDITO RESUMIDO BLINDAJE", "PECUARIO - CRÉDITO AUTOMÁTICO", "PECUARIO - CRÉDITO ESTAMOS CONTIGO", "PECUARIO - DIA DE LA MADRE - 1", "PECUARIO - DIA DE LA MADRE - 2", "PECUARIO - ESCOLAR 1", "PECUARIO - ESCOLAR 2", "PECUARIO - FIESTAS PATRIAS 1", "PECUARIO - FIESTAS PATRIAS 1 - 2022", "PECUARIO - FIESTAS PATRIAS 2", "PECUARIO - FIESTAS PATRIAS 2 - 2022", "PECUARIO - IMPULSO MYPERU", "PECUARIO - Navidad 2", "PECUARIO - PECUARIO", "PECUARIO - PECUARIO - TERRITORIAL", "PECUARIO - PECUARIO RURAL", "PECUARIO - RETANQUEO", "PECUARIO - SOCIOS Q´ORI", "PERSONAL - AGRICOLA RURAL", "PERSONAL - CAMPAÑA CONSUMO PRODUCTIVO 1", "PERSONAL - CAMPAÑA RAPICREDITO NAVIDEÑO RECURRENTES", "PERSONAL - CAMPAÑA REENGANCHE", "PERSONAL - CAMPAÑA REFINANCIAMIENTO", "PERSONAL - CLIENTES Q'ORI", "PERSONAL - COMPRA DE DEUDA", "PERSONAL - CONSUMO PRODUCTIVO 1", "PERSONAL - CONSUMO PRODUCTIVO 2", "PERSONAL - CREDI CONSUMO 1", "PERSONAL - CREDI CONSUMO 2", "PERSONAL - CREDITO RESUMIDO BLINDAJE", "PERSONAL - CRÉDITO AUTOMÁTICO", "PERSONAL - CRÉDITO ESTAMOS CONTIGO", "PERSONAL - DIA DE LA MADRE - 2", "PERSONAL - FIESTAS PATRIAS 1 - 2022", "PERSONAL - FIESTAS PATRIAS 2", "PERSONAL - Navidad 1", "PERSONAL - PECUARIO RURAL", "PERSONAL - PERSONAL", "PERSONAL - PERSONAL - TERRITORIAL", "PERSONAL - PERSONAL - TU CREDI CHAMBA", "PERSONAL - RETENCION - COMPRA DE DEUDA", "PERSONAL - SOL CONSUMO", "PYME - Ampliación Pyme Productivo", "PYME - CAMPAÑA APRENDE Y EMPRENDE RECURRENTE", "PYME - CAMPAÑA RAPICREDITO NAVIDEÑO NUEVOS", "PYME - CAMPAÑA RATUKI PUNTUALITO PYME", "PYME - CAMPAÑA REFINANCIAMIENTO", "PYME - CLIENTES CULQUI", "PYME - CLIENTES PREFERENTES PYME", "PYME - CLIENTES Q'ORI", "PYME - COMPRA DE DEUDA 1", "PYME - COMPRA DE DEUDA ATAQUE", "PYME - CREDI CONFIABLE PYME", "PYME - CREDITO RESUMIDO BLINDAJE", "PYME - CRÉDITO AUTOMÁTICO", "PYME - CRÉDITO ESTAMOS CONTIGO", "PYME - DIA DE LA MADRE - 1", "PYME - DIA DE LA MADRE - 2", "PYME - ESCOLAR 1", "PYME - ESCOLAR 2", "PYME - FIESTAS PATRIAS 1", "PYME - FIESTAS PATRIAS 1 - 2022", "PYME - FIESTAS PATRIAS 2", "PYME - FIESTAS PATRIAS 2 - 2022", "PYME - IMPULSO MYPERU", "PYME - Navidad 2", "PYME - PYME", "PYME - PYME - FACILITO", "PYME - PYME - TERRITORIAL", "PYME - PYME - TU CREDI CHAMBA", "PYME - PYME CREDICAJA", "PYME - PYME PRODUCTIVO", "PYME - Paralelo Pyme Productivo", "PYME - Pyme Productivo CD", "PYME - REENGANCHE PYME PRODUCTIVO", "PYME - RETANQUEO", "PYME - SOCIOS Q´ORI", "PYME - SOLI PYME"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "cDestino", "description": "Destino del Crédito", "dimension": "Yes", "values": ["ACTIVO FIJO", "AGUA Y SANEAMIENTO", "CAPITAL DE TRABAJO", "COMPRA DEUDA", "CONSUMO", "LIBRE DISPONIBILIDAD", "NOVACIÓN", "PERSONALES", "REFINANCIAMIENTO", "VARIOS"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "cTipoCamp", "description": "Tipo de Campaña", "dimension": "Yes", "values": ["CAMPAÑA", "CAMPAÑA RATUKIKASH AA", "CREDI CONFIABLE", "NEG. GERENCIA GENERAL", "NEG. GERENCIA NEGOCIOS", "NEG. GERENCIA REGIONAL", "NEG. JEFE OFICINA", "NEG. REFINANCIACIÓN", "NEG. SUB GERENTE DE NEGOCIOS", "NEGOCIABLE"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "cTipoOper", "description": "Tipo de Operación", "dimension": "Yes", "values": ["AMPLIACIÓN", "NUEVO", "PARALELO", "PREPAGO", "RECURRENTE", "REFINANCIACION", "REFINANCIACIÓN POR NOVACIÓN", "REPROGRAMACION"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "cModalidadPago", "description": "Modalidad de Pago", "dimension": "Yes", "values": ["05:Mensual", "06:Bimensual", "07:Trimestral", "08:Cuatrimestral", "09:Semestral", "10:Anual", "12: Al Vencimiento(*)", "13:IntMensual y K al Final(**)", "15:Otros"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "dFechaVenc", "description": "Fecha Vencimiento Última Cuota", "dimension": "Yes", "values": [""], "type": "date", "semantic_tag": [], "sensible": "No"},
+      {"field": "cRegion", "description": "Región", "dimension": "Yes", "values": ["REGION AREQUIPA", "REGION AYACUCHO", "REGION CENTRO", "REGION CUSCO", "REGION NORTE", "REGION PUNO SUR", "REGIÓN CENTRO ORIENTE", "REGIÓN CORPORATIVO Q'ORI", "REGIÓN LIMA", "REGIÓN PUNO NORTE"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "cCalificacionInt", "description": "Clasificación Interna", "dimension": "Yes", "values": ["A", "AA", "AAA", "B", "C", "D", "E", "Nue. BANCARIZADO"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "nSaldoCap", "description": "Saldo capital a la fecha", "dimension": "Yes", "values": [""], "type": "float", "semantic_tag": [], "sensible": "No"},
+      {"field": "nMora", "description": "dias de atraso", "dimension": "Yes", "values": [""], "type": "int", "semantic_tag": [], "sensible": "No"},
+      {"field": "nSituacionDeu", "description": "Situacion contable del credito", "dimension": "Yes", "values": ["JUDI", "RVEN", "RVIG", "VENC", "VIGE"], "type": "varchar", "semantic_tag": [], "sensible": "No"},
+      {"field": "nSaldoVen", "description": "Saldo vencido a la fecha", "dimension": "Yes", "values": [""], "type": "float", "semantic_tag": [], "sensible": "No"},
+      {"field": "nProvision", "description": "Saldo provision a la fecha", "dimension": "Yes", "values": [""], "type": "float", "semantic_tag": [], "sensible": "No"}
+      ],  
+      "join_keys": [
+        { "field": "idCuenta", "joins_to": ["desembolso.idCuenta"] },
+        { "field": "idCliente", "joins_to": ["desembolso.idCliente"] }
+      ],
+      "time_fields": [
+        { "field": "dFechaCie", "semantic": "fecha_cierre" }
+      ],
+      "measures": [
+        { "field": "idCuenta", "semantic": "credito_id_cierre" },
+        { "field": "idCuenta", "semantic": "identificador_credito_cierre" },
+        { "field": "idCuenta", "semantic": "clave_credito_historico" },
+
+        { "field": "dFechaCie", "semantic": "fecha_cierre_credito" },
+        { "field": "dFechaCie", "semantic": "fecha_snapshot_credito" },
+        { "field": "dFechaCie", "semantic": "fecha_estado_mensual" },
+
+        { "field": "nStock", "semantic": "periodo_stock_yyyymm" },
+        { "field": "nStock", "semantic": "corte_mensual_credito" },
+        { "field": "nStock", "semantic": "periodo_reporte_financiero" },
+
+        { "field": "idSolicitud", "semantic": "solicitud_id_cierre" },
+        { "field": "idSolicitud", "semantic": "identificador_solicitud_historica" },
+        { "field": "idSolicitud", "semantic": "clave_solicitud_credito_cierre" },
+
+        { "field": "idCliente", "semantic": "cliente_id_cierre" },
+        { "field": "idCliente", "semantic": "identificador_cliente_historico" },
+        { "field": "idCliente", "semantic": "clave_cliente_credito_cierre" },
+
+        { "field": "cProducto", "semantic": "producto_credito_vigente" },
+        { "field": "cProducto", "semantic": "nombre_producto_historico" },
+        { "field": "cProducto", "semantic": "segmento_producto_cierre" },
+
+        { "field": "cDestino", "semantic": "destino_credito_vigente" },
+        { "field": "cDestino", "semantic": "finalidad_financiamiento_cierre" },
+        { "field": "cDestino", "semantic": "uso_credito_historico" },
+
+        { "field": "cTipoCamp", "semantic": "tipo_campana_aplicada" },
+        { "field": "cTipoCamp", "semantic": "estrategia_comercial_cierre" },
+        { "field": "cTipoCamp", "semantic": "clasificacion_promocional_credito" },
+
+        { "field": "cTipoOper", "semantic": "tipo_operacion_vigente" },
+        { "field": "cTipoOper", "semantic": "modalidad_operacion_credito_cierre" },
+        { "field": "cTipoOper", "semantic": "naturaleza_transaccion_credito" },
+
+        { "field": "cModalidadPago", "semantic": "frecuencia_pago_vigente" },
+        { "field": "cModalidadPago", "semantic": "periodicidad_amortizacion_actual" },
+        { "field": "cModalidadPago", "semantic": "estructura_pago_credito" },
+
+        { "field": "dFechaVenc", "semantic": "fecha_vencimiento_actual" },
+        { "field": "dFechaVenc", "semantic": "fecha_fin_contrato_credito" },
+        { "field": "dFechaVenc", "semantic": "fecha_termino_financiamiento" },
+
+        { "field": "cRegion", "semantic": "region_operativa_credito" },
+        { "field": "cRegion", "semantic": "zona_comercial_vigente" },
+        { "field": "cRegion", "semantic": "area_geografica_credito_cierre" },
+
+        { "field": "cCalificacionInt", "semantic": "rating_interno_actual" },
+        { "field": "cCalificacionInt", "semantic": "categoria_riesgo_vigente" },
+        { "field": "cCalificacionInt", "semantic": "clasificacion_crediticia_cierre" },
+
+        { "field": "nSaldoCap", "semantic": "saldo_capital_actual" },
+        { "field": "nSaldoCap", "semantic": "capital_pendiente_pago" },
+        { "field": "nSaldoCap", "semantic": "exposicion_crediticia_vigente" },
+
+        { "field": "nMora", "semantic": "dias_atraso_credito" },
+        { "field": "nMora", "semantic": "dias_morosidad_actual" },
+        { "field": "nMora", "semantic": "antiguedad_mora_credito" },
+
+        { "field": "nSituacionDeu", "semantic": "estado_contable_credito" },
+        { "field": "nSituacionDeu", "semantic": "clasificacion_deuda_actual" },
+        { "field": "nSituacionDeu", "semantic": "condicion_credito_cierre" },
+
+        { "field": "nSaldoVen", "semantic": "saldo_vencido_actual" },
+        { "field": "nSaldoVen", "semantic": "importe_mora_vencida" },
+        { "field": "nSaldoVen", "semantic": "capital_en_incumplimiento" },
+
+        { "field": "nProvision", "semantic": "provision_crediticia_actual" },
+        { "field": "nProvision", "semantic": "reserva_riesgo_credito" },
+        { "field": "nProvision", "semantic": "estimacion_perdida_crediticia" }
+      ]
+      ,
+      "dimensions": [
+        "cProducto", "cDestino", "cTipoCamp", "cTipoOper", "cModalidadPago",
+        "dFechaVenc", "cRegion", "cCalificacionInt", "nSituacionDeu"
+      ],
+      "row_level_security": { "field": "idCliente", "policy": "filter_by_user_scope" },
+      "notes": [
+        "Tabla principal para series temporales: evolución de saldo, mora, provisiones y clasificación por mes."
+      ]
+    },
+    {
+      "name": "cosecha_sal",
+      "schema": "rcc",
+      "description": "Comportamiento del cliente por cosecha: variables financieras consolidadas y segmentación por tipo de crédito y mora.",
+      "grain": "cliente_por_cosecha (idCliente + nCosecha + nPeriodo) - 1 fila por cliente-cosecha-periodo",
+      "primary_keys": ["idCliente", "nCosecha", "nPeriodo"],
+
+      "field" :  [
+        {"field": "idCuenta", "description": "id cuenta", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "Yes"},
+        {"field": "nCosecha", "description": "Fecha de cosecha", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "idCliente", "description": "id cliente", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "Yes"},
+        {"field": "idPeriodo", "description": "id periodo", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPeriodo", "description": "Numero periodo", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadEmp", "description": "Cantidad de Empresas", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadC14", "description": "Cantidad Cuentas 14", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadCast", "description": "Cantidad Cuentas castigadas", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoTot", "description": "Monto total", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoC14", "description": "Monto cuentas 14", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoCast", "description": "Monto cuentas castigadas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeCast", "description": "Porcentaje castigos", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraTot", "description": "Mora total", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraC14", "description": "Mora cuentas 14", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraCast", "description": "Mora cuentas castigadas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoCal0", "description": "Monto en calificación de riesgo 0", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoCal1", "description": "Monto en calificación de riesgo 1", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoCal2", "description": "Monto en calificación de riesgo 2", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoCal3", "description": "Monto en calificación de riesgo 3", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoCal4", "description": "Monto en calificación de riesgo 4", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeCal0", "description": "Porcentaje del monto en calificación 0", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeCal1", "description": "Porcentaje del monto en calificación 1", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeCal2", "description": "Porcentaje del monto en calificación 2", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeCal3", "description": "Porcentaje del monto en calificación 3", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeCal4", "description": "Porcentaje del monto en calificación 4", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCalificacion", "description": "Calificación crediticia consolidada del cliente", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadLinAct", "description": "Calificación crediticia en Lineas Activas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoLinAct", "description": "Monto Total en Lineas Activas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoNDes", "description": "Monto no desembolsado de líneas de crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeUsoLin", "description": "Porcentaje de utilización de la línea de crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadMedEmp", "description": "Cantidad de Créditos en Mediana Empresa", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadPeqEmp", "description": "Cantidad de Créditos en Pequeñas Empresas", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadMicEmp", "description": "Cantidad de Créditos en Micro Empresas", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadConRev", "description": "Cantidad de Créditos revolvente", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadConNRev", "description": "Cantidad de Créditos no revolvente", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadHip", "description": "Cantidad de Créditos hipotecários", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoMedEmp", "description": "Monto en Créditos en Mediana Empresa", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoPeqEmp", "description": "Monto en Créditos en Pequeñas Empresas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoMicEmp", "description": "Monto en Créditos en Micro Empresas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoConRev", "description": "Monto en Créditos revolvente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoConNRev", "description": "Monto en Créditos no revolvente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoHip", "description": "Monto en Créditos hipotecários", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeMedEmp", "description": "Porcentaje de Créditos en Mediana Empresa", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajePeqEmp", "description": "Porcentaje de Créditos en Pequeñas Empresas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeMicEmp", "description": "Porcentaje de Créditos en Micro Empresas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeConRev", "description": "Porcentaje de Créditos revolvente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeConNRev", "description": "Porcentaje de Créditos no revolvente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeHip", "description": "Porcentaje de Créditos hipotecários", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMedEmp", "description": "Mora de Créditos en Mediana Empresa", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraPeqEmp", "description": "Mora de Créditos en Pequeñas Empresas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMicEmp", "description": "Mora de Créditos en Micro Empresas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraConRev", "description": "Mora de Créditos revolvente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraConNRev", "description": "Mora de Créditos no revolvente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraHip", "description": "Mora de Créditos hipotecários", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadVeh", "description": "Cantidad de Entidades Tipo Vehiculares", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadLibDis", "description": "Cantidad de Entidades Tipo Libre Disponibilidad", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadLinCre", "description": "Cantidad de Entidades Tipo Líneas de Crédito", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadDisEfe", "description": "Cantidad de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadComDeu", "description": "Cantidad de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadAva", "description": "Cantidad de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadSob", "description": "Cantidad de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadDes", "description": "Cantidad de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadPorLiq", "description": "Cantidad de Entidades Tipo Créditos por Liquidar (acumulación de deudas)", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadPig", "description": "Cantidad de Entidades Tipo Pignoraticio", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadFac", "description": "Cantidad de Entidades Tipo Factoring", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadArr", "description": "Cantidad de Entidades Tipo Arrendamiento", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadLeaBac", "description": "Cantidad de Entidades Tipo Lease-Back", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadDesPla", "description": "Cantidad de Entidades Tipo Convenio Descuento por Planilla", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoVeh", "description": "Monto de Entidades Tipo Vehiculares", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoLibDis", "description": "Monto de Entidades Tipo Libre Disponibilidad", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoLinCre", "description": "Monto de Entidades Tipo Líneas de Crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoDisEfe", "description": "Monto de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoComDeu", "description": "Monto de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoAva", "description": "Monto de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoSob", "description": "Monto de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoDes", "description": "Monto de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoPorLiq", "description": "Monto de Entidades Tipo Créditos por Liquidar (acumulación de deudas)", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoPig", "description": "Monto de Entidades Tipo Pignoraticio", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoFac", "description": "Monto de Entidades Tipo Factoring", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoArr", "description": "Monto de Entidades Tipo Arrendamiento", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoLeaBac", "description": "Monto de Entidades Tipo Lease-Back", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoDesPla", "description": "Monto de Entidades Tipo Convenio Descuento por Planilla", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeVeh", "description": "Porcentaje de Entidades Tipo Vehiculares", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeLibDis", "description": "Porcentaje de Entidades Tipo Libre Disponibilidad", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeLinCre", "description": "Porcentaje de Entidades Tipo Líneas de Crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeDisEfe", "description": "Porcentaje de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeComDeu", "description": "Porcentaje de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeAva", "description": "Porcentaje de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeSob", "description": "Porcentaje de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeDes", "description": "Porcentaje de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajePorLiq", "description": "Porcentaje de Entidades Tipo Créditos por Liquidar (acumulación de deudas)", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajePig", "description": "Porcentaje de Entidades Tipo Pignoraticio", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeFac", "description": "Porcentaje de Entidades Tipo Factoring", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeArr", "description": "Porcentaje de Entidades Tipo Arrendamiento", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeLeaBac", "description": "Porcentaje de Entidades Tipo Lease-Back", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeDesPla", "description": "Porcentaje de Entidades Tipo Convenio Descuento por Planilla", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraVeh", "description": "Mora de Entidades Tipo Vehiculares", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraLibDis", "description": "Mora de Entidades Tipo Libre Disponibilidad", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraLinCre", "description": "Mora de Entidades Tipo Líneas de Crédito", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraDisEfe", "description": "Mora de Entidades Tipo Dispocición de Efectivo (retiro de efectivo con tarjeta)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraComDeu", "description": "Mora de Entidades Tipo Compra de Deuda (refinanciamiento de deudas)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraAva", "description": "Mora de Entidades Tipo Avance en cuenta corriente (gasto por encima del disponible autorizado)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraSob", "description": "Mora de Entidades Tipo Sobregiro en cuenta corriente (gasto por encima del disponible)", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraDes", "description": "Mora de Entidades Tipo Descuentos (adelanto de liquidez pagares, letras, etc.)", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraPorLiq", "description": "Mora de Entidades Tipo Créditos por Liquidar (acumulación de deudas)", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraPig", "description": "Mora de Entidades Tipo Pignoraticio", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraFac", "description": "Mora de Entidades Tipo Factoring", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraArr", "description": "Mora de Entidades Tipo Arrendamiento", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraLeaBac", "description": "Mora de Entidades Tipo Lease-Back", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraDesPla", "description": "Mora de Entidades Tipo Convenio Descuento por Planilla", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadVig", "description": "Cantidad de Cuentas de Estado Vigente", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadRef", "description": "Cantidad de Cuentas de Estado Refinanciado", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadVen", "description": "Cantidad de Cuentas de Estado Vencido", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadJud", "description": "Cantidad de Cuentas de Estado Judicial", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoVig", "description": "Monto en Cuentas de Estado Vigente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoRef", "description": "Monto en Cuentas de Estado Refinanciado", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoVen", "description": "Monto en Cuentas de Estado Vencido", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoJud", "description": "Monto en Cuentas de Estado Judicial", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeVig", "description": "Porcentaje en Cuentas de Estado Vigente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeRef", "description": "Porcentaje en Cuentas de Estado Refinanciado", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeVen", "description": "Porcentaje en Cuentas de Estado Vencido", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeJud", "description": "Porcentaje en Cuentas de Estado Judicial", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraVig", "description": "Porcentaje en Cuentas de Estado Vigente", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraRef", "description": "Porcentaje en Cuentas de Estado Refinanciado", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraVen", "description": "Porcentaje en Cuentas de Estado Vencido", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraJud", "description": "Porcentaje en Cuentas de Estado Judicial", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadAlDia", "description": "Cantidad de Cuentas al día", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadM1a30", "description": "Cantidad de Cuentas con Mora 1 a 30 días", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadM31a60", "description": "Cantidad de Cuentas con Mora 31 días a 60 días", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadM61a90", "description": "Cantidad de Cuentas con Mora 61 días a 90 días", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadM91a120", "description": "Cantidad de Cuentas con Mora 91 días a 120 días", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadM121a150", "description": "Cantidad de Cuentas con Mora 121 días a 150 días", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadM151aMas", "description": "Cantidad de Cuentas con Mora 151 días a mas", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoAlDia", "description": "Monto de Cuentas al día", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoM1a30", "description": "Monto de Cuentas con Mora 1 a 30 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoM31a60", "description": "Monto de Cuentas con Mora 31 días a 60 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoM61a90", "description": "Monto de Cuentas con Mora 61 días a 90 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoM91a120", "description": "Monto de Cuentas con Mora 91 días a 120 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoM121a150", "description": "Monto de Cuentas con Mora 121 días a 150 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoM151aMas", "description": "Monto de Cuentas con Mora 151 días a mas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeAlDia", "description": "Porcentaje de Cuentas al día", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeM1a30", "description": "Porcentaje de Cuentas con Mora 1 a 30 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeM31a60", "description": "Porcentaje de Cuentas con Mora 31 días a 60 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeM61a90", "description": "Porcentaje de Cuentas con Mora 61 días a 90 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeM91a120", "description": "Porcentaje de Cuentas con Mora 91 días a 120 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeM121a150", "description": "Porcentaje de Cuentas con Mora 121 días a 150 días", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeM151aMas", "description": "Porcentaje de Cuentas con Mora 151 días a mas", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadMonNac", "description": "Cantidad de Cuentas en Moneda Nacional", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nCantidadMonExt", "description": "Cantidad de Cuentas en Moneda Extranjera", "dimension": "Yes", "values": [""], "type": "int64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoMonNac", "description": "Monto de Cuentas en Moneda Nacional", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMontoMonExt", "description": "Monto de Cuentas en Moneda Extranjera", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeMonNac", "description": "Porcentaje de Cuentas en Moneda Nacional", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nPorcentajeMonExt", "description": "Porcentaje de Cuentas en Moneda Extranjera", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMonNac", "description": "Mora de Cuentas en Moneda Nacional", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMonExt", "description": "Mora de Cuentas en Moneda Extranjera", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "cClienteAnd", "description": "Marca de Cliente Los Andes", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "cExclusivoAnd", "description": "Marca de Exclusividad Cliente Los Andes", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowAnd", "description": "Sow Los Andes", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowBcp", "description": "Sow BCP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowIbk", "description": "Sow Interbank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowBbv", "description": "Sow BBVA", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowSco", "description": "Sow Scotiabank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMib", "description": "Sow Mi Banco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowBna", "description": "Sow Banco de la Nacion", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowCom", "description": "Sow Comportamos", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowCon", "description": "Sow Confianza", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowAre", "description": "Sow Arequipa", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowCus", "description": "Sow Cusco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowHua", "description": "Sow Huancayo", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowPiu", "description": "Sow Piura", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowBan", "description": "Sow Banbif", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowFin", "description": "Sow Financieras", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowCma", "description": "Sow CMAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowCra", "description": "Sow CRAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowEdp", "description": "Sow EDP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraAnd", "description": "Mora Los Andes", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraBcp", "description": "Mora BCP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraIbk", "description": "Mora Interbank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraBbv", "description": "Mora BBVA", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraSco", "description": "Mora Scotiabank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMib", "description": "Mora Mi Banco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraBna", "description": "Mora Banco de la Nacion", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraCom", "description": "Mora Comportamos", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraCon", "description": "Mora Confianza", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraAre", "description": "Mora Arequipa", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraCus", "description": "Mora Cusco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraHua", "description": "Mora Huancayo", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraPiu", "description": "Mora Piura", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraBan", "description": "Mora Banbif", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraFin", "description": "Mora Financieras", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraCma", "description": "Mora CMAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraCra", "description": "Mora CRAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraEdp", "description": "Mora EDP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeAnd", "description": "Sow Mype Los Andes", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeBcp", "description": "Sow Mype BCP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeIbk", "description": "Sow Mype Interbank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeBbv", "description": "Sow Mype BBVA", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeSco", "description": "Sow Mype Scotiabank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeMib", "description": "Sow Mype Mi Banco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeBna", "description": "Sow Mype Banco de la Nacion", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeCom", "description": "Sow Mype Comportamos", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeCon", "description": "Sow Mype Confianza", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeAre", "description": "Sow Mype Arequipa", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeCus", "description": "Sow Mype Cusco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeHua", "description": "Sow Mype Huancayo", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypePiu", "description": "Sow Mype Piura", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeBan", "description": "Sow Mype Banbif", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeFin", "description": "Sow Mype Financieras", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeCma", "description": "Sow Mype CMAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeCra", "description": "Sow Mype CRAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nSowMypeEdp", "description": "Sow Mype EDP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeAnd", "description": "Mora Mype Los Andes", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeBcp", "description": "Mora Mype BCP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeIbk", "description": "Mora Mype Interbank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeBbv", "description": "Mora Mype BBVA", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeSco", "description": "Mora Mype Scotiabank", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeMib", "description": "Mora Mype Mi Banco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeBna", "description": "Mora Mype Banco de la Nacion", "dimension": "Yes", "values": [""], "type": "object", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeCom", "description": "Mora Mype Comportamos", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeCon", "description": "Mora Mype Confianza", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeAre", "description": "Mora Mype Arequipa", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeCus", "description": "Mora Mype Cusco", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeHua", "description": "Mora Mype Huancayo", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypePiu", "description": "Mora Mype Piura", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeBan", "description": "Mora Mype Banbif", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeFin", "description": "Mora Mype Financieras", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeCma", "description": "Mora Mype CMAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeCra", "description": "Mora Mype CRAC", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"},
+        {"field": "nMoraMypeEdp", "description": "Mora Mype EDP", "dimension": "Yes", "values": [""], "type": "float64", "semantic_tag": [], "sensible": "No"}
+      ],
+      "join_keys": [
+        { "field": "idCliente", "joins_to": ["desembolso.idCliente"] },
+        { "field": "nCosecha", "joins_to": ["desembolso.nCosecha"] }
+      ],
+      "time_fields": [
+        { "field": "nCosecha", "semantic": "cosecha" },
+        { "field": "idPeriodo", "semantic": "periodo_id" },
+        { "field": "nPeriodo", "semantic": "numero_periodo" }
+      ],
+      "measures": [
+  { "field": "idCuenta", "semantic": "credito_id_comportamiento" },
+  { "field": "idCuenta", "semantic": "identificador_credito_cohorte_cliente" },
+  { "field": "idCuenta", "semantic": "clave_credito_seguimiento_riesgo" },
+
+  { "field": "nCosecha", "semantic": "cohorte_originacion_credito" },
+  { "field": "nCosecha", "semantic": "periodo_generacion_crediticia" },
+  { "field": "nCosecha", "semantic": "anio_mes_cohorte_modelo" },
+
+  { "field": "idCliente", "semantic": "cliente_id_comportamiento" },
+  { "field": "idCliente", "semantic": "identificador_cliente_cohorte" },
+  { "field": "idCliente", "semantic": "clave_cliente_modelo_riesgo" },
+
+  { "field": "idPeriodo", "semantic": "periodo_id_seguimiento" },
+  { "field": "idPeriodo", "semantic": "identificador_periodo_modelado" },
+  { "field": "idPeriodo", "semantic": "clave_temporal_riesgo" },
+
+  { "field": "nPeriodo", "semantic": "numero_periodo_cohorte" },
+  { "field": "nPeriodo", "semantic": "mes_desarrollo_credito" },
+  { "field": "nPeriodo", "semantic": "etapa_evolucion_crediticia" },
+
+  { "field": "nCantidadEmp", "semantic": "cantidad_entidades_financieras" },
+  { "field": "nCantidadEmp", "semantic": "numero_relaciones_crediticias" },
+  { "field": "nCantidadEmp", "semantic": "conteo_exposiciones_activas" },
+
+  { "field": "nCantidadC14", "semantic": "cantidad_cuentas_categoria_14" },
+  { "field": "nCantidadC14", "semantic": "numero_operaciones_segmento_14" },
+  { "field": "nCantidadC14", "semantic": "conteo_creditos_clase_14" },
+
+  { "field": "nCantidadCast", "semantic": "cantidad_cuentas_castigadas" },
+  { "field": "nCantidadCast", "semantic": "numero_operaciones_perdida" },
+  { "field": "nCantidadCast", "semantic": "conteo_exposiciones_castigadas" },
+
+  { "field": "nMontoTot", "semantic": "exposicion_total_cliente_cohorte" },
+  { "field": "nMontoTot", "semantic": "saldo_global_sistema_financiero" },
+  { "field": "nMontoTot", "semantic": "monto_agregado_exposicion_crediticia" },
+
+  { "field": "nMontoC14", "semantic": "exposicion_segmento_14" },
+  { "field": "nMontoC14", "semantic": "saldo_creditos_categoria_14" },
+  { "field": "nMontoC14", "semantic": "monto_riesgo_clase_14" },
+
+  { "field": "nMontoCast", "semantic": "monto_total_castigado" },
+  { "field": "nMontoCast", "semantic": "perdida_crediticia_acumulada" },
+  { "field": "nMontoCast", "semantic": "saldo_exposicion_en_default" },
+
+  { "field": "nPorcentajeCast", "semantic": "ratio_castigo_cartera" },
+  { "field": "nPorcentajeCast", "semantic": "tasa_perdida_acumulada_cliente" },
+  { "field": "nPorcentajeCast", "semantic": "porcentaje_exposicion_en_default" },
+
+  { "field": "nMoraTot", "semantic": "morosidad_total_cliente" },
+  { "field": "nMoraTot", "semantic": "ratio_atraso_global" },
+  { "field": "nMoraTot", "semantic": "indicador_incumplimiento_total" },
+
+  { "field": "nMoraC14", "semantic": "morosidad_segmento_14" },
+  { "field": "nMoraC14", "semantic": "ratio_atraso_categoria_14" },
+  { "field": "nMoraC14", "semantic": "indicador_default_clase_14" },
+
+  { "field": "nMoraCast", "semantic": "morosidad_creditos_castigados" },
+  { "field": "nMoraCast", "semantic": "ratio_incumplimiento_castigado" },
+  { "field": "nMoraCast", "semantic": "indicador_perdida_efectiva" },
+
+  { "field": "nMontoCal0", "semantic": "monto_riesgo_calificacion_0" },
+  { "field": "nMontoCal0", "semantic": "exposicion_crediticia_rating_0" },
+  { "field": "nMontoCal0", "semantic": "saldo_total_en_score_0" },
+
+  { "field": "nMontoCal1", "semantic": "monto_riesgo_calificacion_1" },
+  { "field": "nMontoCal1", "semantic": "exposicion_crediticia_rating_1" },
+  { "field": "nMontoCal1", "semantic": "saldo_total_en_score_1" },
+
+  { "field": "nMontoCal2", "semantic": "monto_riesgo_calificacion_2" },
+  { "field": "nMontoCal2", "semantic": "exposicion_crediticia_rating_2" },
+  { "field": "nMontoCal2", "semantic": "saldo_total_en_score_2" },
+
+  { "field": "nMontoCal3", "semantic": "monto_riesgo_calificacion_3" },
+  { "field": "nMontoCal3", "semantic": "exposicion_crediticia_rating_3" },
+  { "field": "nMontoCal3", "semantic": "saldo_total_en_score_3" },
+
+  { "field": "nMontoCal4", "semantic": "monto_riesgo_calificacion_4" },
+  { "field": "nMontoCal4", "semantic": "exposicion_crediticia_rating_4" },
+  { "field": "nMontoCal4", "semantic": "saldo_total_en_score_4" },
+
+  { "field": "nPorcentajeCal0", "semantic": "porcentaje_monto_en_calificacion_0" },
+  { "field": "nPorcentajeCal0", "semantic": "share_exposicion_rating_0" },
+  { "field": "nPorcentajeCal0", "semantic": "ratio_participacion_score_0" },
+
+  { "field": "nPorcentajeCal1", "semantic": "porcentaje_monto_en_calificacion_1" },
+  { "field": "nPorcentajeCal1", "semantic": "share_exposicion_rating_1" },
+  { "field": "nPorcentajeCal1", "semantic": "ratio_participacion_score_1" },
+
+  { "field": "nPorcentajeCal2", "semantic": "porcentaje_monto_en_calificacion_2" },
+  { "field": "nPorcentajeCal2", "semantic": "share_exposicion_rating_2" },
+  { "field": "nPorcentajeCal2", "semantic": "ratio_participacion_score_2" },
+
+  { "field": "nPorcentajeCal3", "semantic": "porcentaje_monto_en_calificacion_3" },
+  { "field": "nPorcentajeCal3", "semantic": "share_exposicion_rating_3" },
+  { "field": "nPorcentajeCal3", "semantic": "ratio_participacion_score_3" },
+
+  { "field": "nPorcentajeCal4", "semantic": "porcentaje_monto_en_calificacion_4" },
+  { "field": "nPorcentajeCal4", "semantic": "share_exposicion_rating_4" },
+  { "field": "nPorcentajeCal4", "semantic": "ratio_participacion_score_4" },
+
+  { "field": "nCalificacion", "semantic": "calificacion_crediticia_consolidada" },
+  { "field": "nCalificacion", "semantic": "score_riesgo_global_cliente" },
+  { "field": "nCalificacion", "semantic": "rating_final_consolidado" },
+
+  { "field": "nCantidadLinAct", "semantic": "cantidad_lineas_credito_activas" },
+  { "field": "nCantidadLinAct", "semantic": "conteo_operaciones_linea_activa" },
+  { "field": "nCantidadLinAct", "semantic": "numero_relaciones_crediticias_activas" },
+
+  { "field": "nMontoLinAct", "semantic": "monto_total_lineas_activas" },
+  { "field": "nMontoLinAct", "semantic": "exposicion_en_lineas_vigentes" },
+  { "field": "nMontoLinAct", "semantic": "saldo_agregado_credito_activo" },
+
+  { "field": "nMontoNDes", "semantic": "monto_no_desembolsado_linea" },
+  { "field": "nMontoNDes", "semantic": "cupo_disponible_sin_usar" },
+  { "field": "nMontoNDes", "semantic": "limite_pendiente_de_disposicion" },
+
+  { "field": "nPorcentajeUsoLin", "semantic": "porcentaje_utilizacion_linea_credito" },
+  { "field": "nPorcentajeUsoLin", "semantic": "ratio_consumo_cupo_crediticio" },
+  { "field": "nPorcentajeUsoLin", "semantic": "tasa_uso_limite_aprobado" },
+
+  { "field": "nCantidadMedEmp", "semantic": "cantidad_creditos_mediana_empresa" },
+  { "field": "nCantidadMedEmp", "semantic": "conteo_operaciones_segmento_mediana" },
+  { "field": "nCantidadMedEmp", "semantic": "numero_exposiciones_med_emp" },
+
+  { "field": "nCantidadPeqEmp", "semantic": "cantidad_creditos_pequena_empresa" },
+  { "field": "nCantidadPeqEmp", "semantic": "conteo_operaciones_segmento_pequena" },
+  { "field": "nCantidadPeqEmp", "semantic": "numero_exposiciones_peq_emp" },
+
+  { "field": "nCantidadMicEmp", "semantic": "cantidad_creditos_micro_empresa" },
+  { "field": "nCantidadMicEmp", "semantic": "conteo_operaciones_segmento_micro" },
+  { "field": "nCantidadMicEmp", "semantic": "numero_exposiciones_mic_emp" },
+
+  { "field": "nCantidadConRev", "semantic": "cantidad_creditos_revolventes" },
+  { "field": "nCantidadConRev", "semantic": "conteo_lineas_tipo_revolvente" },
+  { "field": "nCantidadConRev", "semantic": "numero_operaciones_cupo_rotativo" },
+
+  { "field": "nCantidadConNRev", "semantic": "cantidad_creditos_no_revolventes" },
+  { "field": "nCantidadConNRev", "semantic": "conteo_operaciones_no_rotativas" },
+  { "field": "nCantidadConNRev", "semantic": "numero_creditos_cuota_fija" },
+
+  { "field": "nCantidadHip", "semantic": "cantidad_creditos_hipotecarios" },
+  { "field": "nCantidadHip", "semantic": "conteo_operaciones_garantia_inmueble" },
+  { "field": "nCantidadHip", "semantic": "numero_prestamos_hipoteca" },
+
+  { "field": "nMontoMedEmp", "semantic": "monto_creditos_mediana_empresa" },
+  { "field": "nMontoMedEmp", "semantic": "exposicion_segmento_mediana" },
+  { "field": "nMontoMedEmp", "semantic": "saldo_agregado_med_emp" },
+
+  { "field": "nMontoPeqEmp", "semantic": "monto_creditos_pequena_empresa" },
+  { "field": "nMontoPeqEmp", "semantic": "exposicion_segmento_pequena" },
+  { "field": "nMontoPeqEmp", "semantic": "saldo_agregado_peq_emp" },
+
+  { "field": "nMontoMicEmp", "semantic": "monto_creditos_micro_empresa" },
+  { "field": "nMontoMicEmp", "semantic": "exposicion_segmento_micro" },
+  { "field": "nMontoMicEmp", "semantic": "saldo_agregado_mic_emp" },
+
+  { "field": "nMontoConRev", "semantic": "monto_creditos_revolventes" },
+  { "field": "nMontoConRev", "semantic": "exposicion_cupo_rotativo" },
+  { "field": "nMontoConRev", "semantic": "saldo_en_lineas_revolventes" },
+
+  { "field": "nMontoConNRev", "semantic": "monto_creditos_no_revolventes" },
+  { "field": "nMontoConNRev", "semantic": "exposicion_no_rotativa" },
+  { "field": "nMontoConNRev", "semantic": "saldo_en_prestamos_no_revolventes" },
+
+  { "field": "nMontoHip", "semantic": "monto_creditos_hipotecarios" },
+  { "field": "nMontoHip", "semantic": "exposicion_con_garantia_hipotecaria" },
+  { "field": "nMontoHip", "semantic": "saldo_total_prestamos_hipoteca" },
+
+  { "field": "nPorcentajeMedEmp", "semantic": "porcentaje_creditos_mediana_empresa" },
+  { "field": "nPorcentajeMedEmp", "semantic": "share_exposicion_med_emp" },
+  { "field": "nPorcentajeMedEmp", "semantic": "ratio_participacion_segmento_mediana" },
+
+  { "field": "nPorcentajePeqEmp", "semantic": "porcentaje_creditos_pequena_empresa" },
+  { "field": "nPorcentajePeqEmp", "semantic": "share_exposicion_peq_emp" },
+  { "field": "nPorcentajePeqEmp", "semantic": "ratio_participacion_segmento_pequena" },
+
+  { "field": "nPorcentajeMicEmp", "semantic": "porcentaje_creditos_micro_empresa" },
+  { "field": "nPorcentajeMicEmp", "semantic": "share_exposicion_mic_emp" },
+  { "field": "nPorcentajeMicEmp", "semantic": "ratio_participacion_segmento_micro" },
+
+  { "field": "nPorcentajeConRev", "semantic": "porcentaje_creditos_revolventes" },
+  { "field": "nPorcentajeConRev", "semantic": "share_exposicion_revolvente" },
+  { "field": "nPorcentajeConRev", "semantic": "ratio_participacion_cupo_rotativo" },
+
+  { "field": "nPorcentajeConNRev", "semantic": "porcentaje_creditos_no_revolventes" },
+  { "field": "nPorcentajeConNRev", "semantic": "share_exposicion_no_revolvente" },
+  { "field": "nPorcentajeConNRev", "semantic": "ratio_participacion_no_rotativo" },
+
+  { "field": "nPorcentajeHip", "semantic": "porcentaje_creditos_hipotecarios" },
+  { "field": "nPorcentajeHip", "semantic": "share_exposicion_hipotecaria" },
+  { "field": "nPorcentajeHip", "semantic": "ratio_participacion_prestamos_hipoteca" },
+
+  { "field": "nMoraMedEmp", "semantic": "morosidad_mediana_empresa" },
+  { "field": "nMoraMedEmp", "semantic": "ratio_atraso_segmento_mediana" },
+  { "field": "nMoraMedEmp", "semantic": "indicador_incumplimiento_med_emp" },
+
+  { "field": "nMoraPeqEmp", "semantic": "morosidad_pequena_empresa" },
+  { "field": "nMoraPeqEmp", "semantic": "ratio_atraso_segmento_pequena" },
+  { "field": "nMoraPeqEmp", "semantic": "indicador_incumplimiento_peq_emp" },
+
+  { "field": "nMoraMicEmp", "semantic": "morosidad_micro_empresa" },
+  { "field": "nMoraMicEmp", "semantic": "ratio_atraso_segmento_micro" },
+  { "field": "nMoraMicEmp", "semantic": "indicador_incumplimiento_mic_emp" },
+
+  { "field": "nMoraConRev", "semantic": "morosidad_creditos_revolventes" },
+  { "field": "nMoraConRev", "semantic": "ratio_atraso_revolvente" },
+  { "field": "nMoraConRev", "semantic": "indicador_default_cupo_rotativo" },
+
+  { "field": "nMoraConNRev", "semantic": "morosidad_creditos_no_revolventes" },
+  { "field": "nMoraConNRev", "semantic": "ratio_atraso_no_revolvente" },
+  { "field": "nMoraConNRev", "semantic": "indicador_default_no_rotativo" },
+
+  { "field": "nMoraHip", "semantic": "morosidad_creditos_hipotecarios" },
+  { "field": "nMoraHip", "semantic": "ratio_atraso_garantia_hipotecaria" },
+  { "field": "nMoraHip", "semantic": "indicador_default_prestamo_hipoteca" },
+  { "field": "nCantidadVeh", "semantic": "cantidad_entidades_vehiculares" },
+  { "field": "nCantidadVeh", "semantic": "conteo_operaciones_tipo_vehicular" },
+  { "field": "nCantidadVeh", "semantic": "numero_creditos_vehiculo" },
+
+  { "field": "nCantidadLibDis", "semantic": "cantidad_entidades_libre_disponibilidad" },
+  { "field": "nCantidadLibDis", "semantic": "conteo_creditos_libre_disposicion" },
+  { "field": "nCantidadLibDis", "semantic": "numero_operaciones_libre_uso" },
+
+  { "field": "nCantidadLinCre", "semantic": "cantidad_entidades_linea_credito" },
+  { "field": "nCantidadLinCre", "semantic": "conteo_operaciones_lineas_crediticias" },
+  { "field": "nCantidadLinCre", "semantic": "numero_lineas_credito" },
+
+  { "field": "nCantidadDisEfe", "semantic": "cantidad_entidades_disposicion_efectivo" },
+  { "field": "nCantidadDisEfe", "semantic": "conteo_retiros_efectivo_credito" },
+  { "field": "nCantidadDisEfe", "semantic": "numero_operaciones_cash_advance" },
+
+  { "field": "nCantidadComDeu", "semantic": "cantidad_entidades_compra_deuda" },
+  { "field": "nCantidadComDeu", "semantic": "conteo_refinanciacion_compra_deuda" },
+  { "field": "nCantidadComDeu", "semantic": "numero_operaciones_consolidacion_deuda" },
+
+  { "field": "nCantidadAva", "semantic": "cantidad_entidades_avance_cta_corriente" },
+  { "field": "nCantidadAva", "semantic": "conteo_avances_sobre_disponible_autorizado" },
+  { "field": "nCantidadAva", "semantic": "numero_operaciones_advance_overdraft" },
+
+  { "field": "nCantidadSob", "semantic": "cantidad_entidades_sobregiro_cta_corriente" },
+  { "field": "nCantidadSob", "semantic": "conteo_gasto_sobre_disponible" },
+  { "field": "nCantidadSob", "semantic": "numero_operaciones_overdraft" },
+
+  { "field": "nCantidadDes", "semantic": "cantidad_entidades_descuentos" },
+  { "field": "nCantidadDes", "semantic": "conteo_operaciones_adelanto_liquidez" },
+  { "field": "nCantidadDes", "semantic": "numero_operaciones_descuento_pagares" },
+
+  { "field": "nCantidadPorLiq", "semantic": "cantidad_entidades_creditos_por_liquidar" },
+  { "field": "nCantidadPorLiq", "semantic": "conteo_deudas_acumuladas_por_liquidar" },
+  { "field": "nCantidadPorLiq", "semantic": "numero_operaciones_pendientes_liquidacion" },
+
+  { "field": "nCantidadPig", "semantic": "cantidad_entidades_pignoraticio" },
+  { "field": "nCantidadPig", "semantic": "conteo_creditos_con_garantia_prenda" },
+  { "field": "nCantidadPig", "semantic": "numero_operaciones_pignoradas" },
+
+  { "field": "nCantidadFac", "semantic": "cantidad_entidades_factoring" },
+  { "field": "nCantidadFac", "semantic": "conteo_operaciones_anticipo_facturas" },
+  { "field": "nCantidadFac", "semantic": "numero_operaciones_factoraje" },
+
+  { "field": "nCantidadArr", "semantic": "cantidad_entidades_arrendamiento" },
+  { "field": "nCantidadArr", "semantic": "conteo_operaciones_leasing" },
+  { "field": "nCantidadArr", "semantic": "numero_contratos_arrendamiento_financiero" },
+
+  { "field": "nCantidadLeaBac", "semantic": "cantidad_entidades_lease_back" },
+  { "field": "nCantidadLeaBac", "semantic": "conteo_operaciones_retroarrendamiento" },
+  { "field": "nCantidadLeaBac", "semantic": "numero_contratos_sale_leaseback" },
+
+  { "field": "nCantidadDesPla", "semantic": "cantidad_entidades_descuento_planilla" },
+  { "field": "nCantidadDesPla", "semantic": "conteo_creditos_convenio_planilla" },
+  { "field": "nCantidadDesPla", "semantic": "numero_operaciones_pago_por_planilla" },
+
+  { "field": "nMontoVeh", "semantic": "monto_entidades_vehiculares" },
+  { "field": "nMontoVeh", "semantic": "exposicion_credito_vehiculo" },
+  { "field": "nMontoVeh", "semantic": "saldo_total_tipo_vehicular" },
+
+  { "field": "nMontoLibDis", "semantic": "monto_entidades_libre_disponibilidad" },
+  { "field": "nMontoLibDis", "semantic": "exposicion_libre_disposicion" },
+  { "field": "nMontoLibDis", "semantic": "saldo_total_libre_uso" },
+
+  { "field": "nMontoLinCre", "semantic": "monto_entidades_linea_credito" },
+  { "field": "nMontoLinCre", "semantic": "exposicion_lineas_crediticias" },
+  { "field": "nMontoLinCre", "semantic": "saldo_total_linea_credito" },
+
+  { "field": "nMontoDisEfe", "semantic": "monto_entidades_disposicion_efectivo" },
+  { "field": "nMontoDisEfe", "semantic": "exposicion_retiro_efectivo" },
+  { "field": "nMontoDisEfe", "semantic": "saldo_total_cash_advance" },
+
+  { "field": "nMontoComDeu", "semantic": "monto_entidades_compra_deuda" },
+  { "field": "nMontoComDeu", "semantic": "exposicion_refinanciacion_compra_deuda" },
+  { "field": "nMontoComDeu", "semantic": "saldo_total_consolidacion_deuda" },
+
+  { "field": "nMontoAva", "semantic": "monto_entidades_avance_cta_corriente" },
+  { "field": "nMontoAva", "semantic": "exposicion_avance_sobre_disponible" },
+  { "field": "nMontoAva", "semantic": "saldo_total_advance_overdraft" },
+
+  { "field": "nMontoSob", "semantic": "monto_entidades_sobregiro_cta_corriente" },
+  { "field": "nMontoSob", "semantic": "exposicion_overdraft_sobregiro" },
+  { "field": "nMontoSob", "semantic": "saldo_total_sobregiro" },
+
+  { "field": "nMontoDes", "semantic": "monto_entidades_descuentos" },
+  { "field": "nMontoDes", "semantic": "exposicion_adelanto_liquidez" },
+  { "field": "nMontoDes", "semantic": "saldo_total_descuento_documentos" },
+
+  { "field": "nMontoPorLiq", "semantic": "monto_entidades_creditos_por_liquidar" },
+  { "field": "nMontoPorLiq", "semantic": "exposicion_deudas_por_liquidar" },
+  { "field": "nMontoPorLiq", "semantic": "saldo_total_pendiente_liquidacion" },
+
+  { "field": "nMontoPig", "semantic": "monto_entidades_pignoraticio" },
+  { "field": "nMontoPig", "semantic": "exposicion_credito_pignoraticio" },
+  { "field": "nMontoPig", "semantic": "saldo_total_con_prenda" },
+
+  { "field": "nMontoFac", "semantic": "monto_entidades_factoring" },
+  { "field": "nMontoFac", "semantic": "exposicion_anticipo_facturas" },
+  { "field": "nMontoFac", "semantic": "saldo_total_factoraje" },
+
+  { "field": "nMontoArr", "semantic": "monto_entidades_arrendamiento" },
+  { "field": "nMontoArr", "semantic": "exposicion_leasing_arrendamiento" },
+  { "field": "nMontoArr", "semantic": "saldo_total_arrendamiento_financiero" },
+
+  { "field": "nMontoLeaBac", "semantic": "monto_entidades_lease_back" },
+  { "field": "nMontoLeaBac", "semantic": "exposicion_sale_leaseback" },
+  { "field": "nMontoLeaBac", "semantic": "saldo_total_retroarrendamiento" },
+
+  { "field": "nMontoDesPla", "semantic": "monto_entidades_descuento_planilla" },
+  { "field": "nMontoDesPla", "semantic": "exposicion_credito_planilla" },
+  { "field": "nMontoDesPla", "semantic": "saldo_total_convenio_planilla" },
+
+  { "field": "nPorcentajeVeh", "semantic": "porcentaje_entidades_vehiculares" },
+  { "field": "nPorcentajeVeh", "semantic": "share_exposicion_vehicular" },
+  { "field": "nPorcentajeVeh", "semantic": "ratio_participacion_tipo_vehiculo" },
+
+  { "field": "nPorcentajeLibDis", "semantic": "porcentaje_entidades_libre_disponibilidad" },
+  { "field": "nPorcentajeLibDis", "semantic": "share_exposicion_libre_disposicion" },
+  { "field": "nPorcentajeLibDis", "semantic": "ratio_participacion_libre_uso" },
+
+  { "field": "nPorcentajeLinCre", "semantic": "porcentaje_entidades_linea_credito" },
+  { "field": "nPorcentajeLinCre", "semantic": "share_exposicion_lineas_credito" },
+  { "field": "nPorcentajeLinCre", "semantic": "ratio_participacion_linea_crediticia" },
+
+  { "field": "nPorcentajeDisEfe", "semantic": "porcentaje_entidades_disposicion_efectivo" },
+  { "field": "nPorcentajeDisEfe", "semantic": "share_exposicion_cash_advance" },
+  { "field": "nPorcentajeDisEfe", "semantic": "ratio_participacion_retiro_efectivo" },
+
+  { "field": "nPorcentajeComDeu", "semantic": "porcentaje_entidades_compra_deuda" },
+  { "field": "nPorcentajeComDeu", "semantic": "share_exposicion_consolidacion_deuda" },
+  { "field": "nPorcentajeComDeu", "semantic": "ratio_participacion_refinanciacion_deuda" },
+
+  { "field": "nPorcentajeAva", "semantic": "porcentaje_entidades_avance_cta_corriente" },
+  { "field": "nPorcentajeAva", "semantic": "share_exposicion_avance_autorizado" },
+  { "field": "nPorcentajeAva", "semantic": "ratio_participacion_avance_cta_corriente" },
+
+  { "field": "nPorcentajeSob", "semantic": "porcentaje_entidades_sobregiro_cta_corriente" },
+  { "field": "nPorcentajeSob", "semantic": "share_exposicion_sobregiro" },
+  { "field": "nPorcentajeSob", "semantic": "ratio_participacion_overdraft" },
+
+  { "field": "nPorcentajeDes", "semantic": "porcentaje_entidades_descuentos" },
+  { "field": "nPorcentajeDes", "semantic": "share_exposicion_descuento_documentos" },
+  { "field": "nPorcentajeDes", "semantic": "ratio_participacion_adelanto_liquidez" },
+
+  { "field": "nPorcentajePorLiq", "semantic": "porcentaje_entidades_creditos_por_liquidar" },
+  { "field": "nPorcentajePorLiq", "semantic": "share_exposicion_por_liquidar" },
+  { "field": "nPorcentajePorLiq", "semantic": "ratio_participacion_deuda_por_liquidar" },
+
+  { "field": "nPorcentajePig", "semantic": "porcentaje_entidades_pignoraticio" },
+  { "field": "nPorcentajePig", "semantic": "share_exposicion_pignoraticio" },
+  { "field": "nPorcentajePig", "semantic": "ratio_participacion_con_prenda" },
+
+  { "field": "nPorcentajeFac", "semantic": "porcentaje_entidades_factoring" },
+  { "field": "nPorcentajeFac", "semantic": "share_exposicion_factoring" },
+  { "field": "nPorcentajeFac", "semantic": "ratio_participacion_factoraje" },
+
+  { "field": "nPorcentajeArr", "semantic": "porcentaje_entidades_arrendamiento" },
+  { "field": "nPorcentajeArr", "semantic": "share_exposicion_arrendamiento" },
+  { "field": "nPorcentajeArr", "semantic": "ratio_participacion_leasing" },
+
+  { "field": "nPorcentajeLeaBac", "semantic": "porcentaje_entidades_lease_back" },
+  { "field": "nPorcentajeLeaBac", "semantic": "share_exposicion_sale_leaseback" },
+  { "field": "nPorcentajeLeaBac", "semantic": "ratio_participacion_retroarrendamiento" },
+
+  { "field": "nPorcentajeDesPla", "semantic": "porcentaje_entidades_descuento_planilla" },
+  { "field": "nPorcentajeDesPla", "semantic": "share_exposicion_planilla" },
+  { "field": "nPorcentajeDesPla", "semantic": "ratio_participacion_convenio_planilla" },
+
+  { "field": "nMoraVeh", "semantic": "morosidad_entidades_vehiculares" },
+  { "field": "nMoraVeh", "semantic": "ratio_atraso_tipo_vehicular" },
+  { "field": "nMoraVeh", "semantic": "indicador_default_credito_vehiculo" },
+
+  { "field": "nMoraLibDis", "semantic": "morosidad_entidades_libre_disponibilidad" },
+  { "field": "nMoraLibDis", "semantic": "ratio_atraso_libre_disposicion" },
+  { "field": "nMoraLibDis", "semantic": "indicador_default_libre_uso" },
+
+  { "field": "nMoraLinCre", "semantic": "morosidad_entidades_linea_credito" },
+  { "field": "nMoraLinCre", "semantic": "ratio_atraso_lineas_credito" },
+  { "field": "nMoraLinCre", "semantic": "indicador_default_linea_crediticia" },
+
+  { "field": "nMoraDisEfe", "semantic": "morosidad_entidades_disposicion_efectivo" },
+  { "field": "nMoraDisEfe", "semantic": "ratio_atraso_cash_advance" },
+  { "field": "nMoraDisEfe", "semantic": "indicador_default_retiro_efectivo" },
+
+  { "field": "nMoraComDeu", "semantic": "morosidad_entidades_compra_deuda" },
+  { "field": "nMoraComDeu", "semantic": "ratio_atraso_consolidacion_deuda" },
+  { "field": "nMoraComDeu", "semantic": "indicador_default_refinanciacion_deuda" },
+
+  { "field": "nMoraAva", "semantic": "morosidad_entidades_avance_cta_corriente" },
+  { "field": "nMoraAva", "semantic": "ratio_atraso_avance_autorizado" },
+  { "field": "nMoraAva", "semantic": "indicador_default_avance_cta_corriente" },
+
+  { "field": "nMoraSob", "semantic": "morosidad_entidades_sobregiro_cta_corriente" },
+  { "field": "nMoraSob", "semantic": "ratio_atraso_sobregiro" },
+  { "field": "nMoraSob", "semantic": "indicador_default_overdraft" },
+
+  { "field": "nMoraDes", "semantic": "morosidad_entidades_descuentos" },
+  { "field": "nMoraDes", "semantic": "ratio_atraso_descuento_documentos" },
+  { "field": "nMoraDes", "semantic": "indicador_default_adelanto_liquidez" },
+
+  { "field": "nMoraPorLiq", "semantic": "morosidad_entidades_creditos_por_liquidar" },
+  { "field": "nMoraPorLiq", "semantic": "ratio_atraso_por_liquidar" },
+  { "field": "nMoraPorLiq", "semantic": "indicador_default_deuda_por_liquidar" },
+
+  { "field": "nMoraPig", "semantic": "morosidad_entidades_pignoraticio" },
+  { "field": "nMoraPig", "semantic": "ratio_atraso_pignoraticio" },
+  { "field": "nMoraPig", "semantic": "indicador_default_con_prenda" },
+
+  { "field": "nMoraFac", "semantic": "morosidad_entidades_factoring" },
+  { "field": "nMoraFac", "semantic": "ratio_atraso_factoring" },
+  { "field": "nMoraFac", "semantic": "indicador_default_factoraje" },
+
+  { "field": "nMoraArr", "semantic": "morosidad_entidades_arrendamiento" },
+  { "field": "nMoraArr", "semantic": "ratio_atraso_leasing" },
+  { "field": "nMoraArr", "semantic": "indicador_default_arrendamiento_financiero" },
+
+  { "field": "nMoraLeaBac", "semantic": "morosidad_entidades_lease_back" },
+  { "field": "nMoraLeaBac", "semantic": "ratio_atraso_sale_leaseback" },
+  { "field": "nMoraLeaBac", "semantic": "indicador_default_retroarrendamiento" },
+
+  { "field": "nMoraDesPla", "semantic": "morosidad_entidades_descuento_planilla" },
+  { "field": "nMoraDesPla", "semantic": "ratio_atraso_convenio_planilla" },
+  { "field": "nMoraDesPla", "semantic": "indicador_default_pago_planilla" },
+  {
+    "field": "idCuenta",
+    "semantic": "identificador_id_cuenta"
+  },
+  {
+    "field": "idCuenta",
+    "semantic": "codigo_id_cuenta"
+  },
+  {
+    "field": "idCuenta",
+    "semantic": "clave_id_cuenta"
+  },
+  {
+    "field": "nCosecha",
+    "semantic": "fecha_fecha_cosecha"
+  },
+  {
+    "field": "nCosecha",
+    "semantic": "periodo_fecha_cosecha"
+  },
+  {
+    "field": "nCosecha",
+    "semantic": "timestamp_fecha_cosecha"
+  },
+  {
+    "field": "idCliente",
+    "semantic": "identificador_id_cliente"
+  },
+  {
+    "field": "idCliente",
+    "semantic": "codigo_id_cliente"
+  },
+  {
+    "field": "idCliente",
+    "semantic": "clave_id_cliente"
+  },
+  {
+    "field": "idPeriodo",
+    "semantic": "identificador_id_periodo"
+  },
+  {
+    "field": "idPeriodo",
+    "semantic": "codigo_id_periodo"
+  },
+  {
+    "field": "idPeriodo",
+    "semantic": "clave_id_periodo"
+  },
+  {
+    "field": "nPeriodo",
+    "semantic": "cantidad_numero_periodo"
+  },
+  {
+    "field": "nPeriodo",
+    "semantic": "conteo_numero_periodo"
+  },
+  {
+    "field": "nPeriodo",
+    "semantic": "numero_numero_periodo"
+  },
+  {
+    "field": "nCantidadEmp",
+    "semantic": "identificador_cantidad_empresas"
+  },
+  {
+    "field": "nCantidadEmp",
+    "semantic": "codigo_cantidad_empresas"
+  },
+  {
+    "field": "nCantidadEmp",
+    "semantic": "clave_cantidad_empresas"
+  },
+  {
+    "field": "nCantidadC14",
+    "semantic": "identificador_cantidad_cuentas_14"
+  },
+  {
+    "field": "nCantidadC14",
+    "semantic": "codigo_cantidad_cuentas_14"
+  },
+  {
+    "field": "nCantidadC14",
+    "semantic": "clave_cantidad_cuentas_14"
+  },
+  {
+    "field": "nCantidadCast",
+    "semantic": "identificador_cantidad_cuentas_castigadas"
+  },
+  {
+    "field": "nCantidadCast",
+    "semantic": "codigo_cantidad_cuentas_castigadas"
+  },
+  {
+    "field": "nCantidadCast",
+    "semantic": "clave_cantidad_cuentas_castigadas"
+  },
+  {
+    "field": "nMontoTot",
+    "semantic": "monto_monto_total"
+  },
+  {
+    "field": "nMontoTot",
+    "semantic": "exposicion_monto_total"
+  },
+  {
+    "field": "nMontoTot",
+    "semantic": "saldo_monto_total"
+  },
+  {
+    "field": "nMontoC14",
+    "semantic": "monto_monto_cuentas_14"
+  },
+  {
+    "field": "nMontoC14",
+    "semantic": "exposicion_monto_cuentas_14"
+  },
+  {
+    "field": "nMontoC14",
+    "semantic": "saldo_monto_cuentas_14"
+  },
+  {
+    "field": "nMontoCast",
+    "semantic": "monto_monto_cuentas_castigadas"
+  },
+  {
+    "field": "nMontoCast",
+    "semantic": "exposicion_monto_cuentas_castigadas"
+  },
+  {
+    "field": "nMontoCast",
+    "semantic": "saldo_monto_cuentas_castigadas"
+  },
+  {
+    "field": "nPorcentajeCast",
+    "semantic": "porcentaje_porcentaje_castigos"
+  },
+  {
+    "field": "nPorcentajeCast",
+    "semantic": "ratio_porcentaje_castigos"
+  },
+  {
+    "field": "nPorcentajeCast",
+    "semantic": "share_porcentaje_castigos"
+  },
+  {
+    "field": "nMoraTot",
+    "semantic": "morosidad_mora_total"
+  },
+  {
+    "field": "nMoraTot",
+    "semantic": "ratio_atraso_mora_total"
+  },
+  {
+    "field": "nMoraTot",
+    "semantic": "indicador_default_mora_total"
+  },
+  {
+    "field": "nMoraC14",
+    "semantic": "morosidad_mora_cuentas_14"
+  },
+  {
+    "field": "nMoraC14",
+    "semantic": "ratio_atraso_mora_cuentas_14"
+  },
+  {
+    "field": "nMoraC14",
+    "semantic": "indicador_default_mora_cuentas_14"
+  },
+  {
+    "field": "nMoraCast",
+    "semantic": "morosidad_mora_cuentas_castigadas"
+  },
+  {
+    "field": "nMoraCast",
+    "semantic": "ratio_atraso_mora_cuentas_castigadas"
+  },
+  {
+    "field": "nMoraCast",
+    "semantic": "indicador_default_mora_cuentas_castigadas"
+  },
+  {
+    "field": "nMontoCal0",
+    "semantic": "monto_monto_calificacion_riesgo_0"
+  },
+  {
+    "field": "nMontoCal0",
+    "semantic": "exposicion_monto_calificacion_riesgo_0"
+  },
+  {
+    "field": "nMontoCal0",
+    "semantic": "saldo_monto_calificacion_riesgo_0"
+  },
+  {
+    "field": "nMontoCal1",
+    "semantic": "monto_monto_calificacion_riesgo_1"
+  },
+  {
+    "field": "nMontoCal1",
+    "semantic": "exposicion_monto_calificacion_riesgo_1"
+  },
+  {
+    "field": "nMontoCal1",
+    "semantic": "saldo_monto_calificacion_riesgo_1"
+  },
+  {
+    "field": "nMontoCal2",
+    "semantic": "monto_monto_calificacion_riesgo_2"
+  },
+  {
+    "field": "nMontoCal2",
+    "semantic": "exposicion_monto_calificacion_riesgo_2"
+  },
+  {
+    "field": "nMontoCal2",
+    "semantic": "saldo_monto_calificacion_riesgo_2"
+  },
+  {
+    "field": "nMontoCal3",
+    "semantic": "monto_monto_calificacion_riesgo_3"
+  },
+  {
+    "field": "nMontoCal3",
+    "semantic": "exposicion_monto_calificacion_riesgo_3"
+  },
+  {
+    "field": "nMontoCal3",
+    "semantic": "saldo_monto_calificacion_riesgo_3"
+  },
+  {
+    "field": "nMontoCal4",
+    "semantic": "monto_monto_calificacion_riesgo_4"
+  },
+  {
+    "field": "nMontoCal4",
+    "semantic": "exposicion_monto_calificacion_riesgo_4"
+  },
+  {
+    "field": "nMontoCal4",
+    "semantic": "saldo_monto_calificacion_riesgo_4"
+  },
+  {
+    "field": "nPorcentajeCal0",
+    "semantic": "porcentaje_porcentaje_monto_calificacion_0"
+  },
+  {
+    "field": "nPorcentajeCal0",
+    "semantic": "ratio_porcentaje_monto_calificacion_0"
+  },
+  {
+    "field": "nPorcentajeCal0",
+    "semantic": "share_porcentaje_monto_calificacion_0"
+  },
+  {
+    "field": "nPorcentajeCal1",
+    "semantic": "porcentaje_porcentaje_monto_calificacion_1"
+  },
+  {
+    "field": "nPorcentajeCal1",
+    "semantic": "ratio_porcentaje_monto_calificacion_1"
+  },
+  {
+    "field": "nPorcentajeCal1",
+    "semantic": "share_porcentaje_monto_calificacion_1"
+  },
+  {
+    "field": "nPorcentajeCal2",
+    "semantic": "porcentaje_porcentaje_monto_calificacion_2"
+  },
+  {
+    "field": "nPorcentajeCal2",
+    "semantic": "ratio_porcentaje_monto_calificacion_2"
+  },
+  {
+    "field": "nPorcentajeCal2",
+    "semantic": "share_porcentaje_monto_calificacion_2"
+  },
+  {
+    "field": "nPorcentajeCal3",
+    "semantic": "porcentaje_porcentaje_monto_calificacion_3"
+  },
+  {
+    "field": "nPorcentajeCal3",
+    "semantic": "ratio_porcentaje_monto_calificacion_3"
+  },
+  {
+    "field": "nPorcentajeCal3",
+    "semantic": "share_porcentaje_monto_calificacion_3"
+  },
+  {
+    "field": "nPorcentajeCal4",
+    "semantic": "porcentaje_porcentaje_monto_calificacion_4"
+  },
+  {
+    "field": "nPorcentajeCal4",
+    "semantic": "ratio_porcentaje_monto_calificacion_4"
+  },
+  {
+    "field": "nPorcentajeCal4",
+    "semantic": "share_porcentaje_monto_calificacion_4"
+  },
+  {
+    "field": "nCalificacion",
+    "semantic": "cantidad_calificacion_crediticia_consolidada_cliente"
+  },
+  {
+    "field": "nCalificacion",
+    "semantic": "conteo_calificacion_crediticia_consolidada_cliente"
+  },
+  {
+    "field": "nCalificacion",
+    "semantic": "numero_calificacion_crediticia_consolidada_cliente"
+  },
+  {
+    "field": "nCantidadLinAct",
+    "semantic": "identificador_calificacion_crediticia_lineas_activas"
+  },
+  {
+    "field": "nCantidadLinAct",
+    "semantic": "codigo_calificacion_crediticia_lineas_activas"
+  },
+  {
+    "field": "nCantidadLinAct",
+    "semantic": "clave_calificacion_crediticia_lineas_activas"
+  },
+  {
+    "field": "nMontoLinAct",
+    "semantic": "monto_monto_total_lineas_activas"
+  },
+  {
+    "field": "nMontoLinAct",
+    "semantic": "exposicion_monto_total_lineas_activas"
+  },
+  {
+    "field": "nMontoLinAct",
+    "semantic": "saldo_monto_total_lineas_activas"
+  },
+  {
+    "field": "nMontoNDes",
+    "semantic": "monto_monto_no_desembolsado_lineas_credito"
+  },
+  {
+    "field": "nMontoNDes",
+    "semantic": "exposicion_monto_no_desembolsado_lineas_credito"
+  },
+  {
+    "field": "nMontoNDes",
+    "semantic": "saldo_monto_no_desembolsado_lineas_credito"
+  },
+  {
+    "field": "nPorcentajeUsoLin",
+    "semantic": "porcentaje_porcentaje_utilizacion_linea_credito"
+  },
+  {
+    "field": "nPorcentajeUsoLin",
+    "semantic": "ratio_porcentaje_utilizacion_linea_credito"
+  },
+  {
+    "field": "nPorcentajeUsoLin",
+    "semantic": "share_porcentaje_utilizacion_linea_credito"
+  },
+  {
+    "field": "nCantidadMedEmp",
+    "semantic": "identificador_cantidad_creditos_mediana_empresa"
+  },
+  {
+    "field": "nCantidadMedEmp",
+    "semantic": "codigo_cantidad_creditos_mediana_empresa"
+  },
+  {
+    "field": "nCantidadMedEmp",
+    "semantic": "clave_cantidad_creditos_mediana_empresa"
+  },
+  {
+    "field": "nCantidadPeqEmp",
+    "semantic": "identificador_cantidad_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nCantidadPeqEmp",
+    "semantic": "codigo_cantidad_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nCantidadPeqEmp",
+    "semantic": "clave_cantidad_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nCantidadMicEmp",
+    "semantic": "identificador_cantidad_creditos_micro_empresas"
+  },
+  {
+    "field": "nCantidadMicEmp",
+    "semantic": "codigo_cantidad_creditos_micro_empresas"
+  },
+  {
+    "field": "nCantidadMicEmp",
+    "semantic": "clave_cantidad_creditos_micro_empresas"
+  },
+  {
+    "field": "nCantidadConRev",
+    "semantic": "identificador_cantidad_creditos_revolvente"
+  },
+  {
+    "field": "nCantidadConRev",
+    "semantic": "codigo_cantidad_creditos_revolvente"
+  },
+  {
+    "field": "nCantidadConRev",
+    "semantic": "clave_cantidad_creditos_revolvente"
+  },
+  {
+    "field": "nCantidadConNRev",
+    "semantic": "identificador_cantidad_creditos_no_revolvente"
+  },
+  {
+    "field": "nCantidadConNRev",
+    "semantic": "codigo_cantidad_creditos_no_revolvente"
+  },
+  {
+    "field": "nCantidadConNRev",
+    "semantic": "clave_cantidad_creditos_no_revolvente"
+  },
+  {
+    "field": "nCantidadHip",
+    "semantic": "identificador_cantidad_creditos_hipotecarios"
+  },
+  {
+    "field": "nCantidadHip",
+    "semantic": "codigo_cantidad_creditos_hipotecarios"
+  },
+  {
+    "field": "nCantidadHip",
+    "semantic": "clave_cantidad_creditos_hipotecarios"
+  },
+  {
+    "field": "nMontoMedEmp",
+    "semantic": "monto_monto_creditos_mediana_empresa"
+  },
+  {
+    "field": "nMontoMedEmp",
+    "semantic": "exposicion_monto_creditos_mediana_empresa"
+  },
+  {
+    "field": "nMontoMedEmp",
+    "semantic": "saldo_monto_creditos_mediana_empresa"
+  },
+  {
+    "field": "nMontoPeqEmp",
+    "semantic": "monto_monto_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nMontoPeqEmp",
+    "semantic": "exposicion_monto_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nMontoPeqEmp",
+    "semantic": "saldo_monto_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nMontoMicEmp",
+    "semantic": "monto_monto_creditos_micro_empresas"
+  },
+  {
+    "field": "nMontoMicEmp",
+    "semantic": "exposicion_monto_creditos_micro_empresas"
+  },
+  {
+    "field": "nMontoMicEmp",
+    "semantic": "saldo_monto_creditos_micro_empresas"
+  },
+  {
+    "field": "nMontoConRev",
+    "semantic": "monto_monto_creditos_revolvente"
+  },
+  {
+    "field": "nMontoConRev",
+    "semantic": "exposicion_monto_creditos_revolvente"
+  },
+  {
+    "field": "nMontoConRev",
+    "semantic": "saldo_monto_creditos_revolvente"
+  },
+  {
+    "field": "nMontoConNRev",
+    "semantic": "monto_monto_creditos_no_revolvente"
+  },
+  {
+    "field": "nMontoConNRev",
+    "semantic": "exposicion_monto_creditos_no_revolvente"
+  },
+  {
+    "field": "nMontoConNRev",
+    "semantic": "saldo_monto_creditos_no_revolvente"
+  },
+  {
+    "field": "nMontoHip",
+    "semantic": "monto_monto_creditos_hipotecarios"
+  },
+  {
+    "field": "nMontoHip",
+    "semantic": "exposicion_monto_creditos_hipotecarios"
+  },
+  {
+    "field": "nMontoHip",
+    "semantic": "saldo_monto_creditos_hipotecarios"
+  },
+  {
+    "field": "nPorcentajeMedEmp",
+    "semantic": "porcentaje_porcentaje_creditos_mediana_empresa"
+  },
+  {
+    "field": "nPorcentajeMedEmp",
+    "semantic": "ratio_porcentaje_creditos_mediana_empresa"
+  },
+  {
+    "field": "nPorcentajeMedEmp",
+    "semantic": "share_porcentaje_creditos_mediana_empresa"
+  },
+  {
+    "field": "nPorcentajePeqEmp",
+    "semantic": "porcentaje_porcentaje_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nPorcentajePeqEmp",
+    "semantic": "ratio_porcentaje_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nPorcentajePeqEmp",
+    "semantic": "share_porcentaje_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nPorcentajeMicEmp",
+    "semantic": "porcentaje_porcentaje_creditos_micro_empresas"
+  },
+  {
+    "field": "nPorcentajeMicEmp",
+    "semantic": "ratio_porcentaje_creditos_micro_empresas"
+  },
+  {
+    "field": "nPorcentajeMicEmp",
+    "semantic": "share_porcentaje_creditos_micro_empresas"
+  },
+  {
+    "field": "nPorcentajeConRev",
+    "semantic": "porcentaje_porcentaje_creditos_revolvente"
+  },
+  {
+    "field": "nPorcentajeConRev",
+    "semantic": "ratio_porcentaje_creditos_revolvente"
+  },
+  {
+    "field": "nPorcentajeConRev",
+    "semantic": "share_porcentaje_creditos_revolvente"
+  },
+  {
+    "field": "nPorcentajeConNRev",
+    "semantic": "porcentaje_porcentaje_creditos_no_revolvente"
+  },
+  {
+    "field": "nPorcentajeConNRev",
+    "semantic": "ratio_porcentaje_creditos_no_revolvente"
+  },
+  {
+    "field": "nPorcentajeConNRev",
+    "semantic": "share_porcentaje_creditos_no_revolvente"
+  },
+  {
+    "field": "nPorcentajeHip",
+    "semantic": "porcentaje_porcentaje_creditos_hipotecarios"
+  },
+  {
+    "field": "nPorcentajeHip",
+    "semantic": "ratio_porcentaje_creditos_hipotecarios"
+  },
+  {
+    "field": "nPorcentajeHip",
+    "semantic": "share_porcentaje_creditos_hipotecarios"
+  },
+  {
+    "field": "nMoraMedEmp",
+    "semantic": "morosidad_mora_creditos_mediana_empresa"
+  },
+  {
+    "field": "nMoraMedEmp",
+    "semantic": "ratio_atraso_mora_creditos_mediana_empresa"
+  },
+  {
+    "field": "nMoraMedEmp",
+    "semantic": "indicador_default_mora_creditos_mediana_empresa"
+  },
+  {
+    "field": "nMoraPeqEmp",
+    "semantic": "morosidad_mora_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nMoraPeqEmp",
+    "semantic": "ratio_atraso_mora_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nMoraPeqEmp",
+    "semantic": "indicador_default_mora_creditos_pequenas_empresas"
+  },
+  {
+    "field": "nMoraMicEmp",
+    "semantic": "morosidad_mora_creditos_micro_empresas"
+  },
+  {
+    "field": "nMoraMicEmp",
+    "semantic": "ratio_atraso_mora_creditos_micro_empresas"
+  },
+  {
+    "field": "nMoraMicEmp",
+    "semantic": "indicador_default_mora_creditos_micro_empresas"
+  },
+  {
+    "field": "nMoraConRev",
+    "semantic": "morosidad_mora_creditos_revolvente"
+  },
+  {
+    "field": "nMoraConRev",
+    "semantic": "ratio_atraso_mora_creditos_revolvente"
+  },
+  {
+    "field": "nMoraConRev",
+    "semantic": "indicador_default_mora_creditos_revolvente"
+  },
+  {
+    "field": "nMoraConNRev",
+    "semantic": "morosidad_mora_creditos_no_revolvente"
+  },
+  {
+    "field": "nMoraConNRev",
+    "semantic": "ratio_atraso_mora_creditos_no_revolvente"
+  },
+  {
+    "field": "nMoraConNRev",
+    "semantic": "indicador_default_mora_creditos_no_revolvente"
+  },
+  {
+    "field": "nMoraHip",
+    "semantic": "morosidad_mora_creditos_hipotecarios"
+  },
+  {
+    "field": "nMoraHip",
+    "semantic": "ratio_atraso_mora_creditos_hipotecarios"
+  },
+  {
+    "field": "nMoraHip",
+    "semantic": "indicador_default_mora_creditos_hipotecarios"
+  }
+
+
+      ],
+      "dimensions": [
+        "segmentos_por_tipo_credito (Veh, LibDis, LinCre, Hip, etc.)",
+        "moras_por_tipo_credito (nMoraVeh, nMoraHip, etc.)",
+        "sow_por_entidad (nSowBcp, nSowSco, etc.)"
+      ],
+      "row_level_security": { "field": "idCliente", "policy": "filter_by_user_scope" },
+      "notes": [
+        "Útil para análisis de cohortes/cosechas y comportamiento agregado del cliente (no por crédito)."
+      ]
+    },
+    {
+      "name": "desembolso_comportamiento",
+      "schema": "cartera",
+      "description": "Eventos posteriores del crédito: reprogramaciones, condonaciones y cambios; incluye saldo y mora en fechas de eventos.",
+      "grain": "evento_credito (idCuentaOrig/idCuentaVig + nStock) - 1 fila por evento/fecha",
+      "primary_keys": ["idCuentaOrig", "idCuentaVig", "nStock"],
+
+      "field": [
+      {"field": "idCuentaOrig", "description": "Id cuenta de origen", "dimension": "Yes", "values": [""], "type": "int", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "idCuentaVig", "description": "Id cuenta vigente", "dimension": "Yes", "values": [""], "type": "int", "semantic_tag": [], "sensible": "Yes"},
+      {"field": "idStock", "description": "Id Stock", "dimension": "Yes", "values": [""], "type": "bigint", "semantic_tag": [], "sensible": "No"},
+      {"field": "nStock", "description": "Fecha de stock", "dimension": "Yes", "values": [""], "type": "nvarchar(4000)", "semantic_tag": [], "sensible": "No"},
+      {"field": "nMora", "description": "Mora", "dimension": "Yes", "values": [""], "type": "float", "semantic_tag": [], "sensible": "No"},
+      {"field": "nSaldoCap", "description": "Saldo capital", "dimension": "Yes", "values": [""], "type": "float", "semantic_tag": [], "sensible": "No"},
+      {"field": "cTipoFecha", "description": "Tipo de Fecha", "dimension": "Yes", "values": [""], "type": "date", "semantic_tag": [], "sensible": "No"},
+      {"field": "tipo_ope", "description": "Tipo operación", "dimension": "Yes", "values": ["AMPLIACIÓN", "IMPULSO MYMPERU", "REFINANCIACION", "REFINANCIACIÓN POR NOVACIÓN", "activo"], "type": "varchar(50)", "semantic_tag": [], "sensible": "No"},
+      {"field": "tipo_ope_repro", "description": "Tipo operación reprogramada", "dimension": "Yes", "values": ["INDIVIDUAL", "MASIVO", "NINGUNO"], "type": "varchar(100)", "semantic_tag": [], "sensible": "No"},
+      {"field": "cTipoFecha_repro", "description": "Tipo fecha reprogramada", "dimension": "Yes", "values": [""], "type": "date", "semantic_tag": [], "sensible": "No"},
+      {"field": "tipo_ope_condonacion", "description": "Tipo operación condenación", "dimension": "Yes", "values": ["CONDONACION"], "type": "varchar(11)", "semantic_tag": [], "sensible": "No"},
+      {"field": "cTipoFecha_condonacion", "description": "Tipo de Fecha de condonación", "dimension": "Yes", "values": [""], "type": "date", "semantic_tag": [], "sensible": "No"},
+      {"field": "monto_condonado", "description": "Monto condonado", "dimension": "Yes", "values": [""], "type": "numeric(18,2)", "semantic_tag": [], "sensible": "No"}
+      ],
+      "join_keys": [
+        { "field": "idCuentaVig", "joins_to": ["cierre.idCuenta", "desembolso.idCuenta"] },
+        { "field": "idCuentaOrig", "joins_to": ["desembolso.idCuenta"] }
+      ],
+      "time_fields": [
+
+      ],
+      "measures": [
+  { "field": "idCuentaOrig", "semantic": "identificador_credito_origen" },
+  { "field": "idCuentaOrig", "semantic": "credito_id_original" },
+  { "field": "idCuentaOrig", "semantic": "clave_credito_previo" },
+
+  { "field": "idCuentaVig", "semantic": "identificador_credito_vigente" },
+  { "field": "idCuentaVig", "semantic": "credito_id_actual" },
+  { "field": "idCuentaVig", "semantic": "clave_credito_activo" },
+
+  { "field": "idStock", "semantic": "identificador_stock_credito" },
+  { "field": "idStock", "semantic": "stock_id_periodico" },
+  { "field": "idStock", "semantic": "clave_snapshot_credito" },
+
+  { "field": "nStock", "semantic": "fecha_stock_corte" },
+  { "field": "nStock", "semantic": "periodo_stock_financiero" },
+  { "field": "nStock", "semantic": "fecha_snapshot_crediticio" },
+
+  { "field": "nMora", "semantic": "morosidad_evento_credito" },
+  { "field": "nMora", "semantic": "dias_atraso_en_evento" },
+  { "field": "nMora", "semantic": "indicador_default_evento" },
+
+  { "field": "nSaldoCap", "semantic": "saldo_capital_evento" },
+  { "field": "nSaldoCap", "semantic": "capital_pendiente_evento" },
+  { "field": "nSaldoCap", "semantic": "exposicion_crediticia_evento" },
+
+  { "field": "cTipoFecha", "semantic": "tipo_fecha_evento_credito" },
+  { "field": "cTipoFecha", "semantic": "clasificacion_fecha_evento" },
+  { "field": "cTipoFecha", "semantic": "categoria_temporal_operacion" },
+
+  { "field": "tipo_ope", "semantic": "tipo_operacion_evento" },
+  { "field": "tipo_ope", "semantic": "clasificacion_operacion_credito" },
+  { "field": "tipo_ope", "semantic": "naturaleza_evento_financiero" },
+
+  { "field": "tipo_ope_repro", "semantic": "tipo_reprogramacion_credito" },
+  { "field": "tipo_ope_repro", "semantic": "modalidad_reprogramacion" },
+  { "field": "tipo_ope_repro", "semantic": "categoria_reestructuracion_crediticia" },
+
+  { "field": "cTipoFecha_repro", "semantic": "fecha_reprogramacion_tipo" },
+  { "field": "cTipoFecha_repro", "semantic": "clasificacion_fecha_reprogramacion" },
+  { "field": "cTipoFecha_repro", "semantic": "marca_temporal_reestructuracion" },
+
+  { "field": "tipo_ope_condonacion", "semantic": "tipo_operacion_condonacion" },
+  { "field": "tipo_ope_condonacion", "semantic": "clasificacion_evento_condonacion" },
+  { "field": "tipo_ope_condonacion", "semantic": "naturaleza_perdon_deuda" },
+
+  { "field": "cTipoFecha_condonacion", "semantic": "fecha_condonacion_tipo" },
+  { "field": "cTipoFecha_condonacion", "semantic": "clasificacion_fecha_condonacion" },
+  { "field": "cTipoFecha_condonacion", "semantic": "marca_temporal_perdon_deuda" },
+
+  { "field": "monto_condonado", "semantic": "monto_total_condonado" },
+  { "field": "monto_condonado", "semantic": "importe_perdonado_credito" },
+  { "field": "monto_condonado", "semantic": "reduccion_exposicion_por_condonacion" }
+]
+,
+      "dimensions": [
+        "tipo_ope", "tipo_ope_repro", "tipo_ope_condonacion"
+      ],
+      "notes": [
+        "Útil cuando el usuario pregunta por reprogramaciones/condonaciones o eventos y su impacto."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+
+fastapi
+uvicorn
+pydantic
+requests
+jsonschema
+python-dotenv
+pytest
+langgraph==1.0.4
+
+langgraph
