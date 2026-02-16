@@ -1,42 +1,37 @@
-# prompts/sql_prompt_builder.py
-
+# agents/data/LLM_logic/prompts/sql_prompt_builder.py
+from __future__ import annotations
 import json
-from typing import Dict, Any
+from typing import Any, Dict, List
 from agents.data.LLM_logic.schemas.planning import QueryPlan
 
 
 def _examples_for_plan(plan: QueryPlan) -> str:
-    """
-    Devuelve micro-ejemplos (SOLO patrón SELECT) según result_shape.
-    No incluye DECLARE/CTEs/JOINS porque eso lo controla el plan.
-    """
     shape = plan.get("result_shape", "scalar")
 
     common_rules = """
-- NO uses DECLARE/SET/WITH. Eso ya está resuelto por el plan.
-- Genera únicamente el SELECT final (+ GROUP BY/ORDER BY si aplica).    
-Reglas de estilo (obligatorias):
-- Devuelve SOLO SQL (sin markdown, sin explicación).
-- NO cambies el FROM/JOIN/WHERE del plan.
-- No inventes columnas.
-- Usa alias AS Resultado cuando sea una sola métrica escalar.
-- Para ratios/porcentajes usa NULLIF para evitar división por cero.
+REGLAS DURAS (OBLIGATORIAS):
+- Devuelve SOLO SQL (sin markdown, sin explicación, sin comentarios).
+- NO uses DECLARE/SET/WITH: el plan ya lo resuelve.
+- NO modifiques FROM/JOIN/WHERE del plan.
+- NO inventes columnas: usa SOLO columnas permitidas por el catálogo.
+- Ratios/porcentajes:
+  - NULLIF SOLO en el DENOMINADOR: / NULLIF(denominador, 0)
+  - NO uses NULLIF en el numerador.
+  - NULLIF SIEMPRE con 2 args: NULLIF(expr, 0)
+- Si result_shape=scalar => PROHIBIDO GROUP BY (debe devolver 1 fila / 1 valor).
+- Si hay GROUP BY: toda columna NO agregada del SELECT debe estar en GROUP BY.
 """.strip()
 
-    # Ejemplos mínimos, centrados en SELECT + GROUP BY + ORDER BY
     scalar_examples = """
-Micro-ejemplos (scalar):
+Ejemplos (scalar):
 SELECT SUM(nMonto) AS Resultado
 {FROM_CLAUSE}
 {WHERE_CLAUSE}
 
-SELECT COUNT(*) AS Resultado
-{FROM_CLAUSE}
-{WHERE_CLAUSE}
-
--- porcentaje (solo si la pregunta pide porcentaje/ratio)
+-- porcentaje concentrado en una categoría (escalar, SIN GROUP BY)
 SELECT ROUND(
-  SUM(CASE WHEN nMora > 0 THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0),
+  SUM(CASE WHEN cRegion LIKE '%Sur%' THEN nMonto ELSE 0 END) * 100.0
+  / NULLIF(SUM(nMonto), 0),
   2
 ) AS Resultado
 {FROM_CLAUSE}
@@ -44,31 +39,15 @@ SELECT ROUND(
 """.strip()
 
     grouped_examples = """
-Micro-ejemplos (grouped):
+Ejemplos (grouped):
 SELECT cProducto, AVG(nMonto) AS Resultado
-{FROM_CLAUSE}
-{WHERE_CLAUSE}
-GROUP BY cProducto
-
--- porcentaje por grupo (solo si aplica)
-SELECT cProducto,
-  ROUND(
-    SUM(CASE WHEN nMora > 0 THEN 1 ELSE 0 END) * 100.0 / NULLIF(COUNT(*), 0),
-    2
-  ) AS Resultado
 {FROM_CLAUSE}
 {WHERE_CLAUSE}
 GROUP BY cProducto
 """.strip()
 
     series_examples = """
-Micro-ejemplos (series):
-SELECT nStock, COUNT(*) AS Resultado
-{FROM_CLAUSE}
-{WHERE_CLAUSE}
-GROUP BY nStock
-ORDER BY nStock
-
+Ejemplos (series):
 SELECT nCosecha, AVG(nMonto) AS Resultado
 {FROM_CLAUSE}
 {WHERE_CLAUSE}
@@ -77,14 +56,12 @@ ORDER BY nCosecha
 """.strip()
 
     detail_examples = """
-Micro-ejemplos (detail):
-SELECT TOP 1 nMonto
+Ejemplos (detail):
+SELECT TOP 10 *
 {FROM_CLAUSE}
 {WHERE_CLAUSE}
-ORDER BY nCosecha DESC
 """.strip()
 
-    # Elegir bloque según shape
     if shape == "grouped":
         examples = grouped_examples
     elif shape == "series":
@@ -94,61 +71,66 @@ ORDER BY nCosecha DESC
     else:
         examples = scalar_examples
 
-    # Insertar placeholders con el FROM/WHERE del plan como referencia de forma
     from_sql = plan.get("from_sql", "FROM <tabla>")
     where_sql = plan.get("where_sql", "").strip()
     where_sql = where_sql if where_sql else "-- (sin WHERE)"
 
-    examples = examples.replace("{FROM_CLAUSE}", from_sql).replace(
-        "{WHERE_CLAUSE}", where_sql
-    )
-
+    examples = examples.replace("{FROM_CLAUSE}", from_sql).replace("{WHERE_CLAUSE}", where_sql)
     return f"{common_rules}\n\n{examples}"
 
 
-def build_sql_prompt(intent: str, plan: QueryPlan) -> str:
-    """
-    Prompt optimizado:
-    - Plan determinista manda FROM/JOIN/WHERE.
-    - Ejemplos dinámicos según result_shape.
-    - LLM solo debe completar SELECT (+ GROUP BY/ORDER BY si corresponde).
-    """
-    question = intent.get("optimized_prompt", "no disponible")
+def build_sql_prompt(intent_or_norm: Any, plan: QueryPlan, allowed_columns: List[str]) -> str:
+    if isinstance(intent_or_norm, dict) and "question" in intent_or_norm and "raw" in intent_or_norm:
+        question = intent_or_norm.get("question") or "no disponible"
+        inp = intent_or_norm.get("input") or {}
+    else:
+        raw = intent_or_norm if isinstance(intent_or_norm, dict) else {}
+        question = raw.get("optimized_prompt") or raw.get("normalized_text") or "no disponible"
+        tasks = (raw.get("intent_plan", {}) or {}).get("tasks") or []
+        inp = tasks[0].get("input", {}) if tasks else {}
 
-    # Campos útiles del plan
-    result_shape = plan.get("result_shape", "scalar")
-    group_by_fields = plan.get("group_by_fields", []) or []
+    metric = (inp.get("metric") or {})
+    agg = (metric.get("aggregation") or {})
+    hint_agg_type = (agg.get("type") or agg.get("key") or "")
 
     plan_view = {
-        "result_shape": result_shape,
+        "result_shape": plan.get("result_shape", "scalar"),
         "from_sql": plan.get("from_sql", ""),
         "where_sql": plan.get("where_sql", ""),
-        "group_by_fields": group_by_fields,
+        "group_by_fields": plan.get("group_by_fields", []) or [],
         "notes": plan.get("notes", ""),
+        "hint_agg_type": hint_agg_type,
     }
 
     examples_block = _examples_for_plan(plan)
 
-    # Instrucciones directas y cortas
+    reasoning_rules = """
+Eres un SQL Reasoning Engine (arquitecto SQL).
+
+Checklist ANTES de responder:
+1) Columnas: SOLO usar columnas de ALLOWED_COLUMNS.
+2) result_shape=scalar => NO GROUP BY.
+3) Si hay GROUP BY: toda dimensión no agregada del SELECT debe estar en GROUP BY.
+4) Ratios: la división debe usar NULLIF(denominador, 0) y NULLIF SIEMPRE con 2 args.
+5) Devuelve SOLO SQL, sin texto adicional.
+""".strip()
+
     return f"""
-Eres un experto en SQL Server para analítica de créditos.
-Devuelve SOLO SQL (sin markdown, sin explicación, sin comentarios).
+{reasoning_rules}
 
 Pregunta:
 {question}
 
+ALLOWED_COLUMNS (solo nombres físicos permitidos):
+{json.dumps(sorted(list(set(allowed_columns))), ensure_ascii=False, indent=2)}
+
 Plan (NO modifiques FROM/JOIN/WHERE):
 {json.dumps(plan_view, ensure_ascii=False, indent=2)}
 
-Instrucción principal:
-- Escribe el SELECT final que responda la pregunta.
-- Si result_shape es:
-  - scalar: una sola fila con una métrica.
-  - grouped: incluir GROUP BY usando las dimensiones requeridas.
-  - series: agrupar por el campo temporal y ORDER BY ascendente.
-  - detail: devolver filas detalladas (TOP si corresponde).
-
 {examples_block}
 
-Ahora genera SOLO el SQL final.
+Tarea:
+- Genera SOLO el SELECT final (y su ORDER BY / GROUP BY si aplica).
+- No incluyas DECLARE/SET/WITH: ya viene en el plan.
+- Devuelve SOLO SQL. Nada más.
 """.strip()
