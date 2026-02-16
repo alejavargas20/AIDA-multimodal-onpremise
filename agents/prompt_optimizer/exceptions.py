@@ -1,3 +1,5 @@
+# aida-multimodal-onpremise/agents/prompt_optimizer/exceptions.py
+
 class PromptOptimizerError(Exception):
     """Base exception for Prompt Optimizer."""
 

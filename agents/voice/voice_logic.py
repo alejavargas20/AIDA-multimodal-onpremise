@@ -1,3 +1,5 @@
+# aida-multimodal-onpremise/agents/voice/voice_logic.py
+
 from __future__ import annotations
 
 import os
@@ -5,7 +7,7 @@ import time
 from typing import Any, Dict, Optional
 
 from .engines.stt_engine import transcribe_audio
-from .engines.tts_engine import synthesize_speech
+#from .engines.tts_engine import synthesize_speech
 
 
 SUPPORTED_ACTIONS = {"transcribe", "synthesize"}  # STT | TTS
@@ -85,24 +87,24 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
             )
             return _ok(action=action, result=result, t0=t0)
 
-        if action == "synthesize":
-            text = payload.get("text")
-            if not text or not isinstance(text, str) or not text.strip():
-                return _error("Missing non-empty 'text' for synthesize.", action=action, t0=t0)
+        # if action == "synthesize":
+        #     text = payload.get("text")
+        #     if not text or not isinstance(text, str) or not text.strip():
+        #         return _error("Missing non-empty 'text' for synthesize.", action=action, t0=t0)
 
-            output_path = payload.get("output_path")
-            model_name = config.get("model_name") or os.getenv("VOICE_TTS_MODEL", "")
-            speaker_wav = config.get("speaker_wav")
-            provider = str(config.get("provider") or os.getenv("VOICE_TTS_PROVIDER", "coqui"))
+        #     output_path = payload.get("output_path")
+        #     model_name = config.get("model_name") or os.getenv("VOICE_TTS_MODEL", "")
+        #     speaker_wav = config.get("speaker_wav")
+        #     provider = str(config.get("provider") or os.getenv("VOICE_TTS_PROVIDER", "coqui"))
 
-            result = synthesize_speech(
-                text=text.strip(),
-                output_path=output_path if isinstance(output_path, str) and output_path else None,
-                model_name=str(model_name).strip() if model_name else None,
-                speaker_wav=str(speaker_wav).strip() if isinstance(speaker_wav, str) and speaker_wav else None,
-                provider=provider,
-            )
-            return _ok(action=action, result=result, t0=t0)
+        #     result = synthesize_speech(
+        #         text=text.strip(),
+        #         output_path=output_path if isinstance(output_path, str) and output_path else None,
+        #         model_name=str(model_name).strip() if model_name else None,
+        #         speaker_wav=str(speaker_wav).strip() if isinstance(speaker_wav, str) and speaker_wav else None,
+        #         provider=provider,
+        #     )
+        #     return _ok(action=action, result=result, t0=t0)
 
         return _error("Unexpected router state.", action=action, t0=t0)
 

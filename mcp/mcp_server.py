@@ -1,3 +1,5 @@
+#mcp/mcp_server.py
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import importlib
@@ -5,6 +7,7 @@ import os
 import importlib.util
 import uvicorn
 from typing import Dict, Callable
+from fastapi.middleware.cors import CORSMiddleware
 
 
 # Crear la instancia de FastAPI
@@ -13,6 +16,15 @@ app = FastAPI(
     description="Capa de Herramientas Estandarizadas para Agentes de IA On-Premise.",
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:3000",  # Next.js
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],        # POST, OPTIONS, etc
+    allow_headers=["*"],
+)
 
 # Estructura basica para requests del orquestador
 class ToolRequest(BaseModel):

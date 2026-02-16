@@ -5,7 +5,7 @@ MCP_URL = "http://localhost:8000/call"
 payload = {
     "tool_name": "prompt.optimize",
     "payload": {
-        "user_text": "Hazme un resumen de las ventas del mes pasado"
+        "user_text": "Hazme un resumen de las ventas del mes pasado",
     }
 }
 

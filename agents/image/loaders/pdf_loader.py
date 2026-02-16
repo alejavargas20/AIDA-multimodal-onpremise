@@ -1,3 +1,5 @@
+# aida-multimodal-onpremise/agents/image/loaders/pdf_loader.py
+
 from typing import List
 import pypdfium2 as pdfium
 from PIL import Image

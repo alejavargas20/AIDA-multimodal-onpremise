@@ -1,7 +1,9 @@
-from state import OrchestratorState
+# aida-multimodal-onpremise/orchestrator/nodes_phase_3.py
+
+from orchestrator.state import OrchestratorState
 from typing import TypedDict, List, Literal, Dict, Any, Optional
 from orchestrator.mcp_client import call_mcp
-
+import json
 
 def execute_plan(state: OrchestratorState) -> OrchestratorState:
     print("\nEXECUTE PLAN")
@@ -21,6 +23,7 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
         tool_name = step.get("agent")  # <-- lo que viene del prompt optimizer
         action = step.get("action", "run")
         inp = step.get("input", {}) if isinstance(step.get("input", {}), dict) else {}
+        step_metadata = step.get("metadata", {})
 
         if not tool_name:
             step["status"] = "error"
@@ -30,14 +33,20 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
         # Construimos payload para MCP (incluye action + contexto)
         payload = {
             **inp,
-            "action": action,
+            "task": action,
+            "input": inp,
+            "metadata": step_metadata,
             "context": {
                 "user_id": state.get("user_id"),
                 "session_id": state.get("session_id"),
                 "text": base_text,
                 "intent": state.get("intent"),
+                "user_role": step_metadata.get("user_role"),
+                "file_context": state.get("file_context"), # Inyectamos el OCR si existe
+                "source": state.get("preprocessing_source") 
             },
         }
+        
 
         try:
             print(tool_name)
@@ -50,7 +59,17 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
                     "content": tool_result,
                 }
             )
-            step["status"] = "done"
+
+            # GUARDAR DATOS CRUDOS PARA SÍNTESIS
+            if tool_name == "data.process":
+                # Verificamos tanto el status general como el status interno
+                inner_result = tool_result.get("execution_result", {})
+                if tool_result.get("status") == "success" and inner_result.get("status") == "success":
+                    # Extraemos el valor real ('result' o 'rows') para la síntesis
+                    data_to_save = inner_result.get("result") or inner_result.get("rows")
+                    state["last_data_execution"] = data_to_save
+                    print(f"[FASE 3] Dato guardado para síntesis: {data_to_save}")
+
 
         except Exception as e:
             step["status"] = "error"
@@ -70,8 +89,112 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
     return state
 
 
+# def assemble_results(state: OrchestratorState) -> OrchestratorState:
+#     print("\nASSEMBLE RESULTS")
+#     user_metadata = state.get("metadata", {})
+#     data_raw = state.get("last_data_execution")
+#     blocks = state.get("agent_results", [])
+#     state.setdefault("errors", [])
+
+#     assembled_parts = []
+
+#     if not blocks:
+#         state["assembled_text"] = "No se generaron resultados por parte de los agentes."
+#         return state
+    
+#     # Si tenemos un resultado numérico de la DB, obligamos al NLP a explicarlo.
+#     if data_raw is not None:
+#         print("Invocando NLP para completar respuesta de los datos obtenidos...")
+        
+#         question_user = state.get("normalized_text", "")
+
+#         synthesis_payload = {
+#             "task": "generate", 
+#             "input": {
+#                 "instructions": f"El usuario hizo esta consulta: '{question_user}'. Responde a su pregunta de forma directa, natural y conversacional utilizando ÚNICAMENTE los datos estructurados que se te adjuntan. No menciones que estás leyendo una base de datos ni uses jerga SQL.",
+#                 "data": data_raw,                        # El dato crudo obtenido de la consulta a la base de datosç
+#                 "context": state.get("file_context"), # OCR si existe
+#                 "goal": "Dar la respuesta final al usuario basada en los datos extraídos."
+#             },
+#             "metadata": user_metadata
+#         }
+
+#         try:
+#             # Llamamos a la herramienta registrada en el MCP
+#             synthesis_result = call_mcp("nlp.process", synthesis_payload)
+#             final_answer = synthesis_result.get("answer")
+            
+#             if final_answer:
+#                 state["assembled_text"] = final_answer
+#                 return state # Salimos con la respuesta humanizada
+#         except Exception as e:
+#             state["errors"].append(f"Assemble: error en síntesis final: {e}")
+
+#     # Si no hubo datos o la síntesis falló, unimos lo que haya (PDF, Texto crudo, etc)
+
+#     for block in blocks:
+#         block_type = block.get("type")
+#         role = block.get("role")
+#         action = block.get("action")
+#         content = block.get("content", {})
+
+#         # --- DATA AGENT ---
+#         if block_type == "tool_result" and role == "data.process":
+#             status = content.get("status", "unknown")
+#             inner_result = content.get("execution_result", {})
+#             #data = content.get("data")
+#             data = inner_result.get("result") or inner_result.get("rows")
+#             sql = content.get("sql", "")    
+
+#             if status == "success" and data is not None:
+#                 data_str = json.dumps(data, indent=2, ensure_ascii=False)
+#                 assembled_parts.append(
+#                     f"[DATOS]\nResultado de la consulta ({action}):\n{data_str}"
+#                 )
+#             else:
+#                 error_msg = inner_result.get("error", "Sin datos o consulta fallida")
+#                 assembled_parts.append(
+#                     f"[DATOS]\nConsulta ejecutada ({action}), \nInfo: {error_msg}"
+#                 )
+
+#         # --- NLP AGENT ---
+#         elif block_type == "tool_result" and role == "nlp.process":
+#             output = content.get("answer")
+
+#             if output:
+#                 assembled_parts.append(f"[ANÁLISIS]\n{output}")
+#             else:
+#                 assembled_parts.append(
+#                     "[ANÁLISIS]\nEl agente NLP no devolvió contenido."
+#                 )
+
+#         # --- IMAGE AGENT ---
+#         elif block_type == "tool_result" and role == "image.process":
+#             output = content.get("normal_text")
+#             if output:
+#                 assembled_parts.append(f"[IMAGEN]\n{output}")
+
+#         # --- VOICE AGENT ---
+#         elif block_type == "tool_result" and role == "voice.process":
+#             output = content.get("text") or content.get("result", {}).get("text")
+#             if output:
+#                 assembled_parts.append(f"[AUDIO]\n{output}")
+
+#         # --- ERROR ---
+#         elif block_type == "error":
+#             assembled_parts.append(f"[ERROR]\n{content}")
+
+#         # --- UNKNOWN BLOCK ---
+#         else:
+#             assembled_parts.append(f"[INFO]\nResultado no reconocido: {block}")
+
+#     # Unir todo en un solo texto
+#     state["assembled_text"] = "\n\n".join(assembled_parts)
+#     return state
+
 def assemble_results(state: OrchestratorState) -> OrchestratorState:
     print("\nASSEMBLE RESULTS")
+    user_metadata = state.get("metadata", {})
     blocks = state.get("agent_results", [])
     state.setdefault("errors", [])
 
@@ -80,50 +203,98 @@ def assemble_results(state: OrchestratorState) -> OrchestratorState:
     if not blocks:
         state["assembled_text"] = "No se generaron resultados por parte de los agentes."
         return state
+    
+    # Extraemos el dato directo de los resultados, sin depender de variables borradas 🚨
+    data_raw = None
+    for block in blocks:
+        if block.get("role") == "data.process" and block.get("type") == "tool_result":
+            content = block.get("content", {})
+            if content.get("status") == "success":
+                inner = content.get("execution_result", {})
+                data_raw = inner.get("result") or inner.get("rows")
+            break
 
+    # 2. Si tenemos un resultado numérico de la DB, obligamos al NLP a explicarlo.
+    if data_raw is not None:
+        print(f"Invocando NLP para completar respuesta de los datos obtenidos: {data_raw}")
+        
+        question_user = state.get("normalized_text", "")
+        
+        prompt_sintesis = (
+            f"ERES UN SISTEMA AUTOMATIZADO. El usuario preguntó: '{question_user}'.\n"
+            f"La base de datos del sistema certifica que el valor exacto a responder es: {data_raw}.\n"
+            f"Instrucción Estricta: Asume que el dato es 100% correcto para este usuario. "
+            f"Redacta una frase natural y directa respondiendo a su pregunta usando este número. "
+            f"No te disculpes ni dudes de la información."
+        )
+
+        synthesis_payload = {
+            "action": "reason", 
+            "input": {
+                "question": prompt_sintesis,
+                "context": "",
+                "goal": "Sintetizar respuesta humana"
+            },
+            "metadata": user_metadata
+        }
+
+        try:
+            # Llamamos a Llama 3.1
+            synthesis_result = call_mcp("nlp.process", synthesis_payload)
+            final_answer = synthesis_result.get("answer") or synthesis_result.get("content")
+            
+            if final_answer:
+                print(f"[ÉXITO SÍNTESIS]: {final_answer}")
+                state["assembled_text"] = final_answer
+                state["final_text"] = final_answer # Evitamos que se le pegue la etiqueta "[Modo sencillo]"
+                return state
+        except Exception as e:
+            print(f"[ERROR SÍNTESIS NLP]: {e}")
+            state["errors"].append(f"Assemble: error en síntesis final: {e}")
+
+    # 3. Fallback: Si no hubo datos o Llama falló, unimos el texto crudo
     for block in blocks:
         block_type = block.get("type")
         role = block.get("role")
         action = block.get("action")
         content = block.get("content", {})
 
-        # --- DATA AGENT ---
         if block_type == "tool_result" and role == "data.process":
             status = content.get("status", "unknown")
-            data = content.get("data")
+            inner_result = content.get("execution_result", {})
+            data = inner_result.get("result") or inner_result.get("rows")
 
-            if status != "mock" or data is not None:
-                assembled_parts.append(
-                    f"[DATOS]\nResultado de la consulta ({action}):\n{data}"
-                )
+            if status == "success" and data is not None:
+                data_str = json.dumps(data, indent=2, ensure_ascii=False)
+                assembled_parts.append(f"Los datos extraídos son:\n{data_str}")
             else:
-                assembled_parts.append(
-                    f"[DATOS]\nConsulta ejecutada ({action}), sin datos (mock)."
-                )
+                error_msg = inner_result.get("error", "Sin datos o consulta fallida")
+                assembled_parts.append(f"No se pudo obtener la información: {error_msg}")
 
-        # --- NLP AGENT ---
         elif block_type == "tool_result" and role == "nlp.process":
-            output = content.get("output")
-
+            output = content.get("answer") or content.get("content")
             if output:
-                assembled_parts.append(f"[ANÁLISIS]\n{output}")
-            else:
-                assembled_parts.append(
-                    "[ANÁLISIS]\nEl agente NLP no devolvió contenido."
-                )
+                assembled_parts.append(output)
 
-        # --- ERROR ---
+        elif block_type == "tool_result" and role == "image.process":
+            output = content.get("normal_text")
+            if output:
+                assembled_parts.append(f"Texto extraído del documento:\n{output}")
+
+        elif block_type == "tool_result" and role == "voice.process":
+            output = content.get("text") or content.get("result", {}).get("text")
+            if output:
+                assembled_parts.append(f"Transcripción de audio:\n{output}")
+
         elif block_type == "error":
-            assembled_parts.append(f"[ERROR]\n{content}")
+            assembled_parts.append(f"Se produjo un error en el sistema: {content}")
 
-        # --- UNKNOWN BLOCK ---
-        else:
-            assembled_parts.append(f"[INFO]\nResultado no reconocido: {block}")
-
-    # Unir todo en un solo texto
     state["assembled_text"] = "\n\n".join(assembled_parts)
-    return state
+    
+    if not state.get("final_text"):
+        state["final_text"] = state["assembled_text"]
 
+    return state
 
 def behaviour_adaptation(state: OrchestratorState) -> OrchestratorState:
     profile = state.get("user_profile", "no_tecnico")

@@ -1,52 +1,29 @@
-# # Logica Simulada - Agente Prompt Optimizer
+#aida-multimodal-onpremise/mcp/tools/prompt_tools.py
+# Tool MCP para el Prompt Optimizer
 
-# def optimize_prompt(payload: dict) -> dict:
-#     """
-#     Simula la lógica de reescritura de prompt y generación de JSON de tareas.
-#     El 'payload' viene del Orquestador (request.payload).
-#     """
-#     user_text = payload.get("user_text", "No se encontró texto de usuario.")
+import sys
+import os
+from typing import Dict, Any
 
-#     # Simulacion del resultado del Agente
-#     optimized = f"REESCRIBIR Y ADAPTAR: Analiza la intención sobre '{user_text}'."
 
-#     # El JSON de tareas para el Orquestador
-#     mock_intent_json = {
-#         "intent": "analisis_financiero",
-#         "tasks": [
-#             {"agent": "data", "action": "consultar", "query": user_text},
-#             {"agent": "nlp", "action": "resumir", "input": optimized}
-#         ]
-#     }
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
 
-#     return {
-#         "optimized_prompt": optimized,
-#         "intent_json": mock_intent_json,
-#         "status": "mocked_success"
-#     }
-
-# # REGISTRO DE LA TOOL
-# # Tool_registry que escanea el mcp_server.py
-# TOOL_REGISTRY = {
-#     # Clave (tool_name)       : Valor (función Python)
-#     "prompt.optimize": optimize_prompt,
-# }
-
-# print("Prompt tools: optimize_prompt listo para ser registrado.")
-
-# mcp/tools/prompt_optimizer_tools.py
 
 try:
-    # Import real (cuando exista)
+    # Import real 
     from agents.prompt_optimizer.optimizer_logic import process_request
-except ImportError:
-    # Fallback mock para desarrollo, si el import falla el MCP seguirá funcionando
+    print("[MCP] Prompt Optimizer cargado correctamente.")
+except ImportError as e:
+    print(f"[MCP] No se pudo cargar el Prompt Optimizer: {e}")
+    # Fallback SOLO si falla la importación
     def process_request(payload: dict) -> dict:
         return {
-            "optimized_prompt": f"OPTIMIZED: {payload.get('user_text', '')}",
-            "intent_json": {"intent": "unknown", "tasks": []},
-            "status": "mock",
+            "status": "error",
+            "errors": [f"ImportError: {e}"]
         }
+    
 
 
 # Tool MCP que llama al Prompt Optimizer
@@ -57,8 +34,14 @@ def prompt_optimize(payload: dict) -> dict:
     Solo pasa el payload y devuelve el resultado.
     """
     # Llama a la función real del agente
-    resultado = process_request(payload)
-    return resultado
+    try:
+        resultado = process_request(payload)
+        return resultado
+    except Exception as e:
+        return {
+            "status": "error",
+            "errors": [f"Error in prompt_optimize: {e}"]
+        }
 
 
 # Registro de la tool en el MCP

@@ -1,3 +1,5 @@
+# aida-multimodal-onpremise/agents/image/loaders/image_loader.py
+
 from PIL import Image
 import io
 

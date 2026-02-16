@@ -1,3 +1,5 @@
+# aida-multimodal-onpremise/agents/nlp/nlp_logic.py
+
 """
 Agente NLP ¡
 
@@ -11,6 +13,7 @@ El orquestador decide qué hacer y envía en `payload["task"]` la acción a ejec
 from __future__ import annotations
 
 import os
+import sys
 import time
 import json
 import urllib.request
@@ -18,11 +21,30 @@ import urllib.error
 from typing import Any, Dict, Optional, Tuple, List
 
 
-# ---- Config (env) ----
-DEFAULT_MODEL = os.getenv("NLP_MODEL", "llama3.2:3b")
-DEFAULT_PROVIDER = os.getenv("NLP_PROVIDER", "ollama")  # "ollama" | "mock"
-OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-REQUEST_TIMEOUT_S = float(os.getenv("NLP_REQUEST_TIMEOUT_S", "30"))
+# # ---- Config (env) ----
+# DEFAULT_MODEL = os.getenv("NLP_MODEL", "llama3.2:3b")
+# DEFAULT_PROVIDER = os.getenv("NLP_PROVIDER", "ollama")  # "ollama" | "mock"
+# OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+# REQUEST_TIMEOUT_S = float(os.getenv("NLP_REQUEST_TIMEOUT_S", "30"))
+# --- ENCABEZADO DEL ARCHIVO: Agregar import ---
+
+# ---- Config (Actualizada para Motor Híbrido) ----
+DEFAULT_MODEL = "Llama-3.1-8B-Hybrid"
+DEFAULT_PROVIDER = "Local-RTX5090/CPU"
+
+# Asegurar path para encontrar el engine
+current = os.path.dirname(os.path.abspath(__file__))
+parent = os.path.dirname(current)
+if parent not in sys.path:
+    sys.path.append(parent)
+
+# Importar el motor híbrido
+try:
+    from local_engine import generate_response
+except ImportError:
+    # Fallback por si acaso no encuentra el archivo, para no romper el import
+    print("ERROR: No se pudo importar local_engine. Verifica la ruta.")
+    def generate_response(msgs): return "Error crítico: Motor no encontrado."
 
 
 # ---- Public API ----
@@ -71,7 +93,7 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
     # Solo español (sin detección)
     language = "es"
 
-    # Enrutamiento (sin auto-router; lo decide el Prompt Optimizer/Orquestador)
+    # Dispatch a la función específica
     try:
         if task == "summarize":
             answer = summarize(input_obj, payload)
@@ -89,6 +111,7 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
         return _ok(task=task, answer=answer, language=language, t0=t0)
 
     except Exception as e:
+        print(f"[NLP Agent] Error processing task '{task}': {e}")
         return _error(f"Unhandled error: {type(e).__name__}: {e}", task=task, t0=t0)
 
 
@@ -97,12 +120,20 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
 def summarize(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     """
     Resume datos estructurados (p. ej. salida del Agente de Datos) o texto largo.
-    Inputs:
+    Inputs posibles:
       - data: dict|list (preferido)
       - text: str (alternativo)
       - audience: "analista"|"cliente"
       - style: "ejecutivo"|"tecnico"|"sencillo"
       - constraints: {"length": "short|medium|long", "format": "bullets|paragraph"}
+
+    Instrucciones:
+    - Extrae los puntos más relevantes.
+    - Si hay métricas, menciona solo las más importantes.
+    - Usa lenguaje ejecutivo para analistas.
+    - Usa lenguaje sencillo para clientes.
+    - No más de 5 a 7 líneas salvo que se indique lo contrario.
+
     """
     audience, style, constraints = _normalize_style(input_obj, payload)
 
@@ -115,9 +146,21 @@ def summarize(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     user_goal = input_obj.get("goal") or "Resume la información principal."
     content_block = _render_content_block(data=data, text=text)
 
+    specific_instructions = """
+    Tu tarea es generar un RESUMEN EJECUTIVO de información financiera.
+    Instrucciones:
+    - Analiza el contenido y extrae los puntos más críticos (saldos totales, variaciones de mora, montos de desembolso).
+    - Si el contenido tiene métricas, prioriza las que presenten desviaciones o alertas.
+    - Estilo para ANALISTAS: Lenguaje técnico, preciso y enfocado en KPIs.
+    - Estilo para CLIENTES: Lenguaje sencillo, empático y explicativo.
+    - RESTRICCIÓN: No excedas las 5 a 7 líneas de texto.
+    - FORMATO: Usa viñetas para datos numéricos y un párrafo corto para la conclusión principal.
+    """
+
     system, user = _build_prompt(
         task="summarize",
         audience=audience,
+        specific_instructions=specific_instructions,
         style=style,
         constraints=constraints,
         user_goal=user_goal,
@@ -132,14 +175,19 @@ def summarize(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
 
 def explain(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     """
-    Explica un concepto, una tabla/campo o un resultado.
-    Inputs soportados:
-      - concept: str  (ej: "saldo vencido", "días de mora")
-      - table: {"name": "...", "description": "...", "fields": [...]}
-      - field: {"name": "...", "description": "...", "table": "..."}
-      - data: dict|list  (para explicar un resultado)
-      - question: str    (pregunta del usuario)
-      - audience/style/constraints (igual que summarize)
+    Tu tarea es EXPLICAR un concepto financiero o el significado de datos.
+    Instrucciones:
+    - Define el concepto con claridad.
+    - Usa ejemplos si ayudan.
+    - Si el concepto proviene de un documento o cálculo, explica qué significa para el usuario.
+    - No uses jerga innecesaria con clientes.
+    Ejemplos de conceptos:
+    - días de mora
+    - saldo vencido
+    - reprogramación
+    - condonación
+    - cartera castigada
+
     """
     audience, style, constraints = _normalize_style(input_obj, payload)
 
@@ -159,9 +207,20 @@ def explain(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
         data=data, text=question, concept=concept, table=table, field=field
     )
 
+    specific_instructions = """
+    Tu tarea es EXPLICAR conceptos financieros o el significado de datos específicos del negocio.
+    Instrucciones:
+    - Define el concepto solicitado con total claridad y rigor técnico.
+    - Usa ejemplos prácticos del entorno bancario si ayudan a la comprensión.
+    - Si el concepto proviene de un cálculo o dato estructurado, explica qué impacto tiene esa cifra para el usuario.
+    - Evita jerga técnica compleja si la audiencia es un "Cliente".
+    - Conceptos clave de dominio: Días de mora (atraso), Saldo vencido, Reprogramación (ajuste de cuotas), Condonación (perdón de deuda), Cartera Castigada.
+    """
+
     system, user = _build_prompt(
         task="explain",
         audience=audience,
+        specific_instructions=specific_instructions,
         style=style,
         constraints=constraints,
         user_goal=user_goal,
@@ -196,9 +255,19 @@ def rephrase(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     user_goal = input_obj.get("goal") or "Reformula el texto manteniendo el significado."
     content_block = _render_content_block(text=text)
 
+    specific_instructions = """
+    Tu tarea es REFORMULAR el texto proporcionado para mejorar su impacto y claridad.
+    Instrucciones:
+    - Ajusta el vocabulario y la estructura gramatical según la audiencia (Analista o Cliente).
+    - Mantén el significado original de forma íntegra.
+    - Si el texto original es muy técnico y la audiencia es un "Cliente", simplifícalo sin perder precisión.
+    - Si el texto es plano y la audiencia es un "Analista", dale un tono más corporativo y ejecutivo.
+    """
+
     system, user = _build_prompt(
         task="rephrase",
         audience=audience,
+        specific_instructions=specific_instructions,
         style=style,
         constraints=constraints,
         user_goal=user_goal,
@@ -228,9 +297,20 @@ def reason(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
 
     content_block = _render_content_block(text=question, data=data, context=context)
 
+    specific_instructions = """
+    Tu tarea es RAZONAR y JUSTIFICAR comportamientos financieros basándote en la evidencia.
+    Instrucciones:
+    - Responde a preguntas complejas de tipo "¿Por qué?", "¿A qué se debe?" o "¿Qué impacto tiene?".
+    - Relaciona causas y efectos de forma lógica (ej: Relación entre el aumento del plazo y el incremento del riesgo).
+    - Identifica tendencias en los datos estructurados y formula hipótesis basadas únicamente en ellos.
+    - ADVERTENCIA DE RIESGO: Si detectas indicadores de peligro financiero (ej: mora creciente), menciónalo con cautela y profesionalismo.
+    - Si faltan datos para llegar a una conclusión definitiva, dilo explícitamente.
+    """
+
     system, user = _build_prompt(
         task="reason",
         audience=audience,
+        specific_instructions=specific_instructions,
         style=style,
         constraints=constraints,
         user_goal=user_goal,
@@ -258,9 +338,20 @@ def generate(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
 
     content_block = _render_content_block(text=instructions, data=data, context=context)
 
+    specific_instructions = """
+    Tu tarea es GENERAR contenido financiero nuevo basado en las instrucciones proporcionadas.
+    Instrucciones:
+    - Crea informes, correos de notificación, alertas de riesgo o recomendaciones de pago.
+    - Estructura el contenido con encabezados claros si la extensión lo requiere.
+    - Sigue fielmente los DATOS ESTRUCTURADOS si se proporcionan. NO inventes cifras ni asumas valores que no estén en los datos.
+    - Oculta la complejidad técnica: No menciones palabras como "JSON", "Base de datos", "SQL" o "Query". Presenta los números de forma amigable.
+    - Si hablas con un "Cliente", usa un tono empático, transparente y resolutivo. Si hablas con un "Analista", ve directo al grano.
+    """
+
     system, user = _build_prompt(
         task="generate",
         audience=audience,
+        specific_instructions=specific_instructions,
         style=style,
         constraints=constraints,
         user_goal=user_goal,
@@ -271,9 +362,25 @@ def generate(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
 
 # ---- Prompting ----
 
+def _llm_or_fallback(system: str, user: str, fallback: str) -> str:
+    """
+    Llama al Motor Híbrido Local.
+    """
+    try:
+        messages = [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user}
+        ]
+        # Llamada directa al engine local
+        return generate_response(messages)
+    except Exception as e:
+        print(f"[NLP Agent] Error en inferencia local: {e}")
+        return fallback
+
 def _build_prompt(
     task: str,
     audience: str,
+    specific_instructions: str,
     style: str,
     constraints: Dict[str, Any],
     user_goal: str,
@@ -304,28 +411,40 @@ def _build_prompt(
         "long": "Puedes extenderte si mejora la claridad.",
     }.get(length, "Longitud moderada.")
 
-    system = "\n".join(
-        [
-            "Eres el Agente NLP del proyecto AIDA.",
-            "Respondes SOLO en español.",
-            "No inventes datos: si falta información, dilo y sugiere qué dato falta.",
-            audience_hint,
-            style_hint,
-            format_hint,
-            length_hint,
-        ]
-    )
+    # --- 2. SYSTEM PROMPT (Identidad + Reglas + Tus Hints) ---
+    system = f"""
+    Eres el Agente NLP del sistema AIDA, un asistente experto en análisis financiero senior. 
+    Respondes SIEMPRE en español claro y profesional.
 
-    user = "\n".join(
-        [
-            f"Tarea: {task}",
-            f"Objetivo: {user_goal}",
-            "Contenido:",
-            content,
-        ]
-    )
+    REGLAS DE ORO:
+    - NO inventes datos ni menciones nombres de tablas SQL o lenguaje interno de BD.
+    - Si los datos son insuficientes, indícalo claramente.
+    - Prioriza precisión numérica y utilidad.
 
-    return system, user
+    CONFIGURACIÓN DE LA RESPUESTA:
+    - Audiencia: {audience_hint}
+    - Estilo: {style_hint}
+    - Formato: {format_hint}
+    - {length_hint}
+
+    INSTRUCCIONES ESPECÍFICAS DE LA TAREA:
+    {specific_instructions}
+    """.strip()
+
+    # User Prompt: Estructura de la petición actual
+    user = f"""
+    TAREA A REALIZAR: {task.upper()}
+    AUDIENCIA OBJETIVO: {audience.capitalize()}
+    OBJETIVO DEL USUARIO (user_goal): {user_goal}
+
+    CONTENIDO DE ENTRADA (DATOS/TEXTO):
+    {content}
+
+    Por favor, genera la respuesta siguiendo estrictamente las reglas del Sistema y el objetivo del usuario.
+    Respuesta:
+    """
+    
+    return system.strip(), user.strip()
 
 
 def _render_content_block(
@@ -363,9 +482,22 @@ def _render_content_block(
 
 
 def _normalize_style(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> Tuple[str, str, Dict[str, Any]]:
-    # audience: analista|cliente (default analista)
-    audience = (input_obj.get("audience") or input_obj.get("user_type") or payload.get("audience") or "analista")
-    audience = str(audience).strip().lower()
+    # 1. Prioridad 1: Rol del metadato (Login)
+    # 2. Prioridad 2: Rol definido en la tarea
+    # 3. Default: cliente (por seguridad financiera)
+    metadata = payload.get("metadata", {})
+
+    raw_audience = (
+        metadata.get("user_role") or 
+        input_obj.get("audience") or 
+        payload.get("audience") or 
+        "cliente"
+    )
+
+    audience = str(raw_audience).strip().lower()
+
+    if audience not in ["analista", "cliente"]:
+            audience = "cliente"
 
     # style: sencillo|tecnico|ejecutivo|breve (default ejecutivo para analista, sencillo para cliente)
     style = input_obj.get("style") or payload.get("style")
@@ -378,79 +510,6 @@ def _normalize_style(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> Tupl
         constraints = {}
 
     return audience, style, constraints
-
-
-# ---- LLM client (sin requests; solo stdlib) ----
-
-def _llm_or_fallback(system: str, user: str, fallback: str) -> str:
-    provider = DEFAULT_PROVIDER.strip().lower()
-
-    # Forzar mock si no hay red o para tests:
-    if provider == "mock" or os.getenv("NLP_FORCE_MOCK", "").lower() in {"1", "true", "yes"}:
-        return fallback
-
-    if provider == "ollama":
-        try:
-            return _call_ollama_chat(system, user)
-        except Exception:
-            return fallback
-
-    # Provider desconocido: fallback
-    return fallback
-
-
-def _post_json(url: str, payload: Dict[str, Any], timeout_s: float) -> Dict[str, Any]:
-    """
-    POST JSON usando urllib (stdlib).
-    Devuelve dict parseado desde JSON.
-    Lanza RuntimeError con detalle en errores HTTP/conexión.
-    """
-    body = json.dumps(payload, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(
-        url=url,
-        data=body,
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
-    try:
-        with urllib.request.urlopen(req, timeout=timeout_s) as resp:
-            raw = resp.read().decode("utf-8", errors="replace")
-            try:
-                return json.loads(raw) if raw else {}
-            except json.JSONDecodeError as e:
-                raise RuntimeError(f"Invalid JSON response: {e}") from e
-
-    except urllib.error.HTTPError as e:
-        try:
-            detail = e.read().decode("utf-8", errors="replace")
-        except Exception:
-            detail = ""
-        raise RuntimeError(f"HTTP {e.code} calling {url}: {detail}") from e
-
-    except urllib.error.URLError as e:
-        raise RuntimeError(f"Connection error calling {url}: {e}") from e
-
-
-def _call_ollama_chat(system: str, user: str) -> str:
-    url = f"{OLLAMA_BASE_URL.rstrip('/')}/api/chat"
-    payload = {
-        "model": DEFAULT_MODEL,
-        "stream": False,
-        "messages": [
-            {"role": "system", "content": system},
-            {"role": "user", "content": user},
-        ],
-    }
-
-    data = _post_json(url, payload, timeout_s=REQUEST_TIMEOUT_S)
-
-    # Respuesta típica: {"message": {"role":"assistant", "content":"..."}, ...}
-    msg = (data or {}).get("message") or {}
-    content = msg.get("content")
-    if not isinstance(content, str) or not content.strip():
-        raise RuntimeError("Empty response from Ollama.")
-    return content.strip()
 
 
 # ---- Fallbacks (deterministas, sin LLM) ----

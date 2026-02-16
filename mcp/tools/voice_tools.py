@@ -1,19 +1,29 @@
-# aida-multimodal-onpremise/mcp/tools/image_tools.py
+# aida-multimodal-onpremise/mcp/tools/voice_tools.py
+
+import sys
+import os
+
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
 
 try:
     from agents.voice.voice_logic import process
-except ImportError:
+    print("[MCP] VOICE Agent cargado correctamente.")
 
+except Exception as e:
+    print(f"[MCP] No se pudo cargar VOICE Agent: {e}")
+    
     def process(payload: dict) -> dict:
-        return {"text": None, "status": "mock"}
-
+        return {
+            "status": "error",
+            "error": "El módulo de voz no está disponible.",
+            "text": ""
+        }
 
 def voice_process(payload: dict) -> dict:
-    """
-    Tool MCP para el Agente de Voz.
-    Payload define si es STT o TTS.
-    """
     return process(payload)
 
-
-TOOL_REGISTRY = {"voice.process": voice_process}
+TOOL_REGISTRY = {
+    "voice.process": voice_process
+}

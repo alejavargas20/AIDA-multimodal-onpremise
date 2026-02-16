@@ -1,3 +1,4 @@
+#  aida-multimodal-onpremise/orchestrator/state.py
 from typing import TypedDict, List, Literal, Dict, Any, Optional
 
 
@@ -19,6 +20,7 @@ class OrchestratorState(TypedDict, total=False):
     # FASE 1 – ROUTING DE CANAL
     # =========================
     normalized_text: str
+    file_context: str  # Contexto del usuario cuando adjunta imagen o pdf
     preprocessing_source: Literal["text", "stt", "ocr"]
 
     # =========================

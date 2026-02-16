@@ -1,22 +1,14 @@
-#from typing import Optional
-#from PIL import Image
-#import pytesseract
-
-#class OcrEngine:
-#    def __init__(self, tesseract_cmd: Optional[str] = None):
-#        if tesseract_cmd:
-#            pytesseract.pytesseract.tesseract_cmd = tesseract_cmd
-
-#    def extract_text_from_image(self, img: Image.Image, language: str = "es") -> str:
-#        lang = "spa" if language in ("es", "spa") else language
-#        config = "--oem 3 --psm 6"
-#        return pytesseract.image_to_string(img, lang=lang, config=config)
+# aida-multimodal-onpremise/agents/image/engines/ocr_engine.py
 
 from typing import Optional
 from PIL import Image
 import pytesseract
 import numpy as np
 import cv2
+
+# Si pytesseract lanza un error de "tesseract is not installed or it's 
+# not in your PATH", descomenta la línea de abajo y pon la ruta correcta.
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 class OcrEngine:
     def __init__(self, tesseract_cmd: Optional[str] = None):
@@ -50,8 +42,7 @@ class OcrEngine:
 
         img2 = self._preprocess(img)
 
-        # PSM 6 suele ir bien en bloques de texto.
-        # Si te mezcla líneas, prueba psm 4 o 3.
+        # Configuracion OCR: OEM 3 = LSTM, PSM 6 = bloque de texto uniforme, preserve_interword_spaces=1 para mantener espacios
         config = "--oem 3 --psm 6 -c preserve_interword_spaces=1"
 
         return pytesseract.image_to_string(img2, lang=lang, config=config)
