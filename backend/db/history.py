@@ -1,7 +1,7 @@
 # aida-multimodal-onpremise/backend/db/history.py
 from backend.db.connection import get_db
 
-def get_recent_history(session_id: str, limit: int = 5) -> str:
+def get_recent_history(session_id: str, limit: int = 2) -> str:
     """
     Recupera el historial reciente como TEXTO PLANO
     para inyectarlo en el Prompt Optimizer.
@@ -16,18 +16,22 @@ def get_recent_history(session_id: str, limit: int = 5) -> str:
         
         cursor = conn.cursor()
 
-        # Asegúrate de incluir input_type en el SELECT
-        cursor.execute(
-            """
-            SELECT TOP (?) role, content, input_type
+        query = f"""
+            SELECT TOP ({int(limit)}) role, content, input_type
             FROM chat_messages
-            WHERE session_id = ?
+            WHERE session_id = CAST(? AS UNIQUEIDENTIFIER)
             ORDER BY created_at DESC
-            """,
-            (limit, session_id),
-        )
+        """
+        
+        # Obligamos a que sea un string puro al pasarlo
+        cursor.execute(query, (str(session_id),))
 
         rows = cursor.fetchall()
+        print(f"[HISTORY DEBUG] Mensajes encontrados en DB: {len(rows)}")
+
+        if not rows:
+            return ""
+
         rows.reverse()  # Orden cronológico (Pasado -> Presente)
 
         history_lines = []

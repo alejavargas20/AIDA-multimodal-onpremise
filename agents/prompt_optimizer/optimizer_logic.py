@@ -74,7 +74,7 @@ def _llm_messages(system_prompt: str, user_text: str, metadata: Dict[str, Any], 
     user_payload = {
         "user_text": user_text,
         "metadata": metadata,
-        "constraints": {"output_format": "json_only", "max_tasks": 3},
+        "constraints": {"output_format": "json_only", "max_tasks": 1},
     }
     return [
         {"role": "system", "content": formatted_system.strip()},
@@ -127,8 +127,12 @@ def _normalize_plan_for_nlp(plan: Dict[str, Any]) -> Dict[str, Any]:
             t["input"] = inp
 
         normalized_tasks.append(t)
-
-    plan["intent_plan"]["tasks"] = normalized_tasks[:3]
+    
+    if normalized_tasks:
+        plan["intent_plan"]["tasks"] = [normalized_tasks[0]]
+    else:
+        plan["intent_plan"]["tasks"] = []
+        
     return plan
 
 

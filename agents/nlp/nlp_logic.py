@@ -20,13 +20,7 @@ import urllib.request
 import urllib.error
 from typing import Any, Dict, Optional, Tuple, List
 
-
-# # ---- Config (env) ----
-# DEFAULT_MODEL = os.getenv("NLP_MODEL", "llama3.2:3b")
-# DEFAULT_PROVIDER = os.getenv("NLP_PROVIDER", "ollama")  # "ollama" | "mock"
-# OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
-# REQUEST_TIMEOUT_S = float(os.getenv("NLP_REQUEST_TIMEOUT_S", "30"))
-# --- ENCABEZADO DEL ARCHIVO: Agregar import ---
+from matplotlib.style import context
 
 # ---- Config (Actualizada para Motor Híbrido) ----
 DEFAULT_MODEL = "Llama-3.1-8B-Hybrid"
@@ -47,7 +41,6 @@ except ImportError:
     def generate_response(msgs): return "Error crítico: Motor no encontrado."
 
 
-# ---- Public API ----
 SUPPORTED_TASKS = {
     "summarize",
     "explain",
@@ -136,24 +129,23 @@ def summarize(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
 
     """
     audience, style, constraints = _normalize_style(input_obj, payload)
-
     data = input_obj.get("data")
     text = input_obj.get("text") or input_obj.get("question") or ""
+    context = input_obj.get("context")
 
-    if data is None and (not isinstance(text, str) or not text.strip()):
-        raise ValueError("summarize requires 'input.data' or non-empty 'input.text'.")
+    if not any([data, text, context]):
+        raise ValueError("summarize requires data, text, or context.")
 
     user_goal = input_obj.get("goal") or "Resume la información principal."
-    content_block = _render_content_block(data=data, text=text)
+    content_block = _render_content_block(data=data, text=text, context=context)
 
     specific_instructions = """
-    Tu tarea es generar un RESUMEN EJECUTIVO de información financiera.
+    TAREA: ERES UN MAESTRO DEL RESUMEN. Analiza el documento o los datos adjuntos y extrae la esencia.
     Instrucciones:
     - Analiza el contenido y extrae los puntos más críticos (saldos totales, variaciones de mora, montos de desembolso).
     - Si el contenido tiene métricas, prioriza las que presenten desviaciones o alertas.
     - Estilo para ANALISTAS: Lenguaje técnico, preciso y enfocado en KPIs.
     - Estilo para CLIENTES: Lenguaje sencillo, empático y explicativo.
-    - RESTRICCIÓN: No excedas las 5 a 7 líneas de texto.
     - FORMATO: Usa viñetas para datos numéricos y un párrafo corto para la conclusión principal.
     """
 
@@ -166,12 +158,7 @@ def summarize(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
         user_goal=user_goal,
         content=content_block,
     )
-    return _llm_or_fallback(
-        system,
-        user,
-        fallback=_fallback_summarize(data=data, text=text, audience=audience, style=style),
-    )
-
+    return _llm_or_fallback(system, user, "Error al resumir.")
 
 def explain(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     """
@@ -196,15 +183,16 @@ def explain(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     table = input_obj.get("table")
     field = input_obj.get("field")
     data = input_obj.get("data")
+    context = input_obj.get("context")
 
-    if not any([concept, question, table, field, data]):
+    if not any([concept, question, table, field, data, context]):
         raise ValueError(
             "explain requires at least one of: concept/topic, question/text, table, field, data."
         )
 
     user_goal = input_obj.get("goal") or "Explica claramente lo solicitado."
     content_block = _render_content_block(
-        data=data, text=question, concept=concept, table=table, field=field
+        data=data, text=question, concept=concept, table=table, field=field, context=context
     )
 
     specific_instructions = """
@@ -215,6 +203,35 @@ def explain(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     - Si el concepto proviene de un cálculo o dato estructurado, explica qué impacto tiene esa cifra para el usuario.
     - Evita jerga técnica compleja si la audiencia es un "Cliente".
     - Conceptos clave de dominio: Días de mora (atraso), Saldo vencido, Reprogramación (ajuste de cuotas), Condonación (perdón de deuda), Cartera Castigada.
+
+    Y algunos de estos conceptos pueda ayudarles
+
+    Glosario (términos del negocio):
+    - Producto / Nombre del producto: tipo de crédito (p.ej. consumo, pyme).
+    - Destino del crédito: uso del dinero (capital trabajo, vivienda, etc.).
+    - Campaña / Tipo de campaña: origen comercial del crédito (promoción/segmento).
+    - Monto del crédito: principal desembolsado.
+    - Plazo del crédito: meses/cuotas.
+    - Tasa del crédito: tasa aplicada.
+    - Cuota del crédito: pago periódico.
+    - Modalidad de pago: frecuencia/forma (mensual, quincenal, débito, ventanilla).
+    - Fecha de vencimiento / vencimiento última cuota: fecha límite o fin del cronograma.
+    - Región / Oficina: ubicación comercial de la operación.
+    - Calificación / Clasificación interna: nivel de riesgo (según política interna).
+    - Situación del cliente / situación contable del crédito: estado (vigente, vencido, castigado, etc.).
+    - Mora / días de atraso: días de incumplimiento.
+    - Saldo capital / saldo capital a la fecha: principal pendiente.
+    - Saldo vencido a la fecha: parte del saldo impaga y vencida.
+    - Saldo provisión a la fecha: provisión contable por riesgo.
+    - Reprogramación (tipo operación): cambio del cronograma/condiciones.
+    - Condonación (tipo operación) / monto condonado: deuda perdonada parcial o total.
+
+
+    1. Si hay un 'Documento Adjunto', úsalo como tu fuente principal de verdad para explicar.
+    2. Si no hay documento, usa tu conocimiento financiero para definir el concepto claramente.
+    3. Usa metáforas o ejemplos de la vida real si ayudan a la comprensión.
+    4. Responde con seguridad, sin titubear.
+
     """
 
     system, user = _build_prompt(
@@ -226,18 +243,7 @@ def explain(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
         user_goal=user_goal,
         content=content_block,
     )
-    return _llm_or_fallback(
-        system,
-        user,
-        fallback=_fallback_explain(
-            concept=concept,
-            question=question,
-            table=table,
-            field=field,
-            audience=audience,
-            style=style,
-        ),
-    )
+    return _llm_or_fallback(system, user, "Error al explicar.")
 
 
 def rephrase(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
@@ -249,8 +255,8 @@ def rephrase(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     """
     audience, style, constraints = _normalize_style(input_obj, payload)
     text = input_obj.get("text") or input_obj.get("question") or ""
-    if not isinstance(text, str) or not text.strip():
-        raise ValueError("rephrase requires non-empty 'input.text'.")
+    # if not isinstance(text, str) or not text.strip():
+    #     raise ValueError("rephrase requires non-empty 'input.text'.")
 
     user_goal = input_obj.get("goal") or "Reformula el texto manteniendo el significado."
     content_block = _render_content_block(text=text)
@@ -273,8 +279,7 @@ def rephrase(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
         user_goal=user_goal,
         content=content_block,
     )
-    return _llm_or_fallback(system, user, fallback=text.strip())
-
+    return _llm_or_fallback(system, user, fallback="Lo siento, no pude reformular el texto en este momento.")
 
 def reason(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     """
@@ -286,25 +291,28 @@ def reason(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
       - audience/style/constraints
     """
     audience, style, constraints = _normalize_style(input_obj, payload)
-
     question = input_obj.get("question") or input_obj.get("text") or ""
-    if not isinstance(question, str) or not question.strip():
-        raise ValueError("reason requires non-empty 'input.question' (or 'input.text').")
 
     context = input_obj.get("context")
     data = input_obj.get("data")
-    user_goal = input_obj.get("goal") or "Responde y justifica de forma clara."
+
+    print(f"[NLP_LOGIC DEBUG] Longitud de la pregunta: {len(str(question))}")
+    print(f"[NLP_LOGIC DEBUG] Longitud del contexto recibido: {len(str(context)) if context else 0}")
+
+    user_goal = input_obj.get("goal") or "Responde a la pregunta del usuario."
 
     content_block = _render_content_block(text=question, data=data, context=context)
 
     specific_instructions = """
-    Tu tarea es RAZONAR y JUSTIFICAR comportamientos financieros basándote en la evidencia.
-    Instrucciones:
-    - Responde a preguntas complejas de tipo "¿Por qué?", "¿A qué se debe?" o "¿Qué impacto tiene?".
-    - Relaciona causas y efectos de forma lógica (ej: Relación entre el aumento del plazo y el incremento del riesgo).
-    - Identifica tendencias en los datos estructurados y formula hipótesis basadas únicamente en ellos.
-    - ADVERTENCIA DE RIESGO: Si detectas indicadores de peligro financiero (ej: mora creciente), menciónalo con cautela y profesionalismo.
-    - Si faltan datos para llegar a una conclusión definitiva, dilo explícitamente.
+    TAREA: COMPRENSIÓN DE LECTURA Y RAZONAMIENTO.
+    El usuario te ha hecho una pregunta. Debes responderla basándote PRIMORDIALMENTE en el 'Documento Adjunto' y el 'Historial'.
+    
+    REGLAS DE ORO PARA RESPONDER:
+    1. BUSCA LA RESPUESTA EN EL TEXTO: Lee meticulosamente el documento adjunto. Si la respuesta está ahí (por ejemplo, el alcance de una norma, las normas emitidas, etc.), extráela y respóndela directamente.
+    2. SÉ AMIGABLE: despídete ofreciendo más ayuda.
+    3. DEDUCCIÓN LÓGICA: Si te piden analizar o justificar datos, relaciona las causas y efectos de forma lógica.
+    4. PROHIBIDO RENDIRSE FÁCILMENTE: Haz tu mayor esfuerzo por encontrar la relación entre la pregunta y el texto provisto. Solo si es ABSOLUTAMENTE IMPOSIBLE de deducir, indica educadamente que el documento no menciona ese detalle.
+    5. ADVERTENCIA DE RIESGO: Si detectas indicadores de peligro financiero (ej: mora creciente), menciónalo con cautela y profesionalismo.
     """
 
     system, user = _build_prompt(
@@ -316,8 +324,7 @@ def reason(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
         user_goal=user_goal,
         content=content_block,
     )
-    return _llm_or_fallback(system, user, fallback=_fallback_reason(question=question))
-
+    return _llm_or_fallback(system, user, "Se produjo un error de inferencia en mi motor local.")
 
 def generate(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     """
@@ -329,8 +336,8 @@ def generate(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     """
     audience, style, constraints = _normalize_style(input_obj, payload)
     instructions = input_obj.get("instructions") or input_obj.get("prompt") or ""
-    if not isinstance(instructions, str) or not instructions.strip():
-        raise ValueError("generate requires non-empty 'input.instructions' (or 'input.prompt').")
+    # if not isinstance(instructions, str) or not instructions.strip():
+    #     raise ValueError("generate requires non-empty 'input.instructions' (or 'input.prompt').")
 
     context = input_obj.get("context")
     data = input_obj.get("data")
@@ -357,8 +364,7 @@ def generate(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
         user_goal=user_goal,
         content=content_block,
     )
-    return _llm_or_fallback(system, user, fallback=instructions.strip())
-
+    return _llm_or_fallback(system, user, "Error al generar contenido.")
 
 # ---- Prompting ----
 
@@ -366,6 +372,11 @@ def _llm_or_fallback(system: str, user: str, fallback: str) -> str:
     """
     Llama al Motor Híbrido Local.
     """
+
+    print("\n[NLP_LOGIC DEBUG] --- PREPARANDO LLAMADA A LOCAL_ENGINE ---")
+    print(f"[NLP_LOGIC DEBUG] Longitud System Prompt: {len(system)}")
+    print(f"[NLP_LOGIC DEBUG] Longitud User Prompt: {len(user)}")
+
     try:
         messages = [
             {"role": "system", "content": system},
@@ -376,6 +387,8 @@ def _llm_or_fallback(system: str, user: str, fallback: str) -> str:
     except Exception as e:
         print(f"[NLP Agent] Error en inferencia local: {e}")
         return fallback
+
+    
 
 def _build_prompt(
     task: str,
@@ -392,10 +405,15 @@ def _build_prompt(
     length = (constraints.get("length") or "medium").lower()
     out_format = (constraints.get("format") or "paragraph").lower()
 
-    audience_hint = {
-        "analista": "El usuario es un analista financiero. Usa terminología técnica cuando sea útil.",
-        "cliente": "El usuario es un cliente. Usa lenguaje claro, sin jerga innecesaria.",
-    }.get(audience, "Ajusta el nivel de detalle al usuario.")
+    # audience_hint = {
+    #     "analista": "El usuario es un analista financiero. Usa terminología técnica, explicación técnica con lógica conceptual.",
+    #     "cliente": "El usuario es un cliente. Usa lenguaje claro, impacto práctico.",
+    # }.get(audience, "Ajusta el nivel de detalle al usuario.")
+
+    if audience == "analista":
+        audience_hint = "Te diriges a un COLEGA ANALISTA FINANCIERO. Usa un tono profesional, técnico, pero amable y colaborador. No seas seco, sé un apoyo experto."
+    else:
+        audience_hint = "Te diriges a un CLIENTE que busca ayuda. Sé EXTREMADAMENTE cercano, paciente, empático y usa un lenguaje que cualquiera pueda entender. Tu objetivo es que el cliente se sienta acompañado."
 
     style_hint = {
         "tecnico": "Tono técnico, preciso, orientado a definiciones y contexto.",
@@ -406,15 +424,15 @@ def _build_prompt(
 
     format_hint = "Responde en viñetas." if out_format == "bullets" else "Responde en párrafos claros."
     length_hint = {
-        "short": "Máximo ~6-8 líneas.",
-        "medium": "Longitud moderada.",
-        "long": "Puedes extenderte si mejora la claridad.",
-    }.get(length, "Longitud moderada.")
+        "short": "Regla de longitud: Sé muy breve, máximo 5 líneas.",
+        "medium": "Regla de longitud: Responde con detalle moderado.",
+        "long": "Regla de longitud: Sé exhaustivo y detallado en tu explicación.",
+    }.get(length, "")
 
     # --- 2. SYSTEM PROMPT (Identidad + Reglas + Tus Hints) ---
     system = f"""
-    Eres el Agente NLP del sistema AIDA, un asistente experto en análisis financiero senior. 
-    Respondes SIEMPRE en español claro y profesional.
+    ERES AIDA: La Inteligencia Artificial de acompañamiento financiero más avanzada.
+    TU PERSONALIDAD: Eres amable, detallista, inteligente y siempre das un 'extra' en tus respuestas.
 
     REGLAS DE ORO:
     - NO inventes datos ni menciones nombres de tablas SQL o lenguaje interno de BD.
@@ -423,7 +441,7 @@ def _build_prompt(
 
     CONFIGURACIÓN DE LA RESPUESTA:
     - Audiencia: {audience_hint}
-    - Estilo: {style_hint}
+    - Estilo de respuesta: {style_hint}
     - Formato: {format_hint}
     - {length_hint}
 
@@ -440,7 +458,7 @@ def _build_prompt(
     CONTENIDO DE ENTRADA (DATOS/TEXTO):
     {content}
 
-    Por favor, genera la respuesta siguiendo estrictamente las reglas del Sistema y el objetivo del usuario.
+    Por favor, genera la respuesta siguiendo estrictamente las reglas del Sistema y el objetivo del usuario. '{user_goal}'.
     Respuesta:
     """
     
@@ -458,23 +476,40 @@ def _render_content_block(
 ) -> str:
     parts: List[str] = []
 
-    if concept:
-        parts.append(f"- Concepto/Topic: {concept}")
+    # if concept:
+    #     parts.append(f"- Concepto/Topic: {concept}")
 
-    if isinstance(text, str) and text.strip():
-        parts.append(f"- Pregunta/Text:\n{text.strip()}")
+    # if isinstance(text, str) and text.strip():
+    #     parts.append(f"- Pregunta/Text:\n{text.strip()}")
 
-    if context is not None:
-        parts.append(f"- Contexto:\n{_safe_json(context)}")
+    # if context is not None:
+    #     parts.append(f"- Contexto:\n{_safe_json(context)}")
 
-    if table is not None:
-        parts.append(f"- Tabla:\n{_safe_json(table)}")
+    # if table is not None:
+    #     parts.append(f"- Tabla:\n{_safe_json(table)}")
 
-    if field is not None:
-        parts.append(f"- Campo:\n{_safe_json(field)}")
+    # if field is not None:
+    #     parts.append(f"- Campo:\n{_safe_json(field)}")
+
+    # if data is not None:
+    #     parts.append(f"- Datos estructurados:\n{_safe_json(data)}")
+
+    # if not parts:
+    #     return "(sin contenido)"
+    # return "\n".join(parts)
+
+    # Orden lógico para que el modelo procese mejor:
+    if context is not None and str(context).strip():
+        parts.append(f"--- DOCUMENTO ADJUNTO / HISTORIAL DE CONVERSACIÓN ---\n{_safe_json(context)}\n---------------------------------------------------")
 
     if data is not None:
-        parts.append(f"- Datos estructurados:\n{_safe_json(data)}")
+        parts.append(f"--- DATOS ESTRUCTURADOS DE LA BASE DE DATOS ---\n{_safe_json(data)}\n-----------------------------------------------")
+
+    if concept:
+        parts.append(f"Concepto específico a evaluar: {concept}")
+
+    if isinstance(text, str) and text.strip():
+        parts.append(f"\nPREGUNTA O INSTRUCCIÓN DEL USUARIO:\n{text.strip()}")
 
     if not parts:
         return "(sin contenido)"
@@ -485,9 +520,11 @@ def _normalize_style(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> Tupl
     # 1. Prioridad 1: Rol del metadato (Login)
     # 2. Prioridad 2: Rol definido en la tarea
     # 3. Default: cliente (por seguridad financiera)
+    context_data = payload.get("context", {})
     metadata = payload.get("metadata", {})
 
     raw_audience = (
+        context_data.get("user_role") or 
         metadata.get("user_role") or 
         input_obj.get("audience") or 
         payload.get("audience") or 
@@ -496,8 +533,11 @@ def _normalize_style(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> Tupl
 
     audience = str(raw_audience).strip().lower()
 
-    if audience not in ["analista", "cliente"]:
-            audience = "cliente"
+    # Mapeo de sinónimos de base de datos
+    if audience in ["tecnico", "analista"]:
+        audience = "analista"
+    else:
+        audience = "cliente"
 
     # style: sencillo|tecnico|ejecutivo|breve (default ejecutivo para analista, sencillo para cliente)
     style = input_obj.get("style") or payload.get("style")
@@ -531,11 +571,8 @@ def _fallback_explain(*, concept: Any, question: str, table: Any, field: Any, au
         c = concept.strip().lower()
         glossary = {
             "días de mora": "Los días de mora son la cantidad de días que un pago se encuentra atrasado respecto a su fecha de vencimiento.",
-            "dias de mora": "Los días de mora son la cantidad de días que un pago se encuentra atrasado respecto a su fecha de vencimiento.",
             "saldo vencido": "El saldo vencido es la parte del saldo del crédito que está vencida (pagos que debieron realizarse y no se pagaron a tiempo).",
             "reprogramación de crédito": "Una reprogramación de crédito es un cambio pactado en el calendario de pagos (fechas/plazo/cuota) para adecuarlo a la capacidad de pago.",
-            "reprogramacion de credito": "Una reprogramación de crédito es un cambio pactado en el calendario de pagos (fechas/plazo/cuota) para adecuarlo a la capacidad de pago.",
-            "condonación": "Una condonación es la eliminación total o parcial de una deuda (o de intereses/moras) según condiciones definidas por la entidad.",
             "condonacion": "Una condonación es la eliminación total o parcial de una deuda (o de intereses/moras) según condiciones definidas por la entidad.",
         }
         if c in glossary:
@@ -611,9 +648,15 @@ def _error(message: str, *, task: Optional[str], t0: float) -> Dict[str, Any]:
             "model": DEFAULT_MODEL,
         },
     }
-
+    
 
 def _safe_json(obj: Any) -> str:
+    """
+    Convierte a string de forma segura. Si ya es un string (como un PDF o texto puro), 
+    lo devuelve intacto para NO destruir los saltos de línea vitales para el LLM.
+    """
+    if isinstance(obj, str):
+        return obj.strip()
     try:
         return json.dumps(obj, ensure_ascii=False, indent=2, default=str)
     except Exception:

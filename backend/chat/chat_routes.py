@@ -52,15 +52,19 @@ def create_session(payload: CreateSessionRequest):
         if conn:
             conn.close()
 
-
 @router.post("/message")
 def save_message(payload: MessageRequest):
     conn = None
     try:
+
+        # VALIDACIÓN BÁSICA PARA EVITAR INYECCIÓN SQL EN input_type
+        safe_input_type = payload.input_type
+        if safe_input_type not in ["text", "image", "file"]:
+            safe_input_type = "text"  
+
         conn = get_connection()
         cursor = conn.cursor()
 
-        # Usamos OUTPUT INSERTED.message_id para obtener el ID generado por SQL (NEWID())
         cursor.execute("""
             INSERT INTO chat_messages
             (session_id, user_id, role, input_type, content, agent_chain, latency_ms)
@@ -70,13 +74,14 @@ def save_message(payload: MessageRequest):
             str(payload.session_id),
             payload.user_id,
             payload.role,
-            payload.input_type,
+            safe_input_type, # VALIDACIÓN BÁSICA PARA EVITAR INYECCIÓN SQL EN input_type
             payload.content,
             payload.agent_chain,
             payload.latency_ms
         )
 
         row = cursor.fetchone()
+
         if not row:
             raise Exception("No se pudo insertar el mensaje")
             

@@ -1,4 +1,3 @@
-
 # aida-multimodal-onpremise/agents/local_engine.py
 import os
 import sys
@@ -21,13 +20,9 @@ class HybridEngine:
 
     @classmethod
     def get_llm(cls, model_type: str):
-        # 1. Normalizamos a minúsculas para evitar el bug de "SQL" vs "sql"
         model_type = model_type.strip().lower()
-        
-        # 2. Consultamos la memoria global de Python
         cache = sys.modules["AIDA_LLM_CACHE"]
         
-        # Si ya está en la VRAM, lo devolvemos al instante
         if model_type in cache and cache[model_type] is not None:
             return cache[model_type]
 
@@ -37,28 +32,31 @@ class HybridEngine:
         print(f"\n[ENGINE] Inicializando modelo: {model_type.upper()}")
 
         if not os.path.exists(target_path):
-            print(f"[ENGINE WARNING] Falta modelo: {target_path}. Se omitirá su carga inicial.")
+            print(f"[ENGINE WARNING] Falta modelo: {target_path}. Se omitirá su carga.")
             return None
 
         try:
             print(f"[ENGINE] Cargando '{target_path}' en {'GPU RTX 5090' if cls._is_gpu_mode else 'CPU'}...")
             
-            # Inicialización optimizada
+            # Configuración de contexto (KV Cache)
+            ctx_size = 4096 if model_type == "nlp" else 2048
+
+            batch_size = 1024 if cls._is_gpu_mode else 512
+
             llm_instance = Llama(
                 model_path=target_path,
-                n_gpu_layers=-1 if cls._is_gpu_mode else 0, 
-                n_ctx=8192 if cls._is_gpu_mode else 2048,
-                n_batch=2048 if cls._is_gpu_mode else 256, 
-                use_mmap=True, 
-                offload_kqv=True if cls._is_gpu_mode else False,
-                flash_attn=True if cls._is_gpu_mode else False, 
-                n_threads=4, 
+                n_gpu_layers=-1 if cls._is_gpu_mode else 0, # -1 FORZA todo a la VRAM de la 5090
+                n_ctx=ctx_size,                             # Contexto reducido para no explotar la RAM
+                n_batch=batch_size,                                # Batch más seguro para el puente RAM-VRAM
+                use_mmap=False,                             # PROHIBE a Windows usar RAM como buffer de disco
+                offload_kqv=True if cls._is_gpu_mode else False, # Mueve la memoria de conversación a la GPU
+                flash_attn=True,  # Acelera en GPUs modernas
+                #n_threads=4, 
                 verbose=False
             )
             
-            # Lo guardamos en el candado global
             cache[model_type] = llm_instance
-            print(f"[ENGINE] Modelo {model_type.upper()} cargado y residente en VRAM.")
+            print(f"[ENGINE] Modelo {model_type.upper()} cargado EXITOSAMENTE en VRAM.")
             
             return llm_instance
             
@@ -66,46 +64,60 @@ class HybridEngine:
             print(f"[ENGINE] Error crítico cargando modelo {model_type}: {e}")
             raise e
 
-    # @classmethod
-    # def generate(cls, messages: list, model_type="nlp", temperature=0.7) -> str:
-    #     llm = cls.get_llm(model_type)
-    #     if llm is None:
-    #         return "Error: El modelo no está disponible."
-            
-    #     output = llm.create_chat_completion(
-    #         messages=messages,
-    #         max_tokens=1024, 
-    #         temperature=temperature
-    #     )
-    #     return output["choices"][0]["message"]["content"]
-
     @classmethod
     def generate(cls, messages: list, model_type="nlp", temperature=0.7) -> str:
+        #print(f"\n[ENGINE DEBUG] Entrando a generate(). Model_type: {model_type}")
+
+        # Validacion anti access-violation 0x00000000
+        if not messages or not isinstance(messages, list):
+            #print("[ENGINE ERROR] Messages es nulo o no es una lista.")
+            raise ValueError("Messages list is empty or invalid.")
+        
+        for idx, msg in enumerate(messages):
+            if not isinstance(msg, dict):
+                print(f"[ENGINE ERROR] El mensaje en índice {idx} no es un diccionario.")
+            if "content" not in msg or msg["content"] is None:
+                #print(f"[ENGINE ERROR] El mensaje en índice {idx} tiene un content NULO.")
+                # Parche temporal de emergencia si viene nulo
+                msg["content"] = ""
+
+        #print(f"[ENGINE DEBUG] Validación de mensajes pasada. LLamando a get_llm()")
         llm = cls.get_llm(model_type)
         if llm is None:
             return "Error: El modelo no está disponible."
             
-        # Forzamos a Qwen a olvidar consultas anteriores 
-        if model_type.strip().lower() == "data":
+        if model_type.strip().lower() == "data" or model_type.strip().lower() == "sql":
+            #print("[ENGINE DEBUG] Reseteando KV Cache para SQL.")
             llm.reset()
+
+        #print(f"[ENGINE DEBUG] Enviando solicitud a llama_cpp.create_chat_completion...")
             
-        output = llm.create_chat_completion(
-            messages=messages,
-            max_tokens=1024, 
-            temperature=temperature
-        )
-        return output["choices"][0]["message"]["content"]
+        try:
+            output = llm.create_chat_completion(
+                messages=messages,
+                max_tokens=1024, 
+                temperature=temperature
+            )
+            #print(f"[ENGINE DEBUG] Generación exitosa.")
+            return output["choices"][0]["message"]["content"]
+        except Exception as e:
+            print(f"[ENGINE ERROR FATAL DURANTE INFERENCIA]: {e}")
+            raise e
 
 def generate_response(messages: list, model_type="nlp") -> str:
     safe_type = model_type.strip().lower()
     temp = 0.1 if safe_type == "sql" else 0.7
     return HybridEngine.generate(messages, model_type=safe_type, temperature=temp)
 
-# PRE-CARGA DE LLMs (EAGER LOADING)
 if os.environ.get("AIDA_LLMS_PRELOADED") != "1":
     os.environ["AIDA_LLMS_PRELOADED"] = "1"
     print("\n[PRE-CARGA] Iniciando carga de LLMs en VRAM...")
+    
+    # Solo cargamos NLP de inicio. SQL se cargará solo si el agente Data lo pide.
+    # Esto salva inmediatamente unos ~9GB de tu RAM al arrancar.
     HybridEngine.get_llm("nlp")
-    HybridEngine.get_llm("sql")
-    print("[PRE-CARGA] Todos los LLMs están listos.\n")
-
+    
+    # Comentamos la carga automática de Qwen (SQL) para que el PC respire.
+    # HybridEngine.get_llm("sql") 
+    
+    print("[PRE-CARGA] Carga inicial completada (Modo ahorro de RAM).\n")

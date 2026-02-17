@@ -18,18 +18,29 @@ def prompt_optimizer(state: OrchestratorState) -> OrchestratorState:
     state.setdefault("errors", [])
     text = state.get("normalized_text", "")
     context = state.get("file_context", "")      # El PDF/Imagen puede tener contexto adicional
+    chat_history = state.get("chat_history", "")  # Historial recuperado en Fase 1
 
     if not text:
         state["errors"].append("Prompt optimizer: no hay normalized_text.")
         return state
 
     try:
+        
+        # Combinamos la memoria de la conversación con el contenido del archivo
+        full_context = ""
+        if chat_history:
+            full_context += f"--- MEMORIA DE CONVERSACIÓN RECIENTE ---\n{chat_history}\n\n"
+        if context:
+            full_context += f"--- CONTENIDO DEL ARCHIVO ADJUNTO ---\n{context}\n"
+        
+        
         payload = {
             "user_text": text,
-            "context": context,  # Pasamos el contexto al prompt optimizer
+            "context": full_context,  # Pasamos el contexto al prompt optimizer
             "metadata": state.get("metadata", {}),
             "chat_history": state.get("chat_history", "") # Pasamos el historial al prompt optimizer
         }
+
         results = call_mcp("prompt.optimize", payload)
         state["optimized_text"] = results.get("optimized_prompt", "")
         state["intent_json"] = results.get("intent_plan")
