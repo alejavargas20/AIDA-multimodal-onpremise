@@ -94,18 +94,6 @@ def phase1_router(state: OrchestratorState) -> OrchestratorState:
             except Exception as e:
                 state["errors"].append(f"Error decodificando archivo: {e}")
                 return state
-    
-            # # 2. LLAMAR AL AGENTE DE IMAGEN CON LA RUTA
-            # print(f"Llamando a image.process con: {target_path}")
-
-            # results = call_mcp(
-            #     "image.process", {
-            #         "action": "extract_text", # IMPORTANTE: Añadir la acción
-            #         "file_path": target_path
-            #     })  # Que más necesita el MCP en el payload
-            
-            # # 3. GUARDAR RESULTADO
-            # extracted_text = results.get("normal_text", "")
 
             # 2. LLAMAR AL AGENTE DE IMAGEN CON LA RUTA
             print(f"Llamando a image.process con: {target_path}")
