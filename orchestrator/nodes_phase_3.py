@@ -31,27 +31,6 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
             state["errors"].append("ExecutePlan: step sin 'agent' (tool_name).")
             continue
 
-        # # para que no pierda el contexto si el Prompt Optimizer resumió mucho
-        # if tool_name == "nlp.process":
-            
-        #     historial = state.get("chat_history", "").strip()
-        #     prefix = f"--- HISTORIAL DE CONVERSACIÓN RECIENTE ---\n{historial}\n------------------------------------------\n\n" if historial else ""
-
-        #     # 2. Inyectamos el historial y la pregunta original
-        #     if "text" in inp and len(str(inp["text"])) < len(base_text):
-        #         mensaje_final = f"{prefix}El usuario dice: '{base_text}' (Concepto detectado: {inp['text']}). Responde considerando el historial."
-        #     elif "question" in inp and len(str(inp["question"])) < len(base_text):
-        #         mensaje_final = f"{prefix}El usuario pregunta: '{base_text}'. Responde considerando el historial."
-        #     else:
-        #         texto_original = inp.get("text") or inp.get("question") or inp.get("instructions") or inp.get("prompt") or base_text
-        #         mensaje_final = f"{prefix}Petición actual del usuario: {texto_original}. Responde considerando el historial."
-
-        #     # Rellenamos TODAS las variables posibles para evitar el error de 'generate requires...'
-        #     inp["text"] = mensaje_final
-        #     inp["question"] = mensaje_final
-        #     inp["instructions"] = mensaje_final
-        #     inp["prompt"] = mensaje_final
-
         if tool_name == "nlp.process":
             # 1. Recuperar historial
             historial = state.get("chat_history", "").strip()
@@ -159,110 +138,6 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
     state["agent_results"] = results
     print(state["agent_results"])
     return state
-
-
-# def assemble_results(state: OrchestratorState) -> OrchestratorState:
-#     print("\nASSEMBLE RESULTS")
-#     user_metadata = state.get("metadata", {})
-#     data_raw = state.get("last_data_execution")
-#     blocks = state.get("agent_results", [])
-#     state.setdefault("errors", [])
-
-#     assembled_parts = []
-
-#     if not blocks:
-#         state["assembled_text"] = "No se generaron resultados por parte de los agentes."
-#         return state
-    
-#     # Si tenemos un resultado numérico de la DB, obligamos al NLP a explicarlo.
-#     if data_raw is not None:
-#         print("Invocando NLP para completar respuesta de los datos obtenidos...")
-        
-#         question_user = state.get("normalized_text", "")
-
-#         synthesis_payload = {
-#             "task": "generate", 
-#             "input": {
-#                 "instructions": f"El usuario hizo esta consulta: '{question_user}'. Responde a su pregunta de forma directa, natural y conversacional utilizando ÚNICAMENTE los datos estructurados que se te adjuntan. No menciones que estás leyendo una base de datos ni uses jerga SQL.",
-#                 "data": data_raw,                        # El dato crudo obtenido de la consulta a la base de datosç
-#                 "context": state.get("file_context"), # OCR si existe
-#                 "goal": "Dar la respuesta final al usuario basada en los datos extraídos."
-#             },
-#             "metadata": user_metadata
-#         }
-
-#         try:
-#             # Llamamos a la herramienta registrada en el MCP
-#             synthesis_result = call_mcp("nlp.process", synthesis_payload)
-#             final_answer = synthesis_result.get("answer")
-            
-#             if final_answer:
-#                 state["assembled_text"] = final_answer
-#                 return state # Salimos con la respuesta humanizada
-#         except Exception as e:
-#             state["errors"].append(f"Assemble: error en síntesis final: {e}")
-
-#     # Si no hubo datos o la síntesis falló, unimos lo que haya (PDF, Texto crudo, etc)
-
-#     for block in blocks:
-#         block_type = block.get("type")
-#         role = block.get("role")
-#         action = block.get("action")
-#         content = block.get("content", {})
-
-#         # --- DATA AGENT ---
-#         if block_type == "tool_result" and role == "data.process":
-#             status = content.get("status", "unknown")
-#             inner_result = content.get("execution_result", {})
-#             #data = content.get("data")
-#             data = inner_result.get("result") or inner_result.get("rows")
-#             sql = content.get("sql", "")    
-
-#             if status == "success" and data is not None:
-#                 data_str = json.dumps(data, indent=2, ensure_ascii=False)
-#                 assembled_parts.append(
-#                     f"[DATOS]\nResultado de la consulta ({action}):\n{data_str}"
-#                 )
-#             else:
-#                 error_msg = inner_result.get("error", "Sin datos o consulta fallida")
-#                 assembled_parts.append(
-#                     f"[DATOS]\nConsulta ejecutada ({action}), \nInfo: {error_msg}"
-#                 )
-
-#         # --- NLP AGENT ---
-#         elif block_type == "tool_result" and role == "nlp.process":
-#             output = content.get("answer")
-
-#             if output:
-#                 assembled_parts.append(f"[ANÁLISIS]\n{output}")
-#             else:
-#                 assembled_parts.append(
-#                     "[ANÁLISIS]\nEl agente NLP no devolvió contenido."
-#                 )
-
-#         # --- IMAGE AGENT ---
-#         elif block_type == "tool_result" and role == "image.process":
-#             output = content.get("normal_text")
-#             if output:
-#                 assembled_parts.append(f"[IMAGEN]\n{output}")
-
-#         # --- VOICE AGENT ---
-#         elif block_type == "tool_result" and role == "voice.process":
-#             output = content.get("text") or content.get("result", {}).get("text")
-#             if output:
-#                 assembled_parts.append(f"[AUDIO]\n{output}")
-
-#         # --- ERROR ---
-#         elif block_type == "error":
-#             assembled_parts.append(f"[ERROR]\n{content}")
-
-#         # --- UNKNOWN BLOCK ---
-#         else:
-#             assembled_parts.append(f"[INFO]\nResultado no reconocido: {block}")
-
-#     # Unir todo en un solo texto
-#     state["assembled_text"] = "\n\n".join(assembled_parts)
-#     return state
 
 def assemble_results(state: OrchestratorState) -> OrchestratorState:
     print("\nASSEMBLE RESULTS")
