@@ -18,6 +18,7 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
 
     # Usamos el mejor texto para pasar como contexto
     base_text = state.get("optimized_text") or state.get("normalized_text") or ""
+    source = state.get("preprocessing_source", "text")
 
     for step in plan:
         tool_name = step.get("agent")  # <-- lo que viene del prompt optimizer
@@ -30,6 +31,77 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
             state["errors"].append("ExecutePlan: step sin 'agent' (tool_name).")
             continue
 
+        # # para que no pierda el contexto si el Prompt Optimizer resumió mucho
+        # if tool_name == "nlp.process":
+            
+        #     historial = state.get("chat_history", "").strip()
+        #     prefix = f"--- HISTORIAL DE CONVERSACIÓN RECIENTE ---\n{historial}\n------------------------------------------\n\n" if historial else ""
+
+        #     # 2. Inyectamos el historial y la pregunta original
+        #     if "text" in inp and len(str(inp["text"])) < len(base_text):
+        #         mensaje_final = f"{prefix}El usuario dice: '{base_text}' (Concepto detectado: {inp['text']}). Responde considerando el historial."
+        #     elif "question" in inp and len(str(inp["question"])) < len(base_text):
+        #         mensaje_final = f"{prefix}El usuario pregunta: '{base_text}'. Responde considerando el historial."
+        #     else:
+        #         texto_original = inp.get("text") or inp.get("question") or inp.get("instructions") or inp.get("prompt") or base_text
+        #         mensaje_final = f"{prefix}Petición actual del usuario: {texto_original}. Responde considerando el historial."
+
+        #     # Rellenamos TODAS las variables posibles para evitar el error de 'generate requires...'
+        #     inp["text"] = mensaje_final
+        #     inp["question"] = mensaje_final
+        #     inp["instructions"] = mensaje_final
+        #     inp["prompt"] = mensaje_final
+
+        if tool_name == "nlp.process":
+            # 1. Recuperar historial
+            historial = state.get("chat_history", "").strip()
+            if not historial:
+                from backend.db.history import get_recent_history
+                session_id = str(state.get("session_id", ""))
+                if session_id:
+                    historial = get_recent_history(session_id, limit=2)
+
+            if len(historial) > 1500:
+                historial = "..." + historial[-1500:]
+
+            # ANTI CUDA-ERROR (AHORA CUBRE AUDIOS Y PDFs) ===
+            MAX_CHARS = 7000 
+            
+            # Protección A: Para PDFs e Imágenes
+            safe_file_context = state.get("file_context", "")
+            if isinstance(safe_file_context, str) and len(safe_file_context) > MAX_CHARS:
+                safe_file_context = safe_file_context[:MAX_CHARS] + "\n\n... [DOCUMENTO OMITIDO PARA NO SATURAR VRAM]"
+
+            # Protección B: Para Audios Largos (STT) y Textos Gigantes
+            safe_base_text = base_text
+            if isinstance(safe_base_text, str) and len(safe_base_text) > MAX_CHARS:
+                safe_base_text = safe_base_text[:MAX_CHARS] + "\n\n... [AUDIO/TEXTO TRUNCADO PARA NO SATURAR VRAM]"
+
+            print(f"\n[DEBUG HISTORIAL FINAL ENVIADO AL LLM]:\n{historial if historial else 'SIN HISTORIAL'}\n")
+
+            # 2. Identificamos si el usuario habló o escribió
+            tipo_input = "Transcripción de Audio del usuario" if source == "stt" else "Mensaje del usuario"
+
+            # 3. Construimos LA PREGUNTA / INSTRUCCIÓN
+            mensaje_final = (
+                f"Instrucción Estricta: Eres AIDA. Responde de forma natural y conversacional. "
+                f"Háblale directamente al usuario tratándolo de 'tú'. PROHIBIDO hablar en tercera persona.\n\n"
+                f"{tipo_input}:\n{safe_base_text}"
+            )
+
+            # 4. Construimos EL CONTEXTO UNIFICADO
+            contexto_combinado = ""
+            if historial:
+                contexto_combinado += f"--- HISTORIAL DE LA CONVERSACIÓN ---\n{historial}\n\n"
+            if safe_file_context:
+                contexto_combinado += f"--- DOCUMENTO ADJUNTO A ANALIZAR ---\n{safe_file_context}"
+
+            inp["text"] = mensaje_final
+            inp["question"] = mensaje_final
+            inp["instructions"] = mensaje_final
+            inp["prompt"] = mensaje_final
+            inp["context"] = contexto_combinado if contexto_combinado else None            
+
         # Construimos payload para MCP (incluye action + contexto)
         payload = {
             **inp,
@@ -39,11 +111,11 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
             "context": {
                 "user_id": state.get("user_id"),
                 "session_id": state.get("session_id"),
-                "text": base_text,
+                "text": safe_base_text, #base_text,
                 "intent": state.get("intent"),
                 "user_role": step_metadata.get("user_role"),
-                "file_context": state.get("file_context"), # Inyectamos el OCR si existe
-                "source": state.get("preprocessing_source") 
+                "file_context": safe_file_context, #state.get("file_context"), # Inyectamos el OCR si existe
+                "source": source #state.get("preprocessing_source") 
             },
         }
         
@@ -222,10 +294,8 @@ def assemble_results(state: OrchestratorState) -> OrchestratorState:
         
         prompt_sintesis = (
             f"ERES UN SISTEMA AUTOMATIZADO. El usuario preguntó: '{question_user}'.\n"
-            f"La base de datos del sistema certifica que el valor exacto a responder es: {data_raw}.\n"
-            f"Instrucción Estricta: Asume que el dato es 100% correcto para este usuario. "
-            f"Redacta una frase natural y directa respondiendo a su pregunta usando este número. "
-            f"No te disculpes ni dudes de la información."
+            f"La base de datos respondio: {data_raw}.\n"
+            f"Redacta una respuesta natural y directa respondiendo a su pregunta usando este número. "
         )
 
         synthesis_payload = {

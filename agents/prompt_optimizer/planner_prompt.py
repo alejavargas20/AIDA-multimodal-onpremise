@@ -25,6 +25,10 @@ ALLOWED AGENTS & ACTIONS:
 - nlp: summarize -> USE THIS to summarize text.
 - nlp: generate -> USE THIS to write emails, reports or new text.
 
+CRITICAL RULES:
+1. You MUST output EXACTLY ONE (1) task in the "tasks" array. 
+2. DO NOT break the request into multiple tasks. A single agent can handle the whole request.
+
 OUTPUT JSON STRUCTURE:
 {
   "optimized_prompt": "Clear summary of what the user wants",

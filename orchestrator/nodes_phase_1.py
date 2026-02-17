@@ -62,42 +62,6 @@ def phase1_router(state: OrchestratorState) -> OrchestratorState:
             state["normalized_text"] = text_result
             state["preprocessing_source"] = "stt"
 
-
-        # elif input_type in ("image", "pdf"):
-        #     # 1. DECODIFICAR Y GUARDAR ARCHIVO
-        #     ext = ".pdf" if input_type == "pdf" else ".jpg"
-        #     temp_path = os.path.join(TEMP_DIR, f"{uuid.uuid4()}{ext}")
-
-        #     # Detectar si es base64 (lo que manda el frontend)
-        #     try:
-        #         # Si el contenido es largo, asumimos que es Base64 del frontend
-        #         if len(raw_content) > 200: 
-        #             # Limpieza absoluta del string
-        #             clean_b64 = raw_content.strip()
-                    
-        #             # Cortar cabeceras sin importar cómo vengan desde el JS
-        #             if "base64," in clean_b64:
-        #                 clean_b64 = clean_b64.split("base64,")[-1]
-        #             elif "," in clean_b64:
-        #                 clean_b64 = clean_b64.split(",")[-1]
-                    
-        #             # Reparar Padding (Súper crítico porque Javascript a veces lo omite)
-        #             clean_b64 += "=" * ((4 - len(clean_b64) % 4) % 4)
-                    
-        #             # Decodificar a bytes puros
-        #             file_bytes = base64.b64decode(clean_b64)
-                    
-        #             # VERIFICACIÓN DE INTEGRIDAD PARA PDFs
-        #             if ext == ".pdf" and not file_bytes.startswith(b'%PDF'):
-        #                 print("\n[🚨 ALERTA CRÍTICA] El archivo decodificado NO es un PDF válido. ¡El Frontend está enviando el Base64 corrupto!\n")
-                    
-        #             with open(temp_path, "wb") as f:
-        #                 f.write(file_bytes)
-                    
-        #             target_path = temp_path
-        #         else:
-        #             target_path = raw_content
-
         elif input_type in ("image", "pdf"):
             # 1. DECODIFICAR Y GUARDAR ARCHIVO
             ext = ".pdf" if input_type == "pdf" else ".jpg"
@@ -163,6 +127,11 @@ def phase1_router(state: OrchestratorState) -> OrchestratorState:
             if not extracted_text:
                 print("[WARNING] El OCR no detectó texto en la imagen/pdf.")
                 extracted_text = "El sistema no pudo extraer texto de este documento. Puede que la resolución sea baja o sea ilegible."
+            
+            # Limitamos el texto a aprox. 20,000 caracteres (~5000 a 6000 tokens)
+            if len(extracted_text) > 20000:
+                print("[WARNING] PDF muy largo. Truncando para proteger la ventana de contexto.")
+                extracted_text = extracted_text[:20000] + "\n\n... [TEXTO TRUNCADO POR LÍMITE DE LECTURA]"
                 
             # Guardamos el resultado (o el aviso) en el contexto
             state["file_context"] = extracted_text 
@@ -182,6 +151,16 @@ def phase1_router(state: OrchestratorState) -> OrchestratorState:
         print(state["preprocessing_source"])
         if not state.get("normalized_text"):
             state["errors"].append("Fase 1: normalized_text vacío.")
+
+        # Importamos el historial reciente para inyectarlo en el Prompt Optimizer
+        from backend.db.history import get_recent_history
+        
+        session_id_str = str(state.get("session_id")) if state.get("session_id") else ""
+        if session_id_str:
+            historial = get_recent_history(session_id_str, limit=2)
+            state["chat_history"] = historial
+        else:
+            state["chat_history"] = ""
 
     except Exception as e:
         state["errors"].append(f"Error en Fase 1: {e}")

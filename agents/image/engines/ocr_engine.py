@@ -1,4 +1,3 @@
-# aida-multimodal-onpremise/agents/image/engines/ocr_engine.py
 
 from typing import Optional
 from PIL import Image
@@ -6,8 +5,6 @@ import pytesseract
 import numpy as np
 import cv2
 
-# Si pytesseract lanza un error de "tesseract is not installed or it's 
-# not in your PATH", descomenta la línea de abajo y pon la ruta correcta.
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 
 class OcrEngine:
