@@ -1,6 +1,4 @@
-
-# aida-multimodal-onpremise/agents/data/executors/sql_server_executor.py
-
+# # aida-multimodal-onpremise/agents/data/executors/sql_server_executor.py
 # import pyodbc
 # from typing import Any, Dict, List, Optional
 
@@ -85,7 +83,6 @@ import sys
 import os
 from typing import Any, Dict, List, Optional  
 import warnings
-
 warnings.filterwarnings('ignore', category=UserWarning, module='pandas')
 
 # Rutas para encontrar backend
@@ -93,7 +90,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(current_dir))))
 if root_dir not in sys.path:
     sys.path.append(root_dir)
-
 try:
     from backend.db.connection import get_db
 except ImportError:
@@ -113,30 +109,47 @@ def execute_sql(
 ) -> Dict[str, Any]:
     """
     Ejecuta SQL usando la conexión centralizada (get_db).
-    Ignora los parámetros de conexión hardcodeados.
+    Ignora los parámetros de conexión hardcodeados para priorizar la seguridad del entorno.
     """
     conn = None
     try:
-        
         conn = get_db()
         
-        df = pd.read_sql(sql, conn)
+        # Limpiamos el SQL de posibles inyecciones markdown del LLM por si acaso
+        clean_sql = sql.replace("```sql", "").replace("```", "").strip()
         
-        if mode == 'scalar' and not df.empty:
+        # Ejecutamos con Pandas
+        df = pd.read_sql(clean_sql, conn)
+        
+        # Control de Dataframe vacío
+        if df.empty:
+            return {
+                "status": "success",
+                "result": None if mode == 'scalar' else [],
+                "sql_executed": clean_sql
+            }
+
+        # Lógica Escalar
+        if mode == 'scalar':
             val = df.iloc[0, 0]
-            if hasattr(val, 'item'): val = val.item()
+            if hasattr(val, 'item'): 
+                val = val.item()
             
             return {
                 "status": "success",
                 "result": val,
-                "sql_executed": sql
+                "sql_executed": clean_sql
             }
             
+        df_limited = df.head(max_rows)
+        # Convertimos fechas y nulos para que el JSON no explote en el Frontend
+        df_clean = df_limited.fillna("").astype(str)
+
         return {
             "status": "success",
-            "columns": list(df.columns),
-            "rows": df.to_dict(orient='records'),
-            "sql_executed": sql
+            "columns": list(df_clean.columns),
+            "rows": df_clean.to_dict(orient='records'),
+            "sql_executed": clean_sql
         }
 
     except Exception as e:

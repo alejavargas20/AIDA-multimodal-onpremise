@@ -1,4 +1,3 @@
-# aida-multimodal-onpremise/agents/data/LLM_logic/schemas/planning.py
 from typing import TypedDict, List, Dict, Optional, Literal
 
 ResultShape = Literal["scalar", "grouped", "series", "detail"]

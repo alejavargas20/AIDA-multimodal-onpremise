@@ -1,111 +1,115 @@
-# aida-multimodal-onpremise/agents/data/LLM_logic/planners/intent_planner.py
-import json
-from typing import Dict, Any, List, Optional
+# planners/intent_planner.py
+from typing import Dict, Any, List, Optional, Union
 from agents.data.LLM_logic.schemas.planning import QueryPlan
 
 from agents.data.LLM_logic.utils import ultimo_mes_declaracion, ultimos_n_meses_where
-from agents.data.LLM_logic.utils import (
-    recipe_cliente__cuentas_activas,
-)
+from agents.data.LLM_logic.utils import recipe_cliente__cuentas_activas
 
 
-def _detect_client_scope(prompt_lower: str, intent_obj: Dict[str, Any]) -> bool:
-    """
-    Heurística:
-    - Preguntas tipo "mi ..." sugieren scope cliente
-    - intent_plan.tasks[0].input.scope.type == 'cliente'
-    """
+NormLike = Dict[str, Any]
+
+
+def _get_question(intent_or_norm: Dict[str, Any]) -> str:
+    # Si viene norm: usa norm["question"]
+    if "question" in intent_or_norm and "raw" in intent_or_norm:
+        return intent_or_norm.get("question") or ""
+    # Si viene intent raw: usa optimized_prompt o normalized_text
+    return (intent_or_norm.get("optimized_prompt") or intent_or_norm.get("normalized_text") or "")
+
+
+def _get_input(intent_or_norm: Dict[str, Any]) -> Dict[str, Any]:
+    # Si viene norm: usa norm["input"]
+    if "input" in intent_or_norm and "raw" in intent_or_norm:
+        return intent_or_norm.get("input") or {}
+
+    # Intent raw: extrae tasks[0].input
+    tasks = (intent_or_norm.get("intent_plan", {}) or {}).get("tasks") or []
+    return tasks[0].get("input", {}) if tasks else {}
+
+
+def _detect_client_scope(prompt_lower: str, intent_raw: Dict[str, Any], input_data: Dict[str, Any]) -> bool:
     if "mi " in prompt_lower or "mi crédito" in prompt_lower or "mis " in prompt_lower:
         return True
 
-    tasks = intent_obj.get("intent_plan", {}).get("tasks") or []
+    scope = (input_data.get("scope", {}) or {})
+    if scope.get("type") == "cliente":
+        return True
+
+    # fallback por compatibilidad (si viene en raw)
+    tasks = intent_raw.get("intent_plan", {}).get("tasks") or []
     if tasks:
         inp = tasks[0].get("input", {}) or {}
-        scope = inp.get("scope", {}) or {}
-        if scope.get("type") == "cliente":
+        scope2 = inp.get("scope", {}) or {}
+        if scope2.get("type") == "cliente":
             return True
 
     return False
 
 
 def _detect_result_shape(prompt_lower: str) -> str:
-    """
-    scalar/grouped/series/detail
-    """
-    if (
-        "muéstr" in prompt_lower
-        or "muestr" in prompt_lower
-        or "lista" in prompt_lower
-        or "top " in prompt_lower
-    ):
+    if any(k in prompt_lower for k in ["muéstr", "muestr", "lista", "top "]):
         return "detail"
 
-    if (
-        "por mes" in prompt_lower
-        or "últimos" in prompt_lower
-        or "ultimos" in prompt_lower
-        or "evolución" in prompt_lower
-        or "evolucion" in prompt_lower
-    ):
+    if any(k in prompt_lower for k in ["por mes", "últimos", "ultimos", "evolución", "evolucion"]):
         return "series"
 
-    if (
-        "por producto" in prompt_lower
-        or "por oficina" in prompt_lower
-        or "por región" in prompt_lower
-        or "por region" in prompt_lower
-        or "por tipo" in prompt_lower
-        or "por " in prompt_lower
-    ):
+    if any(k in prompt_lower for k in ["por producto", "por oficina", "por región", "por region", "por tipo"]):
         return "grouped"
 
+    # "por " es demasiado agresivo, lo quitamos porque genera falsos grouped
     return "scalar"
 
 
 def _pick_base_table(prompt_lower: str) -> str:
-    """
-    Decide tabla base según keywords.
-    """
-    # cierre: cartera/portfolio (saldo, mora, provisiones)
-    if any(
-        k in prompt_lower
-        for k in [
-            "cartera",
-            "saldo",
-            "mora",
-            "provision",
-            "provisiones",
-            "días de mora",
-            "dias de mora",
-        ]
-    ):
+    if any(k in prompt_lower for k in ["cartera", "saldo", "mora", "provision", "provisiones", "días de mora", "dias de mora"]):
         return "cartera.cierre"
 
-    # eventos: reprogramación/condonación/cambio
     if any(k in prompt_lower for k in ["reprogram", "condon", "cambio", "evento"]):
         return "cartera.desembolso_comportamiento"
 
-    # rcc: sistema financiero, sbs, sow
     if any(k in prompt_lower for k in ["sistema financiero", "sbs", "sow", "rcc"]):
         return "rcc.cosecha_sal"
 
-    # default: originación
     return "cartera.desembolso"
 
 
-def plan_query(intent: dict, id_cliente: Optional[int] = None) -> QueryPlan:
+def _infer_period_value(input_data: Dict[str, Any]) -> str:
+    time = input_data.get("time", {}) or {}
+    period = time.get("period", {}) or {}
 
-    prompt = intent.get("optimized_prompt", "") or ""
-    prompt_lower = prompt.lower()
+    # prefer key (si ya fue normalizado)
+    if period.get("key"):
+        return str(period["key"])
+
+    # fallback al value original
+    value = str(period.get("value") or "ultimo_mes")
+
+    # Si hay filtros con hint relativo, forzamos ultimo_mes
+    for f in (input_data.get("filters") or []):
+        if isinstance(f, dict) and f.get("_relative_time_hint") == "ultimo_mes":
+            return "ultimo_mes"
+
+    return value
+
+
+def plan_query(intent_or_norm: Dict[str, Any], id_cliente: Optional[int] = None) -> QueryPlan:
+    """
+    Acepta:
+      - intent raw (como antes)
+      - norm ({"raw","question","input","params"})
+    """
+    intent_raw = intent_or_norm.get("raw") if ("raw" in intent_or_norm and isinstance(intent_or_norm.get("raw"), dict)) else intent_or_norm
+    input_data = _get_input(intent_or_norm)
+
+    prompt = _get_question(intent_or_norm)
+    prompt_lower = (prompt or "").lower()
 
     # 1) client scope
-    client_scope = _detect_client_scope(prompt_lower, intent)
+    client_scope = _detect_client_scope(prompt_lower, intent_raw, input_data)
 
     # 2) base table y time_field
     base = _pick_base_table(prompt_lower)
-    if base == "cartera.cierre":
-        time_field = "nStock"
-    elif base == "cartera.desembolso_comportamiento":
+    if base in ("cartera.cierre", "cartera.desembolso_comportamiento"):
         time_field = "nStock"
     else:
         time_field = "nCosecha"
@@ -117,68 +121,42 @@ def plan_query(intent: dict, id_cliente: Optional[int] = None) -> QueryPlan:
     group_by_fields: List[str] = []
     if result_shape == "series":
         group_by_fields = [time_field]
-    # grouped: el LLM suele inferir dimensión (cProducto, tipo_ope, etc.)
-    # Si quieres forzarlo, puedes mapear keywords -> campo.
 
-    # 5) periodo desde intent si viene; default ultimo_mes
-    tasks = intent.get("intent_plan", {}).get("tasks") or []
-    inp = tasks[0].get("input", {}) if tasks else {}
-    period = (inp.get("time", {}) or {}).get("period", {}) or {}
-    period_value = period.get("value", "ultimo_mes")
+    # 5) periodo
+    period_value = _infer_period_value(input_data)
 
-    # 6) Construcción determinista de preamble + from + where
+    # 6) SQL determinista (preamble + from + where)
     declare_sql = ""
     with_sql = ""
     from_sql = f"FROM {base}"
     where_parts: List[str] = []
 
-    # Cliente scope: patrón cuentas activas (si no, se responde portfolio)
     if client_scope:
-        # Requiere IdCliente
-        if id_cliente is None:
-            # No rompemos aquí: dejamos nota; el SQL fallará si no se inyecta @IdCliente.
-            # (Tu orquestador puede decidir devolver error antes.)
-            pass
-
-        # Para cliente, normalmente tus queries usan cierre para determinar cuentas activas del último mes
         declare_sql = (
-            (
-                f"DECLARE @IdCliente INT = {int(id_cliente)};\n"
-                if id_cliente is not None
-                else ""
-            )
+            (f"DECLARE @IdCliente INT = {int(id_cliente)};\n" if id_cliente is not None else "")
             + "DECLARE @UltimoMes INT; SELECT @UltimoMes = MAX(nStock) FROM cartera.cierre;"
         )
         with_sql = recipe_cliente__cuentas_activas()
 
-        # base para cliente: desembolso (detalles) + cuentas activas
         from_sql = "FROM cartera.desembolso d INNER JOIN CuentasActivas ca ON ca.idCuenta = d.idCuenta"
         where_parts = ["d.idCliente = @IdCliente"]
 
-        # Nota: para preguntas de eventos (reprogram/condon) y cliente, el planner puede cambiar FROM a comportamiento.
-        # Si lo quieres, se puede extender con otra receta (cuentas_activas__comportamiento).
     else:
-        # Portfolio: resolver tiempo por tabla base
         if period_value == "ultimo_mes":
             declare_sql = ultimo_mes_declaracion(time_field, base)
             where_parts.append(f"{time_field} = @UltimoMes")
+        elif "6" in period_value or "six" in period_value:
+            decl, w = ultimos_n_meses_where(time_field, base, 6)
+            declare_sql = decl
+            where_parts.append(w)
         else:
-            # Ejemplo: ultimos_6_meses
-            if "6" in str(period_value):
-                decl, w = ultimos_n_meses_where(time_field, base, 6)
-                declare_sql = decl
-                where_parts.append(w)
-            else:
-                # fallback: ultimo_mes
-                declare_sql = ultimo_mes_declaracion(time_field, base)
-                where_parts.append(f"{time_field} = @UltimoMes")
+            # fallback seguro
+            declare_sql = ultimo_mes_declaracion(time_field, base)
+            where_parts.append(f"{time_field} = @UltimoMes")
 
     where_sql = ("WHERE " + " AND ".join(where_parts)) if where_parts else ""
 
-    # preamble: DECLARE/SET primero, luego WITH/CTE
-    preamble_sql = (
-        (declare_sql + "\n" + with_sql).strip() if (declare_sql or with_sql) else ""
-    )
+    preamble_sql = ((declare_sql + "\n" + with_sql).strip() if (declare_sql or with_sql) else "")
 
     return {
         "base_table": base,

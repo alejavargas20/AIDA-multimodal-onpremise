@@ -30,7 +30,7 @@ def data_process(payload: dict) -> dict:
         return process(payload)
     except Exception as e:
         print("\n" + "="*50)
-        print(f"🚨 ERROR FATAL AL EJECUTAR DATA AGENT 🚨")
+        print(f"ERROR FATAL AL EJECUTAR DATA AGENT")
         traceback.print_exc()
         print("="*50 + "\n")
         return {
