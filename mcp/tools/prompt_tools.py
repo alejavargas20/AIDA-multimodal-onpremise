@@ -13,53 +13,84 @@ def optimize_prompt(payload: dict) -> dict:
 
     # El JSON de tareas para el Orquestador
     mock_intent_json = {
-        "optimized_prompt": "Muéstrate el monto promedio desembolsado por mes, de los últimos 6 meses",
-        "intent_plan": {
-            "intent": "analitica_desembolsos",
-            "confidence": 0.9,
-            "tasks": [
-                {
-                    "agent": "data",
-                    "action": "fetch_metrics",
-                    "input": {
-                        "metric": {
-                            "concept": "monto_desembolsado",
-                            "description": None,
-                            "aggregation": {
-                                "type": "avg",
-                                "field": "monto",
-                                "notes": None,
-                            },
-                        },
-                        "entity": {"name": "credito", "grain": "idCuenta"},
-                        "data_sources": [
-                            {"table": "desembolso", "role": "primary", "reason": None}
-                        ],
-                        "time": {
-                            "description": None,
-                            "period": {"type": "relative", "value": "ultimo_6_meses"},
-                            "granularity": "mensual",
-                        },
-                        "filters": [],
-                        "comparison": {"type": "none", "enabled": False},
-                        "scope": {"type": "analista", "id": None},
-                        "privacy": {
-                            "allow_sensitive": False,
-                            "sensitive_fields_detected": ["idCuenta"],
-                        },
-                        "confidence": 1.0,
-                        "ambiguities": [],
-                    },
-                    "params": {},
-                }
-            ],
-            "conductual_state": None,
-            "conductual_notes": None,
+  "optimized_prompt": "¿Cuál fue el monto total desembolsado en la última semana?",
+  "intent_plan": {
+    "intent": "analitica_desembolsos",
+    "confidence": 0.9,
+    "tasks": [
+      {
+        "agent": "data",
+        "action": "fetch_metrics",
+        "input": {
+          "metric": {
+            "concept": "monto_desembolsado",
+            "description": None,
+            "aggregation": {
+              "type": "suma",
+              "field": None,
+              "numerator": None,
+              "denominator": None,
+              "notes": None
+            }
+          },
+          "entity": {
+            "name": "credito",
+            "grain": "idSolicitud"
+          },
+          "data_sources": [
+            {
+              "table": "desembolso",
+              "role": "primary",
+              "join_key": None,
+              "reason": None
+            }
+          ],
+          "time": {
+            "description": None,
+            "period": {
+              "type": "relative",
+              "value": "ultimas_semanas"
+            },
+            "granularity": None
+          },
+          "filters": [
+            {
+              "field": "fecha",
+              "operator": ">",
+              "value": "now()",
+              "table": "desembolso"
+            }
+          ],
+          "comparison": {
+            "type": "none",
+            "enabled": False
+          },
+          "scope": {
+            "type": "analista",
+            "id": None
+          },
+          "privacy": {
+            "allow_sensitive": False,
+            "sensitive_fields_detected": []
+          },
+          "confidence": 1,
+          "ambiguities": []
         },
-        "status": "ok",
-        "errors": [],
-    }
+        "params": {}
+      }
+    ],
+    "metadata": {
+      "language": "unknown",
+      "input_source": "unknown"
+    },
+    "conductual_state": None,
+    "conductual_notes": None
+  },
+  "status": "ok",
+  "errors": []
+}
 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
     print(mock_intent_json)
 
     return mock_intent_json

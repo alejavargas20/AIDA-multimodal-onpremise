@@ -15,8 +15,8 @@ def _is_empty(result: Any) -> bool:
             if result.get("status") == "error":
                 return True
             # ✅ caso escalar: viene en "result"
-            if "result" in result:
-                return result["result"] is None
+            #if "result" in result:
+            #    return result["result"] is None
             # caso tabla: viene en "rows"
             if "rows" in result and isinstance(result["rows"], list):
                 return len(result["rows"]) == 0
@@ -78,13 +78,13 @@ def process(payload: Dict[str, Any]) -> Dict[str, Any]:
         print("\n[PROG] SQL: "+sql)
 
         # si no hay resultados, fallback a LLM + re-ejecución
-        if _is_empty(execution_result):
-            print("Sin resultados en ejecución con lógica programada. Entra por LLM")
-            sql, mode = create_sql_LLM(payload, catalog, id_cliente)
-            mode = _guess_mode(sql, default="scalar")
-            print("\n[LLM] Voy a ejecutar SQL:")
-            execution_result = execute_sql(sql, mode=mode)
-            print("\n[LLM] SQL: "+sql)
+        #if _is_empty(execution_result):
+        #    print("Sin resultados en ejecución con lógica programada. Entra por LLM")
+        #    sql, mode = create_sql_LLM(payload, catalog, id_cliente)
+        #    mode = _guess_mode(sql, default="scalar")
+        #    print("\n[LLM] Voy a ejecutar SQL:")
+        #    execution_result = execute_sql(sql, mode=mode)
+        #    print("\n[LLM] SQL: "+sql)
 
 
     except Exception as e:
