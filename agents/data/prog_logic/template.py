@@ -1,4 +1,3 @@
-# aida-multimodal-onpremise/agents/data/prog_logic/template.py
 from dataclasses import dataclass
 from typing import Any, Dict, Optional, Tuple, List
 

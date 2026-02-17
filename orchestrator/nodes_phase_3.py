@@ -31,55 +31,55 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
             state["errors"].append("ExecutePlan: step sin 'agent' (tool_name).")
             continue
 
-        if tool_name == "nlp.process":
-            # 1. Recuperar historial
-            historial = state.get("chat_history", "").strip()
-            if not historial:
-                from backend.db.history import get_recent_history
-                session_id = str(state.get("session_id", ""))
-                if session_id:
-                    historial = get_recent_history(session_id, limit=2)
+        
+        # 1. Recuperar historial
+        historial = state.get("chat_history", "").strip()
+        if not historial:
+            from backend.db.history import get_recent_history
+            session_id = str(state.get("session_id", ""))
+            if session_id:
+                historial = get_recent_history(session_id, limit=2)
 
-            if len(historial) > 1500:
-                historial = "..." + historial[-1500:]
+        if len(historial) > 1500:
+            historial = "..." + historial[-1500:]
 
-            # ANTI CUDA-ERROR (AHORA CUBRE AUDIOS Y PDFs) ===
-            MAX_CHARS = 7000 
-            
-            # Protección A: Para PDFs e Imágenes
-            safe_file_context = state.get("file_context", "")
-            if isinstance(safe_file_context, str) and len(safe_file_context) > MAX_CHARS:
-                safe_file_context = safe_file_context[:MAX_CHARS] + "\n\n... [DOCUMENTO OMITIDO PARA NO SATURAR VRAM]"
+        # ANTI CUDA-ERROR (AHORA CUBRE AUDIOS Y PDFs) ===
+        MAX_CHARS = 7000 
+        
+        # Protección A: Para PDFs e Imágenes
+        safe_file_context = state.get("file_context", "")
+        if isinstance(safe_file_context, str) and len(safe_file_context) > MAX_CHARS:
+            safe_file_context = safe_file_context[:MAX_CHARS] + "\n\n... [DOCUMENTO OMITIDO PARA NO SATURAR VRAM]"
 
-            # Protección B: Para Audios Largos (STT) y Textos Gigantes
-            safe_base_text = base_text
-            if isinstance(safe_base_text, str) and len(safe_base_text) > MAX_CHARS:
-                safe_base_text = safe_base_text[:MAX_CHARS] + "\n\n... [AUDIO/TEXTO TRUNCADO PARA NO SATURAR VRAM]"
+        # Protección B: Para Audios Largos (STT) y Textos Gigantes
+        safe_base_text = base_text
+        if isinstance(safe_base_text, str) and len(safe_base_text) > MAX_CHARS:
+            safe_base_text = safe_base_text[:MAX_CHARS] + "\n\n... [AUDIO/TEXTO TRUNCADO PARA NO SATURAR VRAM]"
 
-            print(f"\n[DEBUG HISTORIAL FINAL ENVIADO AL LLM]:\n{historial if historial else 'SIN HISTORIAL'}\n")
+        print(f"\n[DEBUG HISTORIAL FINAL ENVIADO AL LLM]:\n{historial if historial else 'SIN HISTORIAL'}\n")
 
-            # 2. Identificamos si el usuario habló o escribió
-            tipo_input = "Transcripción de Audio del usuario" if source == "stt" else "Mensaje del usuario"
+        # 2. Identificamos si el usuario habló o escribió
+        tipo_input = "Transcripción de Audio del usuario" if source == "stt" else "Mensaje del usuario"
 
-            # 3. Construimos LA PREGUNTA / INSTRUCCIÓN
-            mensaje_final = (
-                f"Instrucción Estricta: Eres AIDA. Responde de forma natural y conversacional. "
-                f"Háblale directamente al usuario tratándolo de 'tú'. PROHIBIDO hablar en tercera persona.\n\n"
-                f"{tipo_input}:\n{safe_base_text}"
-            )
+        # 3. Construimos LA PREGUNTA / INSTRUCCIÓN
+        mensaje_final = (
+            f"Instrucción Estricta: Eres AIDA. Responde de forma natural y conversacional. "
+            f"Háblale directamente al usuario tratándolo de 'tú'. PROHIBIDO hablar en tercera persona.\n\n"
+            f"{tipo_input}:\n{safe_base_text}"
+        )
 
-            # 4. Construimos EL CONTEXTO UNIFICADO
-            contexto_combinado = ""
-            if historial:
-                contexto_combinado += f"--- HISTORIAL DE LA CONVERSACIÓN ---\n{historial}\n\n"
-            if safe_file_context:
-                contexto_combinado += f"--- DOCUMENTO ADJUNTO A ANALIZAR ---\n{safe_file_context}"
+        # 4. Construimos EL CONTEXTO UNIFICADO
+        contexto_combinado = ""
+        if historial:
+            contexto_combinado += f"--- HISTORIAL DE LA CONVERSACIÓN ---\n{historial}\n\n"
+        if safe_file_context:
+            contexto_combinado += f"--- DOCUMENTO ADJUNTO A ANALIZAR ---\n{safe_file_context}"
 
-            inp["text"] = mensaje_final
-            inp["question"] = mensaje_final
-            inp["instructions"] = mensaje_final
-            inp["prompt"] = mensaje_final
-            inp["context"] = contexto_combinado if contexto_combinado else None            
+        inp["text"] = mensaje_final
+        inp["question"] = mensaje_final
+        inp["instructions"] = mensaje_final
+        inp["prompt"] = mensaje_final
+        inp["context"] = contexto_combinado if contexto_combinado else None            
 
         # Construimos payload para MCP (incluye action + contexto)
         payload = {
@@ -151,7 +151,7 @@ def assemble_results(state: OrchestratorState) -> OrchestratorState:
         state["assembled_text"] = "No se generaron resultados por parte de los agentes."
         return state
     
-    # Extraemos el dato directo de los resultados, sin depender de variables borradas 🚨
+    # Extraemos el dato directo de los resultados, sin depender de variables borradas 
     data_raw = None
     for block in blocks:
         if block.get("role") == "data.process" and block.get("type") == "tool_result":

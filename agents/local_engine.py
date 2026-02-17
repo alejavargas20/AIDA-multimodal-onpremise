@@ -85,18 +85,26 @@ class HybridEngine:
         llm = cls.get_llm(model_type)
         if llm is None:
             return "Error: El modelo no está disponible."
-            
-        if model_type.strip().lower() == "data" or model_type.strip().lower() == "sql":
+        
+        stop_words = None
+        max_tokens_run = 1024
+        final_temp = temperature
+
+        if model_type.strip().lower() in ["data", "sql"]:
             #print("[ENGINE DEBUG] Reseteando KV Cache para SQL.")
             llm.reset()
+            final_temp = 0.0  
+            max_tokens_run = 300 
+            stop_words = ["```", "```sql", "Para ", "En este", "Explicación", "Explanation:", "Aquí tienes", "El SQL"]
 
         #print(f"[ENGINE DEBUG] Enviando solicitud a llama_cpp.create_chat_completion...")
             
         try:
             output = llm.create_chat_completion(
                 messages=messages,
-                max_tokens=1024, 
-                temperature=temperature
+                max_tokens=max_tokens_run, 
+                temperature=final_temp,
+                stop=stop_words 
             )
             #print(f"[ENGINE DEBUG] Generación exitosa.")
             return output["choices"][0]["message"]["content"]
@@ -106,7 +114,7 @@ class HybridEngine:
 
 def generate_response(messages: list, model_type="nlp") -> str:
     safe_type = model_type.strip().lower()
-    temp = 0.1 if safe_type == "sql" else 0.7
+    temp = 0.0 if safe_type == "sql" else 0.7
     return HybridEngine.generate(messages, model_type=safe_type, temperature=temp)
 
 if os.environ.get("AIDA_LLMS_PRELOADED") != "1":

@@ -1,5 +1,3 @@
-#aida-multimodal-onpremise/agents/data/prog_logic/aggregations.py
-
 from dataclasses import dataclass
 from typing import Dict, List, Optional
 
