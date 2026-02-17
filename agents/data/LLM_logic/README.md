@@ -124,7 +124,7 @@ WHERE nCosecha = @UltimoMes
 
 Problema resuelto: evitar bugs como “usa la pregunta anterior” o inputs inconsistentes.
 Qué garantiza:
-* question: siempre se obtiene de optimized_prompt o fallback.
+* question: se obtiene de optimized_prompt si existe; si no, se reconstruye desde el input estructurado.
 * input: normalizado con field_norm en filtros.
 * period.key: mapea valores relativos (ultimo_mes, ultimo_6_meses, etc.).
 
@@ -173,6 +173,7 @@ Validaciones generales (no sobreajustadas)
 (1) Columnas existen en catálogo
 * Detecta columnas usadas en SELECT/WHERE/GROUP BY.
 * Las valida contra allowed_cols derivado del catalog.json.
+* Si allowed_cols queda vacío ,la validación de columnas no puede aplicarse y se mantienen solo validaciones sintácticas/estructurales(GROUP BY, NULLIF, ratio).
 (2) GROUP BY coherente
 * Si hay GROUP BY: toda columna no agregada en SELECT debe estar en GROUP BY.
 (3) Ratio seguro
@@ -215,3 +216,4 @@ Si falla otra vez:
     * valida catálogo real
     * valida seguridad en ratios y agregaciones
 * Retry máximo: 1 (para evitar loops y latencia)
+* Si el LLM devuelve salida sin un SELECT final ejecutable, se activa un fallback determinista para garantizar SQL ejecutable.
