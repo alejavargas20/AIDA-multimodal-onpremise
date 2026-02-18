@@ -167,12 +167,23 @@ def assemble_results(state: OrchestratorState) -> OrchestratorState:
         
         question_user = state.get("normalized_text", "")
         
-        prompt_sintesis = (
-            f"ERES UN SISTEMA AUTOMATIZADO. El usuario preguntó: '{question_user}'.\n"
-            f"La base de datos respondio: {data_raw}.\n"
-            f"Redacta una respuesta natural y directa respondiendo a su pregunta usando este número. "
-        )
+        # prompt_sintesis = (
+        #     f"El usuario te ha preguntó: '{question_user}'.\n"
+        #     f"La base de datos respondio: {data_raw}.\n"
+        #     f"Tu tarea: Comunícale este dato al usuario de forma natural, sin mencionar bases de datos ni que el sistema lo buscó. Habla como si tú mismo supieras el dato."
+        # )
 
+        prompt_sintesis = (
+            f"Pregunta del usuario: '{question_user}'\n"
+            f"Datos EXACTOS extraídos del sistema: {data_raw}\n\n"
+            f"INSTRUCCIONES CRÍTICAS Y OBLIGATORIAS:\n"
+            f"1. Eres un PRESENTADOR de datos, NO un asesor teórico. Tu ÚNICA base de la verdad son los 'Datos EXACTOS extraídos del sistema'.\n"
+            f"2. TIENES ESTRICTAMENTE PROHIBIDO inventar valores, dar ejemplos genéricos (como 30, 60, 90 días) o usar tu conocimiento previo. Si el dato extraído es un número, ESE es el número que debes dar.\n"
+            f"3. Si los 'Datos extraídos' contienen múltiples registros, DEBES enumerarlos TODOS en una lista o viñetas.\n"
+            f"4. Si los 'Datos extraídos' contienen un solo valor numérico o de texto, dalo directamente en una frase natural y concisa.\n"
+            f"5. Habla en primera persona, con seguridad, y NUNCA menciones bases de datos, SQL, ni que el sistema lo buscó."
+        )
+        
         synthesis_payload = {
             "action": "reason", 
             "input": {
@@ -213,8 +224,11 @@ def assemble_results(state: OrchestratorState) -> OrchestratorState:
                 data_str = json.dumps(data, indent=2, ensure_ascii=False)
                 assembled_parts.append(f"Los datos extraídos son:\n{data_str}")
             else:
-                error_msg = inner_result.get("error", "Sin datos o consulta fallida")
-                assembled_parts.append(f"No se pudo obtener la información: {error_msg}")
+                error_msg = inner_result.get("error", "Error desconocido")
+                print(f"\n[ERROR INTERNO DE SQL OCULTO AL USUARIO]: {error_msg}\n") # Se queda en la consola
+                
+                # Respuesta limpia para el chat:
+                assembled_parts.append("Lo siento, hubo un problema técnico al analizar esa información específica. Por favor, intenta reformular la pregunta.")
 
         elif block_type == "tool_result" and role == "nlp.process":
             output = content.get("answer") or content.get("content")

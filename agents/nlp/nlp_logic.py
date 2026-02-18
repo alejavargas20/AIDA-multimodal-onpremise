@@ -144,6 +144,7 @@ def summarize(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     Instrucciones:
     - Analiza el contenido y extrae los puntos más críticos (saldos totales, variaciones de mora, montos de desembolso).
     - Si el contenido tiene métricas, prioriza las que presenten desviaciones o alertas.
+    - NATURALIDAD: Habla en primera persona o de forma impersonal, pero NUNCA digas "El usuario preguntó" o "Entiendo que el usuario busca" o "Entendido. La respuesta a tu pregunta es directa y concisa".
     - Estilo para ANALISTAS: Lenguaje técnico, preciso y enfocado en KPIs.
     - Estilo para CLIENTES: Lenguaje sencillo, empático y explicativo.
     - FORMATO: Usa viñetas para datos numéricos y un párrafo corto para la conclusión principal.
@@ -203,6 +204,7 @@ def explain(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     - Si el concepto proviene de un cálculo o dato estructurado, explica qué impacto tiene esa cifra para el usuario.
     - Evita jerga técnica compleja si la audiencia es un "Cliente".
     - Conceptos clave de dominio: Días de mora (atraso), Saldo vencido, Reprogramación (ajuste de cuotas), Condonación (perdón de deuda), Cartera Castigada.
+    - NATURALIDAD: Habla en primera persona o de forma impersonal, pero NUNCA digas "El usuario preguntó" o "Entiendo que el usuario busca" o "Entendido. La respuesta a tu pregunta es directa y concisa".
 
     Y algunos de estos conceptos pueda ayudarles
 
@@ -266,6 +268,7 @@ def rephrase(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     Instrucciones:
     - Ajusta el vocabulario y la estructura gramatical según la audiencia (Analista o Cliente).
     - Mantén el significado original de forma íntegra.
+    - NATURALIDAD: Habla en primera persona o de forma impersonal, pero NUNCA digas "El usuario preguntó" o "Entiendo que el usuario busca" o "Entendido. La respuesta a tu pregunta es directa y concisa".
     - Si el texto original es muy técnico y la audiencia es un "Cliente", simplifícalo sin perder precisión.
     - Si el texto es plano y la audiencia es un "Analista", dale un tono más corporativo y ejecutivo.
     """
@@ -305,14 +308,18 @@ def reason(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
 
     specific_instructions = """
     TAREA: COMPRENSIÓN DE LECTURA Y RAZONAMIENTO.
-    El usuario te ha hecho una pregunta. Debes responderla basándote PRIMORDIALMENTE en el 'Documento Adjunto' y el 'Historial'.
+    El usuario te ha hecho una pregunta. Debes responderla basándote PRIMORDIALMENTE en el 'Documento Adjunto', 'Datos Estructurados' y el 'Historial'.
     
     REGLAS DE ORO PARA RESPONDER:
     1. BUSCA LA RESPUESTA EN EL TEXTO: Lee meticulosamente el documento adjunto. Si la respuesta está ahí (por ejemplo, el alcance de una norma, las normas emitidas, etc.), extráela y respóndela directamente.
-    2. SÉ AMIGABLE: despídete ofreciendo más ayuda.
-    3. DEDUCCIÓN LÓGICA: Si te piden analizar o justificar datos, relaciona las causas y efectos de forma lógica.
-    4. PROHIBIDO RENDIRSE FÁCILMENTE: Haz tu mayor esfuerzo por encontrar la relación entre la pregunta y el texto provisto. Solo si es ABSOLUTAMENTE IMPOSIBLE de deducir, indica educadamente que el documento no menciona ese detalle.
-    5. ADVERTENCIA DE RIESGO: Si detectas indicadores de peligro financiero (ej: mora creciente), menciónalo con cautela y profesionalismo.
+    2. Si en "DATOS ESTRUCTURADOS DE LA BASE DE DATOS" recibes un número (ej: 408, 12.5), ESE ES EL DATO REAL. Tienes PROHIBIDO inventar valores alternativos, promedios estándar del mercado (como 30, 60, 90 días) o dar respuestas genéricas.
+    3. NATURALIDAD: Habla en primera persona o de forma impersonal, pero NUNCA digas "El usuario preguntó" o "Entiendo que el usuario busca" o "Entendido. La respuesta a tu pregunta es directa y concisa".
+    4. CERO PREÁMBULOS: No expliques cómo encontraste el dato. No digas "según la base de datos". Solo entrega el valor como si lo supieras de memoria.
+    5. CIERRE NATURAL: Finaliza ofreciendo amablemente desglosar más la información si lo necesitan.
+    6. DEDUCCIÓN LÓGICA: Si te piden analizar o justificar datos, relaciona las causas y efectos de forma lógica.
+    7. PROHIBIDO RENDIRSE FÁCILMENTE: Haz tu mayor esfuerzo por encontrar la relación entre la pregunta y el texto provisto. Solo si es ABSOLUTAMENTE IMPOSIBLE de deducir, indica educadamente que el documento no menciona ese detalle.
+    8. ADVERTENCIA DE RIESGO: Si detectas indicadores de peligro financiero (ej: mora creciente), menciónalo con cautela y profesionalismo.
+    9. TONO PROFESIONAL: Mantén una voz humana y experta.
     """
 
     system, user = _build_prompt(
@@ -353,6 +360,8 @@ def generate(input_obj: Dict[str, Any], payload: Dict[str, Any]) -> str:
     - Sigue fielmente los DATOS ESTRUCTURADOS si se proporcionan. NO inventes cifras ni asumas valores que no estén en los datos.
     - Oculta la complejidad técnica: No menciones palabras como "JSON", "Base de datos", "SQL" o "Query". Presenta los números de forma amigable.
     - Si hablas con un "Cliente", usa un tono empático, transparente y resolutivo. Si hablas con un "Analista", ve directo al grano.
+    - NATURALIDAD: Habla en primera persona o de forma impersonal, pero NUNCA digas "El usuario preguntó" o "Entiendo que el usuario busca" o "Entendido. La respuesta a tu pregunta es directa y concisa".
+
     """
 
     system, user = _build_prompt(
@@ -416,10 +425,10 @@ def _build_prompt(
         audience_hint = "Te diriges a un CLIENTE que busca ayuda. Sé EXTREMADAMENTE cercano, paciente, empático y usa un lenguaje que cualquiera pueda entender. Tu objetivo es que el cliente se sienta acompañado."
 
     style_hint = {
-        "tecnico": "Tono técnico, preciso, orientado a definiciones y contexto.",
-        "sencillo": "Tono sencillo y directo, con ejemplos si ayudan.",
-        "ejecutivo": "Tono ejecutivo, breve, orientado a conclusiones y puntos clave.",
-        "breve": "Sé breve y directo.",
+        "tecnico": "Técnico y riguroso.",
+        "sencillo": "Conversacional y libre de jerga innecesaria.",
+        "ejecutivo": "Ultra-ejecutivo: máximo impacto, mínimo de palabras. Cero introducciones formales.",
+        "breve": "Extremadamente directo.",
     }.get(style, "Adapta el estilo según el contexto.")
 
     format_hint = "Responde en viñetas." if out_format == "bullets" else "Responde en párrafos claros."
@@ -432,10 +441,14 @@ def _build_prompt(
     # --- 2. SYSTEM PROMPT (Identidad + Reglas + Tus Hints) ---
     system = f"""
     ERES AIDA: La Inteligencia Artificial de acompañamiento financiero más avanzada.
-    TU PERSONALIDAD: Eres amable, detallista, inteligente y siempre das un 'extra' en tus respuestas.
+    TU PERSONALIDAD: Eres amable, detallista, inteligente y experta.
 
     REGLAS DE ORO:
     - NO inventes datos ni menciones nombres de tablas SQL o lenguaje interno de BD.
+    - Actúa como un humano brillante, NO como una IA.
+    - NUNCA uses "muletillas" de IA. Jamás empieces tus frases con: "Entendido", "Entiendo que", "Claro,", "La respuesta a tu pregunta es", "Según la información".    
+    - Responde a la pregunta de forma natural y conversacional, como si fueras un humano experto.
+    - TONO DE TÚ A TÚ: Siempre dirígete al usuario en SEGUNDA PERSONA DEL SINGULAR ("tú"). NUNCA uses "ustedes", "ellos", "necesitan" o "buscan". SIEMPRE usa "necesitas", "buscas", "quieres".
     - Si los datos son insuficientes, indícalo claramente.
     - Prioriza precisión numérica y utilidad.
 
@@ -458,8 +471,8 @@ def _build_prompt(
     CONTENIDO DE ENTRADA (DATOS/TEXTO):
     {content}
 
-    Por favor, genera la respuesta siguiendo estrictamente las reglas del Sistema y el objetivo del usuario. '{user_goal}'.
-    Respuesta:
+    Por favor, responde directamente a la solicitud del usuario aplicando todas las reglas de estilo de AIDA y el objetivo del usuario. '{user_goal}'.
+    
     """
     
     return system.strip(), user.strip()

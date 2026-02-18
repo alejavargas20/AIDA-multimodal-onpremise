@@ -1,4 +1,5 @@
 # planners/intent_planner.py
+
 from typing import Dict, Any, List, Optional, Union
 from agents.data.LLM_logic.schemas.planning import QueryPlan
 
@@ -97,6 +98,10 @@ def plan_query(intent_or_norm: Dict[str, Any], id_cliente: Optional[int] = None)
     Acepta:
       - intent raw (como antes)
       - norm ({"raw","question","input","params"})
+
+    ✅ Cambio pedido:
+    - Si id_cliente viene con valor, úsalo en el WHERE también cuando NO se detecte client_scope.
+    - No tocamos data_logic.py ni utils.py.
     """
     intent_raw = intent_or_norm.get("raw") if ("raw" in intent_or_norm and isinstance(intent_or_norm.get("raw"), dict)) else intent_or_norm
     input_data = _get_input(intent_or_norm)
@@ -132,16 +137,24 @@ def plan_query(intent_or_norm: Dict[str, Any], id_cliente: Optional[int] = None)
     where_parts: List[str] = []
 
     if client_scope:
-        declare_sql = (
-            (f"DECLARE @IdCliente INT = {int(id_cliente)};\n" if id_cliente is not None else "")
-            + "DECLARE @UltimoMes INT; SELECT @UltimoMes = MAX(nStock) FROM cartera.cierre;"
-        )
-        with_sql = recipe_cliente__cuentas_activas()
+        # Si se pide “mi/mis” pero no hay id_cliente, bloqueamos (seguro) para no filtrar mal.
+        if id_cliente is None:
+            declare_sql = ""
+            with_sql = ""
+            from_sql = f"FROM {base}"
+            where_parts = ["1=0"]
+        else:
+            declare_sql = (
+                f"DECLARE @IdCliente INT = {int(id_cliente)};\n"
+                + "DECLARE @UltimoMes INT; SELECT @UltimoMes = MAX(nStock) FROM cartera.cierre;"
+            )
+            with_sql = recipe_cliente__cuentas_activas()
 
-        from_sql = "FROM cartera.desembolso d INNER JOIN CuentasActivas ca ON ca.idCuenta = d.idCuenta"
-        where_parts = ["d.idCliente = @IdCliente"]
+            from_sql = "FROM cartera.desembolso d INNER JOIN CuentasActivas ca ON ca.idCuenta = d.idCuenta"
+            where_parts = ["d.idCliente = @IdCliente"]
 
     else:
+        # filtros de tiempo (como antes)
         if period_value == "ultimo_mes":
             declare_sql = ultimo_mes_declaracion(time_field, base)
             where_parts.append(f"{time_field} = @UltimoMes")
@@ -153,6 +166,10 @@ def plan_query(intent_or_norm: Dict[str, Any], id_cliente: Optional[int] = None)
             # fallback seguro
             declare_sql = ultimo_mes_declaracion(time_field, base)
             where_parts.append(f"{time_field} = @UltimoMes")
+
+        # ✅ NUEVO: si data_logic te pasó id_cliente, úsalo en el WHERE
+        if id_cliente is not None:
+            where_parts.insert(0, f"idCliente = {int(id_cliente)}")
 
     where_sql = ("WHERE " + " AND ".join(where_parts)) if where_parts else ""
 
