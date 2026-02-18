@@ -53,39 +53,11 @@ export default function CameraModal({ onCapture, onClose }: CameraModalProps) {
     }, "image/jpeg", 1.0);
   };
 
-  // return (
-  //   <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-  //     <div className="bg-white rounded-lg p-4 space-y-4">
-  //       <video ref={videoRef} autoPlay playsInline className="w-96 rounded" />
-
-  //       <div className="flex justify-between">
-  //         <button
-  //           onClick={() => {
-  //             stopCamera();
-  //             onClose();
-  //           }}
-  //           className="px-4 py-2 border rounded"
-  //         >
-  //           Cancelar
-  //         </button>
-
-  //         <button
-  //           onClick={takePhoto}
-  //           className="px-4 py-2 bg-blue-600 text-white rounded"
-  //         >
-  //           Tomar foto
-  //         </button>
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
-
-
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg p-4 space-y-4 shadow-xl">
         <div className="relative">
-          {/* 🚨 EL TRUCO DEL ESPEJO: 
+          {/* ESPEJO: 
             Usamos transform: scaleX(-1) para que el video funcione como un espejo real. 
             El texto se verá al revés para ti, ¡pero es normal! Esto hace que cuadrar la hoja sea súper fácil.
           */}

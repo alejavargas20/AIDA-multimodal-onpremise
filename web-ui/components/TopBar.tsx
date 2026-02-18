@@ -18,7 +18,7 @@ export default function TopBar({ user, setUser }: Props) {
   return (
     <header className="h-14 bg-slate-900 text-white flex items-center justify-between px-6 border-b border-slate-700">
       <div>
-        <h1 className="font-semibold">AIDA Finanzas</h1>
+        <h1 className="font-semibold">AIDA</h1>
         <p className="text-xs text-slate-400">
           Asistente Inteligente para Análisis Financiero
         </p>

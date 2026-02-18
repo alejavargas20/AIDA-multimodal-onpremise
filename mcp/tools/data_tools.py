@@ -4,12 +4,9 @@ import os
 import traceback
 import warnings
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-root_dir = os.path.dirname(os.path.dirname(current_dir))
-
-if root_dir not in sys.path:
-    sys.path.append(root_dir)
-
+ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+if ROOT_DIR not in sys.path:
+    sys.path.append(ROOT_DIR)
 try:
     warnings.filterwarnings('ignore', category=UserWarning, module='pandas')
     from agents.data.data_logic import process

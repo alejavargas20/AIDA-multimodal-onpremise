@@ -22,6 +22,11 @@ class HybridEngine:
     def get_llm(cls, model_type: str):
         model_type = model_type.strip().lower()
         cache = sys.modules["AIDA_LLM_CACHE"]
+
+        # opuesto = "nlp" if model_type in ["sql", "data"] else "sql"
+        # if opuesto in cache:
+        #     print(f"\n[ENGINE ANTI-APAGON] Peligro de VRAM. Matando {opuesto.upper()} antes de invocar a {model_type.upper()}...")
+        #     cls.unload_llm(opuesto)
         
         if model_type in cache and cache[model_type] is not None:
             return cache[model_type]
@@ -39,9 +44,9 @@ class HybridEngine:
             print(f"[ENGINE] Cargando '{target_path}' en {'GPU RTX 5090' if cls._is_gpu_mode else 'CPU'}...")
             
             # Configuración de contexto (KV Cache)
-            ctx_size = 4096 if model_type == "nlp" else 2048
+            ctx_size = 2048 if model_type in ["sql", "data"] else 8192
 
-            batch_size = 1024 if cls._is_gpu_mode else 512
+            batch_size = 256 if cls._is_gpu_mode else 128
 
             llm_instance = Llama(
                 model_path=target_path,
@@ -51,7 +56,6 @@ class HybridEngine:
                 use_mmap=False,                             # PROHIBE a Windows usar RAM como buffer de disco
                 offload_kqv=True if cls._is_gpu_mode else False, # Mueve la memoria de conversación a la GPU
                 flash_attn=True,  # Acelera en GPUs modernas
-                #n_threads=4, 
                 verbose=False
             )
             
@@ -63,6 +67,24 @@ class HybridEngine:
         except Exception as e:
             print(f"[ENGINE] Error crítico cargando modelo {model_type}: {e}")
             raise e
+        
+
+
+    @classmethod
+    def unload_llm(cls, model_type: str):
+        """
+        Libera la VRAM descargando el modelo especificado.
+        """
+        model_type = model_type.strip().lower()
+        cache = sys.modules["AIDA_LLM_CACHE"]
+        if model_type in cache:
+            print(f"\n[ENGINE] Liberando VRAM: Descargando modelo {model_type.upper()}...")
+            del cache[model_type]
+            import gc
+            gc.collect()
+            print(f"[ENGINE] VRAM liberada.\n")
+
+
 
     @classmethod
     def generate(cls, messages: list, model_type="nlp", temperature=0.7) -> str:
@@ -107,9 +129,18 @@ class HybridEngine:
                 stop=stop_words 
             )
             #print(f"[ENGINE DEBUG] Generación exitosa.")
-            return output["choices"][0]["message"]["content"]
+            result = output["choices"][0]["message"]["content"]
+
+            # # Si el modelo que acaba de responder es Qwen (SQL), lo descargamos de inmediato
+            # if model_type.strip().lower() in ["data", "sql"]:
+            #     cls.unload_llm("sql")
+
+            return result        
+
         except Exception as e:
             print(f"[ENGINE ERROR FATAL DURANTE INFERENCIA]: {e}")
+            if model_type.strip().lower() in ["data", "sql"]:
+                cls.unload_llm("sql")
             raise e
 
 def generate_response(messages: list, model_type="nlp") -> str:
@@ -121,11 +152,13 @@ if os.environ.get("AIDA_LLMS_PRELOADED") != "1":
     os.environ["AIDA_LLMS_PRELOADED"] = "1"
     print("\n[PRE-CARGA] Iniciando carga de LLMs en VRAM...")
     
-    # Solo cargamos NLP de inicio. SQL se cargará solo si el agente Data lo pide.
+    # Solo cargamos NLP de inicio. DATA se cargará solo si el agente Data lo pide.
     # Esto salva inmediatamente unos ~9GB de tu RAM al arrancar.
+    print("[PRE-CARGA] 1/2: Asignando memoria para NLP (Llama 3.1)...")
     HybridEngine.get_llm("nlp")
-    
-    # Comentamos la carga automática de Qwen (SQL) para que el PC respire.
-    # HybridEngine.get_llm("sql") 
+
+    print("[PRE-CARGA] 2/2: Asignando memoria para DATA (Qwen 2.5)...")
+    # Comentamos la carga automática de Qwen (DATA) 
+    HybridEngine.get_llm("sql") 
     
     print("[PRE-CARGA] Carga inicial completada (Modo ahorro de RAM).\n")
