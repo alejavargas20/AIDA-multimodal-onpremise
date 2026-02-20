@@ -1,2 +1,2 @@
-# Sistema multimodal de IA con agentes orquestados para asistencia financiera on-premise
+# Sistema multimodal de IA con agentes orquestados para asistencia financiera
 # On-premise
