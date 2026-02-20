@@ -1,1 +1,2 @@
-# Sistema multimodal de IA con agentes orquestados y modelo de conducta adaptativa para asistencia financiera on-premise
+# Sistema multimodal de IA con agentes orquestados para asistencia financiera on-premise
+# On-premise
