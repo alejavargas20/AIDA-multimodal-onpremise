@@ -131,10 +131,8 @@ aida-multimodal-onpremise
 
 ## Example Use Cases
 
-[![AIDA Demo Video](https://img.youtube.com/vi/TU_ID_DE_VIDEO/maxresdefault.jpg)](https://www.youtube.com/watch?v=apHoQVYMS3o)
+[![AIDA Demo Video](https://img.youtube.com/vi/apHoQVYMS3o/maxresdefault.jpg)](https://www.youtube.com/watch?v=apHoQVYMS3o)
 > 🎥 *Click the image above to watch the full system demonstration on YouTube.*
-
-...
 
 ...
 
