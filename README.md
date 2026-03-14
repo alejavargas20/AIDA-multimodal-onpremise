@@ -3,11 +3,14 @@
 
 ## AIDA – Artificial Intelligence for Data Assistance
 
+> 🥇 **1st Place Winner** - Master’s Thesis Competition (MSc in Big Data, Data Science & Artificial Intelligence - Universidad Complutense de Madrid).
+
 ![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
 ![SQL Server](https://img.shields.io/badge/SQL_Server-CC292B?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
+![License](https://img.shields.io/github/license/alejavargas20/aida-multimodal-onpremise?style=for-the-badge)
 
 AIDA is a multimodal artificial intelligence platform designed to assist financial data analysis through natural interaction.
 
