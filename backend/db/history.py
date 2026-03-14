@@ -1,7 +1,7 @@
 # aida-multimodal-onpremise/backend/db/history.py
 from backend.db.connection import get_db
 
-def get_recent_history(session_id: str, limit: int = 2) -> str:
+def get_recent_history(session_id: str, limit: int = 8) -> str:
     """
     Recupera el historial reciente como TEXTO PLANO
     para inyectarlo en el Prompt Optimizer.

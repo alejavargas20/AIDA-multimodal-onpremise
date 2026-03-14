@@ -281,6 +281,10 @@ def create_sql_LLM(payload: Dict[str, Any], catalog, id_cliente) -> Tuple[str, s
     safety = is_safe_sql(sql_final)
     if not safety["ok"]:
         raise ValueError(f"SQL bloqueado: {safety['reason']}")
+    
+    if "group by" in sql_final.lower() and result_shape == "scalar":
+        print("[LLM] Qwen aplicó GROUP BY correctamente. Ajustando result_shape a 'grouped'.", flush=True)
+        result_shape = "grouped"
 
     vr = validate_sql_reasoning(sql_final, allowed_cols, result_shape=result_shape)
     if not vr["ok"]:

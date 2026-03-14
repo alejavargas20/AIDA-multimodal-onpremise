@@ -38,9 +38,9 @@ def execute_plan(state: OrchestratorState) -> OrchestratorState:
             from backend.db.history import get_recent_history
             session_id = str(state.get("session_id", ""))
             if session_id:
-                historial = get_recent_history(session_id, limit=2)
+                historial = get_recent_history(session_id, limit=8)
 
-        if len(historial) > 1500:
+        if len(historial) > 3500:
             historial = "..." + historial[-1500:]
 
         # ANTI CUDA-ERROR (AHORA CUBRE AUDIOS Y PDFs) ===
