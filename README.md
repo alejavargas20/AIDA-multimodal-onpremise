@@ -129,6 +129,13 @@ aida-multimodal-onpremise
 └── README.md
 ```
 
+## Example Use Cases
+
+[![AIDA Demo Video](https://www.youtube.com/watch?v=apHoQVYMS3o)
+> 🎥 *Click the image above to watch the full system demonstration on YouTube.*
+
+...
+
 # Research Context
 
 This project demonstrates the feasibility of deploying **advanced multimodal AI systems entirely on-premise**, combining:
