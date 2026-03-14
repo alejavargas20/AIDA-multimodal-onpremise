@@ -111,6 +111,8 @@ GPU resources are dedicated to LLM inference, while CPU handles multimodal prepr
 ---
 
 ## Project Structure
+
+```text
 aida-multimodal-onpremise
 │
 ├── agents/              # Specialized AI agents
@@ -125,6 +127,7 @@ aida-multimodal-onpremise
 │
 ├── requirements.txt     # Python dependencies
 └── README.md
+```
 
 # Research Context
 
