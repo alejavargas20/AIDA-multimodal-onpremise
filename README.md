@@ -23,8 +23,6 @@ The system allows users to interact with financial information using natural lan
 
 Unlike most AI assistants that rely on external APIs, AIDA runs entirely on-premise, using open-source models executed locally. This approach ensures data privacy, regulatory compliance, and full control over sensitive financial information.
 
-This project was developed as the Master’s Thesis (TFM) for the MSc in Big Data, Data Science & Artificial Intelligence – Universidad Complutense de Madrid.
-
 ---
 
 ## Key Features
