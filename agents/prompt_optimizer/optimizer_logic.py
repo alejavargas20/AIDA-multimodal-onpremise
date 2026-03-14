@@ -74,7 +74,7 @@ def _llm_messages(system_prompt: str, user_text: str, metadata: Dict[str, Any], 
     user_payload = {
         "user_text": user_text,
         "metadata": metadata,
-        "constraints": {"output_format": "json_only", "max_tasks": 1},
+        "constraints": {"output_format": "json_only", "max_tasks": 3},
     }
     return [
         {"role": "system", "content": formatted_system.strip()},
@@ -83,7 +83,7 @@ def _llm_messages(system_prompt: str, user_text: str, metadata: Dict[str, Any], 
 
 def _normalize_plan_for_nlp(plan: Dict[str, Any]) -> Dict[str, Any]:
     """
-    Aligns LLM output with NLP agent contract (Naty).
+    Aligns LLM output with NLP agent contract.
     """
     supported = {"summarize", "explain", "rephrase", "reason", "generate"}
     action_map = {
@@ -129,7 +129,7 @@ def _normalize_plan_for_nlp(plan: Dict[str, Any]) -> Dict[str, Any]:
         normalized_tasks.append(t)
     
     if normalized_tasks:
-        plan["intent_plan"]["tasks"] = [normalized_tasks[0]]
+        plan["intent_plan"]["tasks"] = normalized_tasks
     else:
         plan["intent_plan"]["tasks"] = []
         
@@ -183,11 +183,6 @@ def process_request(payload: Dict[str, Any]) -> Dict[str, Any]:
         "user_role": raw_meta.get("user_role", "cliente"),
         "client_id": raw_meta.get("client_id", "")
     }
-    # # Baseline intent
-    # intent, base_conf = baseline_intent(user_text)
-    
-    # # Detectamos si es intención de datos para usar el Prompt DATA
-    # is_data_intent = intent in ["analitica_desembolsos", "analitica_sistema", "analitica_cartera", "info_cliente", "analitica_general"]
 
     use_llm = os.getenv("USE_LLM_PLANNER", "true").lower() in ("1", "true", "yes", "y", "on")
 
@@ -238,7 +233,7 @@ def process_request(payload: Dict[str, Any]) -> Dict[str, Any]:
         try:
             doc_task = Task(
                 agent="nlp",
-                action="reason",
+                action="explain",
                 input={
                     "question": user_text if user_text else "Resume el documento.",
                     "context": file_context,
@@ -267,47 +262,6 @@ def process_request(payload: Dict[str, Any]) -> Dict[str, Any]:
 
             planner_msgs = _llm_messages(PLANNER_SYSTEM_PROMPT, user_text, metadata, chat_history)
             
-            # SELECCIÓN DE PROMPT (DATA vs GENERAL)
-            #messages = []
-            # if is_data_intent:
-            #     print(f"[DEBUG] Detectado Intent de DATOS: {intent}")
-            #     # PROMPT DE DATOS y el Contexto de Tablas
-            #     # Extraemos seguridad del metadata
-            #     user_role = metadata.get("user_role", "analista")
-            #     client_id = metadata.get("client_id", "")
-
-            #     tables_context = """
-            #     CONTEXT - TABLES:
-            #     - desembolso (idSolicitud, monto, fecha)
-            #     - cosecha_sal (idCliente, periodo, saldo, mora)
-            #     - desembolso_comportamiento (idCuenta, reprogramado)
-            #     - cierre (idCuenta, periodo, saldo_capital)
-            #     """
-                
-            #     full_data_prompt = DATA_INTENT_SYSTEM_PROMPT + "\n" + tables_context
-            #     # messages = [
-            #     #     {"role": "system", "content": full_data_prompt, "chat_history": chat_history},
-            #     #     {"role": "user", "content": user_text, "chat_history": chat_history}
-            #     # ]
-
-            #     formatted_data_prompt = full_data_prompt.replace(
-            #                         "{chat_history}", chat_history
-            #                     ).replace(
-            #                         "{user_role}", str(user_role)
-            #                     ).replace(
-            #                         "{client_id}", str(client_id)
-            #                     )
-                
-
-            #     messages = [
-            #         {"role": "system", "content": formatted_data_prompt},
-            #         {"role": "user", "content": user_text}
-            #     ]
-
-            # else:
-            #     metadata_for_llm = {"language": language, "input_source": input_source}
-            #     messages = _llm_messages(PLANNER_SYSTEM_PROMPT, user_text, metadata_for_llm, chat_history)
-
             #last_err = None
             for attempt in range(2):  
                 try:
@@ -453,99 +407,6 @@ def process_request(payload: Dict[str, Any]) -> Dict[str, Any]:
     except Exception as exc:
         return {"optimized_prompt": "Error crítico.", "intent_plan": {"intent": "error", "confidence": 0.0, "tasks": [], "metadata": metadata}, "status": "error", "errors": [str(exc)]}    
                     
-                    # # DEBUGGING PRINT ACTIVADO SI ES DATA 
-                    # if is_data_intent:
-                    #     print(f"\n[DEBUG] RESPUESTA DE LLAMA 3.1 (Intento {attempt+1}):")
-                    #     print("--------------------------------------------------")
-                    #     print(raw) 
-                    #     print("--------------------------------------------------\n")
-
-                    # plan_dict = _extract_json_object(raw)
-                    
-                    # # ADAPTACIÓN SI ES DATA INTENT 
-                    # if is_data_intent:
-                    #     if "input" in plan_dict:
-                    #         # Envolvemos el resultado y AGREGAMOS optimized_prompt
-                    #         plan_dict = {
-                    #             "optimized_prompt": user_text,  
-                    #             "intent_plan": {
-                    #                 "intent": intent,
-                    #                 "confidence": 0.9,
-                    #                 "tasks": [{
-                    #                     "agent": "data",
-                    #                     "action": "fetch_metrics",
-                    #                     "input": plan_dict["input"]
-                    #                 }],
-                    #                 "metadata": metadata
-                    #             }
-                    #         }
-                    #     # # O si Llama lo devolvió dentro de otro objeto
-                    #     elif "intent_plan" not in plan_dict: 
-                    #          print("[DEBUG] JSON recibido no tiene estructura conocida.")
-                    #          raise ValueError("Estructura JSON desconocida")
-                    # if not plan_dict.get("optimized_prompt"):
-                    #     plan_dict["optimized_prompt"] = user_text
-
-        #             plan_dict = _normalize_plan_for_nlp(plan_dict)
-
-        #             # Enforce max_tasks defensively
-        #             tasks_list = plan_dict.get("intent_plan", {}).get("tasks", [])
-        #             if isinstance(tasks_list, list) and len(tasks_list) > 3:
-        #                 plan_dict["intent_plan"]["tasks"] = tasks_list[:3]
-
-        #             # Validate strictly with Pydantic schema
-        #             validated = PromptOptimizerResponse.model_validate(plan_dict)
-        #             data = validated.model_dump()
-
-        #             try:
-        #                 tasks_list = data.get("intent_plan", {}).get("tasks", []) or []
-        #                 if isinstance(tasks_list, list):
-        #                     metric = None
-        #                     period = None
-        #                     for t in tasks_list:
-        #                         if isinstance(t, dict) and (t.get("agent") == "data") and (t.get("action") == "fetch_metrics"):
-        #                             inp = t.get("input") or {}
-        #                             if isinstance(inp, dict):
-        #                                 metric = inp.get("metric")
-        #                                 period = inp.get("period")
-
-        #                     if metric and period:
-        #                         data["optimized_prompt"] = f"Resume de forma ejecutiva las {metric} del {period}."
-        #                     else:
-        #                         data["optimized_prompt"] = user_text
-        #             except Exception:
-        #                 data["optimized_prompt"] = user_text
-
-        #             json.dumps(data)
-        #             return data
-
-        #         except Exception as e:
-        #             last_err = e
-        #             print(f"[OPTIMIZER] Error procesando JSON (Intento {attempt+1}): {e}")
-        #             pass
-
-        # # 2) Baseline fallback (keeps system resilient)
-        # print("[OPTIMIZER] Falló el LLM o el parseo JSON. Usando Fallback Básico.")
-        # tasks = _build_tasks(intent, user_text)
-
-        # response = PromptOptimizerResponse(
-        #     optimized_prompt=user_text,
-        #     intent_plan=IntentPlan(
-        #         intent=intent,
-        #         confidence=base_conf,
-        #         tasks=tasks,
-        #         metadata=metadata,
-        #         conductual_state=None,
-        #         conductual_notes=None,
-        #     ),
-        #     status="ok",
-        #     errors=[],
-        # )
-
-        # data = response.model_dump()
-        # json.dumps(data)
-        # return data
-
 
     except PydanticValidationError as e:
         safe_response = {

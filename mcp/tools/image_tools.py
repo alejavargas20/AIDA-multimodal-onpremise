@@ -8,7 +8,7 @@ if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 
 try:
-    from agents.image.image_logic import process
+    #from agents.image.image_logic import process
     print("[MCP] Image Agent cargado correctamente.")
 except Exception as e:
     print(f"[MCP] No se pudo cargar el Image Agent: {e}")

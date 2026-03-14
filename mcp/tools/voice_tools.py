@@ -8,7 +8,7 @@ if ROOT_DIR not in sys.path:
     sys.path.append(ROOT_DIR)
 
 try:
-    from agents.voice.voice_logic import process
+    #from agents.voice.voice_logic import process
     print("[MCP] VOICE Agent cargado correctamente.")
 
 except Exception as e:

@@ -145,10 +145,11 @@ def phase1_router(state: OrchestratorState) -> OrchestratorState:
         
         session_id_str = str(state.get("session_id")) if state.get("session_id") else ""
         if session_id_str:
-            historial = get_recent_history(session_id_str, limit=2)
+            historial = get_recent_history(session_id_str, limit=8)
             state["chat_history"] = historial
         else:
             state["chat_history"] = ""
+
 
     except Exception as e:
         state["errors"].append(f"Error en Fase 1: {e}")
